@@ -97,9 +97,7 @@ export async function POST(request: Request) {
     if (e instanceof AuthError) {
       return NextResponse.json({ success: false, error: e.message }, { status: e.status });
     }
-    if (process.env.NODE_ENV !== "production") {
-      console.error("Upload error:", (e as Error)?.message);
-    }
+    console.error("Upload error:", e);
     return NextResponse.json({ success: false, error: "Upload failed" }, { status: 500 });
   }
 }

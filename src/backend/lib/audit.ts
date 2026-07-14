@@ -28,9 +28,7 @@ export async function audit(entry: AuditEntry): Promise<void> {
     });
   } catch (err) {
     // Audit failures should be visible but never break the user-facing flow
-    if (process.env.NODE_ENV !== "production") {
-      console.error("[Audit] write failed:", (err as Error)?.message);
-    }
+    console.error("[Audit] write failed:", err);
   }
 }
 

@@ -30,9 +30,7 @@ export async function POST(request: Request) {
     }
     return NextResponse.json({ success: true, message: result.message });
   } catch (error) {
-    if (process.env.NODE_ENV !== "production") {
-      console.error("[Webhook] error:", (error as Error)?.message);
-    }
+    console.error("[Webhook] error:", error);
     return NextResponse.json({ success: false, error: "Webhook processing failed" }, { status: 500 });
   }
 }
