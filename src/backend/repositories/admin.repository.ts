@@ -185,50 +185,46 @@ export const adminRepository = {
     const todayStart = new Date();
     todayStart.setHours(0, 0, 0, 0);
 
+    const PAID_STATUSES = ["PAID", "PREPARING", "READY", "COMPLETED"] as const;
+
     const cafes = await prisma.cafe.findMany({
       where: { isActive: true },
       select: { id: true, name: true, slug: true },
     });
 
-    const cafeStats = await Promise.all(
-      cafes.map(async (cafe) => {
-        const [totalOrders, todayOrders, totalRevenue, todayRevenue] =
-          await Promise.all([
-            prisma.order.count({
-              where: { cafeId: cafe.id, status: { in: ["PAID", "PREPARING", "READY", "COMPLETED"] } },
-            }),
-            prisma.order.count({
-              where: {
-                cafeId: cafe.id,
-                status: { in: ["PAID", "PREPARING", "READY", "COMPLETED"] },
-                createdAt: { gte: todayStart },
-              },
-            }),
-            prisma.order.aggregate({
-              where: { cafeId: cafe.id, status: { in: ["PAID", "PREPARING", "READY", "COMPLETED"] } },
-              _sum: { totalPaise: true },
-            }),
-            prisma.order.aggregate({
-              where: {
-                cafeId: cafe.id,
-                status: { in: ["PAID", "PREPARING", "READY", "COMPLETED"] },
-                createdAt: { gte: todayStart },
-              },
-              _sum: { totalPaise: true },
-            }),
-          ]);
+    // Two grouped queries cover every cafe at once instead of 4 queries per
+    // cafe, which used to scale linearly with the number of cafes.
+    const [totalByCafe, todayByCafe] = await Promise.all([
+      prisma.order.groupBy({
+        by: ["cafeId"],
+        where: { status: { in: [...PAID_STATUSES] } },
+        _count: true,
+        _sum: { totalPaise: true },
+      }),
+      prisma.order.groupBy({
+        by: ["cafeId"],
+        where: { status: { in: [...PAID_STATUSES] }, createdAt: { gte: todayStart } },
+        _count: true,
+        _sum: { totalPaise: true },
+      }),
+    ]);
 
-        return {
-          cafeId: cafe.id,
-          cafeName: cafe.name,
-          cafeSlug: cafe.slug,
-          totalOrders,
-          todayOrders,
-          totalRevenue: totalRevenue._sum.totalPaise || 0,
-          todayRevenue: todayRevenue._sum.totalPaise || 0,
-        };
-      })
-    );
+    const totalMap = new Map(totalByCafe.map((r) => [r.cafeId, r]));
+    const todayMap = new Map(todayByCafe.map((r) => [r.cafeId, r]));
+
+    const cafeStats = cafes.map((cafe) => {
+      const total = totalMap.get(cafe.id);
+      const today = todayMap.get(cafe.id);
+      return {
+        cafeId: cafe.id,
+        cafeName: cafe.name,
+        cafeSlug: cafe.slug,
+        totalOrders: total?._count ?? 0,
+        todayOrders: today?._count ?? 0,
+        totalRevenue: total?._sum.totalPaise ?? 0,
+        todayRevenue: today?._sum.totalPaise ?? 0,
+      };
+    });
 
     return {
       activeCafes: cafes.length,
