@@ -8,6 +8,7 @@ import { sseManager } from "@/backend/lib/sse";
 import { notifyOrderReady } from "@/backend/lib/whatsapp";
 import type { CreateOrderRequest, CreateOrderResponse, OrderSummary } from "@/shared/types";
 import { v4 as uuid } from "uuid";
+import { after } from "next/server";
 
 const APP_URL = process.env.NEXT_PUBLIC_APP_URL || `http://localhost:${process.env.PORT || 3000}`;
 
@@ -173,19 +174,26 @@ export const orderService = {
       status as "PREPARING" | "READY" | "COMPLETED" | "CANCELLED"
     );
 
-    // Send WhatsApp message when order is ready for pickup
+    // Send WhatsApp message when order is ready for pickup. Scheduled via
+    // after() so the notification API call doesn't block this response.
     if (status === "READY" && updated.customerPhone) {
-      const cafe = await adminRepository.getCafeById(updated.cafeId);
-      try {
-        await notifyOrderReady({
-          customerPhone: updated.customerPhone,
-          customerName: updated.customerName || "there",
-          orderNumber: updated.orderNumber,
-          cafeName: cafe?.name || "the cafe",
-        });
-      } catch (err) {
-        console.error("[WhatsApp] notifyOrderReady failed:", err);
-      }
+      const customerPhone = updated.customerPhone;
+      const customerName = updated.customerName || "there";
+      const orderNumber = updated.orderNumber;
+      const cafeId = updated.cafeId;
+      after(async () => {
+        try {
+          const cafe = await adminRepository.getCafeById(cafeId);
+          await notifyOrderReady({
+            customerPhone,
+            customerName,
+            orderNumber,
+            cafeName: cafe?.name || "the cafe",
+          });
+        } catch (err) {
+          console.error("[WhatsApp] notifyOrderReady failed:", err);
+        }
+      });
     }
 
     // Push SSE event

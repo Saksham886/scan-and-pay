@@ -4,6 +4,7 @@ import { verifyWebhookSignature, checkPaymentStatus } from "@/backend/lib/phonep
 import { sseManager } from "@/backend/lib/sse";
 import { notifyOrderPlaced } from "@/backend/lib/whatsapp";
 import type { Prisma } from "@/generated/prisma";
+import { after } from "next/server";
 
 type FullOrder = NonNullable<Awaited<ReturnType<typeof orderRepository.getOrderById>>>;
 
@@ -126,7 +127,9 @@ export const paymentService = {
       const fullOrder = await orderRepository.getOrderById(payment.orderId);
       if (fullOrder) {
         broadcastNewOrder(fullOrder);
-        await sendOrderPlacedWhatsApp(fullOrder);
+        // Scheduled via after() so the WhatsApp API call doesn't block the
+        // webhook/reconcile response (PhonePe may retry on slow responses).
+        after(() => sendOrderPlacedWhatsApp(fullOrder));
       }
     }
 
@@ -172,7 +175,9 @@ export const paymentService = {
       const fullOrder = await orderRepository.getOrderById(payment.orderId);
       if (fullOrder) {
         broadcastNewOrder(fullOrder);
-        await sendOrderPlacedWhatsApp(fullOrder);
+        // Scheduled via after() so the WhatsApp API call doesn't block the
+        // webhook/reconcile response (PhonePe may retry on slow responses).
+        after(() => sendOrderPlacedWhatsApp(fullOrder));
       }
     }
 
