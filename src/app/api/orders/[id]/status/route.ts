@@ -11,7 +11,7 @@ export async function GET(
   try {
     // Aggressive rate-limit on this public IDOR-prone endpoint to prevent
     // brute-forcing UUIDs and scraping customer PII.
-    const limited = rateLimitResponse(`order-status:${getClientIp(request)}`, {
+    const limited = await rateLimitResponse(`order-status:${getClientIp(request)}`, {
       max: 60,
       windowMs: 60 * 1000,
     });

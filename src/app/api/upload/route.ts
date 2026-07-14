@@ -34,7 +34,7 @@ export async function POST(request: Request) {
   try {
     const user = await requireRole("CAFE_OWNER", "SUPER_ADMIN");
 
-    const limited = rateLimitResponse(`upload:${user.id}`, { max: 30, windowMs: 60 * 1000 });
+    const limited = await rateLimitResponse(`upload:${user.id}`, { max: 30, windowMs: 60 * 1000 });
     if (limited) return limited;
 
     const contentLength = Number(request.headers.get("content-length") || 0);

@@ -16,7 +16,7 @@ export async function POST(
   { params }: { params: Promise<{ id: string }> }
 ) {
   try {
-    const limited = rateLimitResponse(`reconcile:${getClientIp(request)}`, {
+    const limited = await rateLimitResponse(`reconcile:${getClientIp(request)}`, {
       max: 30,
       windowMs: 60 * 1000,
     });

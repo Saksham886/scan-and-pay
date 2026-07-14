@@ -9,7 +9,7 @@ export async function GET(
   { params }: { params: Promise<{ slug: string }> }
 ) {
   try {
-    const limited = rateLimitResponse(`menu-fetch:${getClientIp(request)}`, {
+    const limited = await rateLimitResponse(`menu-fetch:${getClientIp(request)}`, {
       max: 120,
       windowMs: 60 * 1000,
     });

@@ -15,7 +15,7 @@ export async function POST(request: Request) {
   try {
     const actor = await requireRole("SUPER_ADMIN");
 
-    const limited = rateLimitResponse(`reset-password:${getClientIp(request)}`, {
+    const limited = await rateLimitResponse(`reset-password:${getClientIp(request)}`, {
       max: 10,
       windowMs: 60 * 1000,
     });

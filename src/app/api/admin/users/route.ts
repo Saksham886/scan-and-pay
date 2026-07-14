@@ -14,7 +14,7 @@ export async function GET(request: Request) {
   try {
     await requireRole("SUPER_ADMIN");
 
-    const limited = rateLimitResponse(`admin-users-list:${getClientIp(request)}`, {
+    const limited = await rateLimitResponse(`admin-users-list:${getClientIp(request)}`, {
       max: 60,
       windowMs: 60 * 1000,
     });
@@ -44,7 +44,7 @@ export async function POST(request: Request) {
   try {
     const actor = await requireRole("SUPER_ADMIN");
 
-    const limited = rateLimitResponse(`admin-users-create:${getClientIp(request)}`, {
+    const limited = await rateLimitResponse(`admin-users-create:${getClientIp(request)}`, {
       max: 20,
       windowMs: 60 * 1000,
     });

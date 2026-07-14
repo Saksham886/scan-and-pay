@@ -8,7 +8,7 @@ const MAX_HEADER_LEN = 1024;
 export async function POST(request: Request) {
   try {
     // Limit per-IP webhook spam (PhonePe will retry, but bound it).
-    const limited = rateLimitResponse(`phonepe-webhook:${getClientIp(request)}`, {
+    const limited = await rateLimitResponse(`phonepe-webhook:${getClientIp(request)}`, {
       max: 120,
       windowMs: 60 * 1000,
     });

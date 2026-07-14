@@ -17,9 +17,9 @@ export async function POST(request: Request) {
   try {
     // Per-IP rate limit: 10 orders / minute, 60 / hour.
     const ip = getClientIp(request);
-    const burst = rateLimitResponse(`order-create-burst:${ip}`, { max: 10, windowMs: 60 * 1000 });
+    const burst = await rateLimitResponse(`order-create-burst:${ip}`, { max: 10, windowMs: 60 * 1000 });
     if (burst) return burst;
-    const sustained = rateLimitResponse(`order-create-hour:${ip}`, { max: 60, windowMs: 60 * 60 * 1000 });
+    const sustained = await rateLimitResponse(`order-create-hour:${ip}`, { max: 60, windowMs: 60 * 60 * 1000 });
     if (sustained) return sustained;
 
     let raw: unknown;
