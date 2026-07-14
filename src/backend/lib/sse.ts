@@ -35,7 +35,10 @@ class SSEManager {
     const url = process.env.REDIS_URL;
     if (!url) return; // No Redis configured: falls back to single-process, in-memory delivery.
 
-    this.publisher = new Redis(url);
+    // maxRetriesPerRequest: 1 so a queued publish() rejects quickly during
+    // an outage (default is 20 retries with backoff, which would delay the
+    // local-delivery fallback below by many seconds instead of failing fast).
+    this.publisher = new Redis(url, { maxRetriesPerRequest: 1 });
     this.subscriber = new Redis(url);
 
     this.publisher.on("error", (err) => console.error("[sse] Redis publisher error:", err));
@@ -73,7 +76,12 @@ class SSEManager {
     if (this.publisher) {
       this.publisher
         .publish(REDIS_CHANNEL, JSON.stringify({ channel, cafeId, event, data }))
-        .catch((err) => console.error("[sse] Redis publish failed:", err));
+        .catch((err) => {
+          // Fail open: a transient Redis blip shouldn't drop the event for
+          // clients on this instance too, just for the cross-instance reach.
+          console.error("[sse] Redis publish failed, falling back to local delivery:", err);
+          this.deliverLocal(channel, cafeId, event, data);
+        });
       return;
     }
     this.deliverLocal(channel, cafeId, event, data);
