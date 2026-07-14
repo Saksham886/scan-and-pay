@@ -113,6 +113,9 @@ export async function POST(request: Request) {
 
     // Only echo error message back if it's a known business error
     const safeMsg = status === 500 ? "Failed to create order" : message;
+    if (status === 500) {
+      console.error("[POST /api/orders] unexpected error:", error);
+    }
     return NextResponse.json({ success: false, error: safeMsg }, { status });
   }
 }

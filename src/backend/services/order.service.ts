@@ -40,12 +40,38 @@ function isIdempotencyKeyConflict(err: unknown): boolean {
   return JSON.stringify(err.meta ?? {}).toLowerCase().includes("idempotency");
 }
 
+// Two observed transient failure modes under a concurrent burst against a
+// small DB compute: the pool has no free connection within
+// connectionTimeoutMillis (db.ts), or Neon is briefly unreachable (the same
+// cold-start reachability blip seen throughout this project's scripts).
+// Both fail before any write is attempted, so retrying is safe.
+function isTransientDbError(err: unknown): boolean {
+  return (
+    err instanceof Error &&
+    (/timeout exceeded when trying to connect/i.test(err.message) ||
+      /can't reach database server/i.test(err.message))
+  );
+}
+
+async function withTransientRetry<T>(fn: () => Promise<T>, attempts = 2): Promise<T> {
+  for (let attempt = 1; ; attempt++) {
+    try {
+      return await fn();
+    } catch (err) {
+      if (attempt >= attempts || !isTransientDbError(err)) throw err;
+      await new Promise((r) => setTimeout(r, 150 + Math.random() * 250));
+    }
+  }
+}
+
 export const orderService = {
   async createOrder(
     request: CreateOrderRequest
   ): Promise<CreateOrderResponse> {
     // Check idempotency
-    const existing = await orderRepository.findByIdempotencyKey(request.idempotencyKey);
+    const existing = await withTransientRetry(() =>
+      orderRepository.findByIdempotencyKey(request.idempotencyKey)
+    );
     if (existing) {
       return existingOrderResponse(existing);
     }
@@ -99,26 +125,30 @@ export const orderService = {
     const orderNumber = await generateOrderNumber(cafe.id, cafe.slug);
 
     // Create order in DB
+    const orderData = {
+      cafeId: cafe.id,
+      orderNumber,
+      totalPaise,
+      customerName: request.customerName,
+      customerPhone: request.customerPhone,
+      customerEmail: request.customerEmail,
+      notes: request.notes,
+      idempotencyKey: request.idempotencyKey,
+      items: orderItems,
+    };
+
     let order;
     try {
-      order = await orderRepository.createOrder({
-        cafeId: cafe.id,
-        orderNumber,
-        totalPaise,
-        customerName: request.customerName,
-        customerPhone: request.customerPhone,
-        customerEmail: request.customerEmail,
-        notes: request.notes,
-        idempotencyKey: request.idempotencyKey,
-        items: orderItems,
-      });
+      order = await withTransientRetry(() => orderRepository.createOrder(orderData));
     } catch (err) {
       // A concurrent request with the same idempotencyKey (e.g. a client
       // retry racing a slow-but-successful first attempt) can win the
       // unique constraint before this one. Return the winner's order
       // instead of surfacing a false "failed to create order" error.
       if (isIdempotencyKeyConflict(err)) {
-        const raced = await orderRepository.findByIdempotencyKey(request.idempotencyKey);
+        const raced = await withTransientRetry(() =>
+          orderRepository.findByIdempotencyKey(request.idempotencyKey)
+        );
         if (raced) return existingOrderResponse(raced);
       }
       throw err;
