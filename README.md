@@ -213,6 +213,7 @@ npm run dev:customer  # Customer menu at port 3003
 | `META_WHATSAPP_TOKEN` | Optional | WhatsApp Business API token |
 | `META_WHATSAPP_PHONE_ID` | Optional | WhatsApp sender phone number ID |
 | `RESEND_API_KEY` | Optional | Email notifications |
+| `REDIS_URL` | Recommended for production | Upstash Redis connection string. Enables cross-instance SSE fan-out (order/menu live updates) and is required once traffic spans more than one serverless instance. Without it, SSE falls back to single-process in-memory delivery — fine for local dev, not safe for production. |
 
 ---
 
