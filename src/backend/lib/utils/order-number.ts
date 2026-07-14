@@ -1,24 +1,18 @@
 import { prisma } from "@/backend/lib/db";
 
-export async function generateOrderNumber(cafeSlug: string): Promise<string> {
-  const today = new Date();
-  const dateStr = today.toISOString().slice(0, 10).replace(/-/g, "");
+export async function generateOrderNumber(cafeId: string, cafeSlug: string): Promise<string> {
+  const dateStr = new Date().toISOString().slice(0, 10).replace(/-/g, "");
   const prefix = cafeSlug.slice(0, 4).toUpperCase();
 
-  const todayStart = new Date(today.getFullYear(), today.getMonth(), today.getDate());
-  const todayEnd = new Date(todayStart);
-  todayEnd.setDate(todayEnd.getDate() + 1);
-
-  const count = await prisma.order.count({
-    where: {
-      cafe: { slug: cafeSlug },
-      createdAt: {
-        gte: todayStart,
-        lt: todayEnd,
-      },
-    },
+  // Upsert compiles to a single INSERT ... ON CONFLICT DO UPDATE on
+  // Postgres, so concurrent orders for the same cafe/day each get a
+  // distinct incremented count instead of racing on a count-then-write read.
+  const counter = await prisma.orderCounter.upsert({
+    where: { cafeId_dateKey: { cafeId, dateKey: dateStr } },
+    create: { cafeId, dateKey: dateStr, count: 1 },
+    update: { count: { increment: 1 } },
   });
 
-  const seq = String(count + 1).padStart(4, "0");
+  const seq = String(counter.count).padStart(4, "0");
   return `${prefix}-${dateStr}-${seq}`;
 }

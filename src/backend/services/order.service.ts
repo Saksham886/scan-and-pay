@@ -77,7 +77,7 @@ export const orderService = {
     const cafeCredentials = merchantId && saltKey ? { merchantId, saltKey, saltIndex } : undefined;
 
     // Generate order number
-    const orderNumber = await generateOrderNumber(cafe.slug);
+    const orderNumber = await generateOrderNumber(cafe.id, cafe.slug);
 
     // Create order in DB
     const order = await orderRepository.createOrder({

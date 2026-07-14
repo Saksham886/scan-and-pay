@@ -44,6 +44,11 @@ export type Order = $Result.DefaultSelection<Prisma.$OrderPayload>
  */
 export type OrderItem = $Result.DefaultSelection<Prisma.$OrderItemPayload>
 /**
+ * Model OrderCounter
+ * 
+ */
+export type OrderCounter = $Result.DefaultSelection<Prisma.$OrderCounterPayload>
+/**
  * Model Payment
  * 
  */
@@ -299,6 +304,16 @@ export class PrismaClient<
     * ```
     */
   get orderItem(): Prisma.OrderItemDelegate<ExtArgs, ClientOptions>;
+
+  /**
+   * `prisma.orderCounter`: Exposes CRUD operations for the **OrderCounter** model.
+    * Example usage:
+    * ```ts
+    * // Fetch zero or more OrderCounters
+    * const orderCounters = await prisma.orderCounter.findMany()
+    * ```
+    */
+  get orderCounter(): Prisma.OrderCounterDelegate<ExtArgs, ClientOptions>;
 
   /**
    * `prisma.payment`: Exposes CRUD operations for the **Payment** model.
@@ -789,6 +804,7 @@ export namespace Prisma {
     MenuItem: 'MenuItem',
     Order: 'Order',
     OrderItem: 'OrderItem',
+    OrderCounter: 'OrderCounter',
     Payment: 'Payment',
     Table: 'Table',
     Staff: 'Staff',
@@ -809,7 +825,7 @@ export namespace Prisma {
       omit: GlobalOmitOptions
     }
     meta: {
-      modelProps: "cafe" | "user" | "menuCategory" | "menuItem" | "order" | "orderItem" | "payment" | "table" | "staff" | "expense" | "auditLog"
+      modelProps: "cafe" | "user" | "menuCategory" | "menuItem" | "order" | "orderItem" | "orderCounter" | "payment" | "table" | "staff" | "expense" | "auditLog"
       txIsolationLevel: Prisma.TransactionIsolationLevel
     }
     model: {
@@ -1254,6 +1270,80 @@ export namespace Prisma {
           count: {
             args: Prisma.OrderItemCountArgs<ExtArgs>
             result: $Utils.Optional<OrderItemCountAggregateOutputType> | number
+          }
+        }
+      }
+      OrderCounter: {
+        payload: Prisma.$OrderCounterPayload<ExtArgs>
+        fields: Prisma.OrderCounterFieldRefs
+        operations: {
+          findUnique: {
+            args: Prisma.OrderCounterFindUniqueArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$OrderCounterPayload> | null
+          }
+          findUniqueOrThrow: {
+            args: Prisma.OrderCounterFindUniqueOrThrowArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$OrderCounterPayload>
+          }
+          findFirst: {
+            args: Prisma.OrderCounterFindFirstArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$OrderCounterPayload> | null
+          }
+          findFirstOrThrow: {
+            args: Prisma.OrderCounterFindFirstOrThrowArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$OrderCounterPayload>
+          }
+          findMany: {
+            args: Prisma.OrderCounterFindManyArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$OrderCounterPayload>[]
+          }
+          create: {
+            args: Prisma.OrderCounterCreateArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$OrderCounterPayload>
+          }
+          createMany: {
+            args: Prisma.OrderCounterCreateManyArgs<ExtArgs>
+            result: BatchPayload
+          }
+          createManyAndReturn: {
+            args: Prisma.OrderCounterCreateManyAndReturnArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$OrderCounterPayload>[]
+          }
+          delete: {
+            args: Prisma.OrderCounterDeleteArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$OrderCounterPayload>
+          }
+          update: {
+            args: Prisma.OrderCounterUpdateArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$OrderCounterPayload>
+          }
+          deleteMany: {
+            args: Prisma.OrderCounterDeleteManyArgs<ExtArgs>
+            result: BatchPayload
+          }
+          updateMany: {
+            args: Prisma.OrderCounterUpdateManyArgs<ExtArgs>
+            result: BatchPayload
+          }
+          updateManyAndReturn: {
+            args: Prisma.OrderCounterUpdateManyAndReturnArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$OrderCounterPayload>[]
+          }
+          upsert: {
+            args: Prisma.OrderCounterUpsertArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$OrderCounterPayload>
+          }
+          aggregate: {
+            args: Prisma.OrderCounterAggregateArgs<ExtArgs>
+            result: $Utils.Optional<AggregateOrderCounter>
+          }
+          groupBy: {
+            args: Prisma.OrderCounterGroupByArgs<ExtArgs>
+            result: $Utils.Optional<OrderCounterGroupByOutputType>[]
+          }
+          count: {
+            args: Prisma.OrderCounterCountArgs<ExtArgs>
+            result: $Utils.Optional<OrderCounterCountAggregateOutputType> | number
           }
         }
       }
@@ -1741,6 +1831,7 @@ export namespace Prisma {
     menuItem?: MenuItemOmit
     order?: OrderOmit
     orderItem?: OrderItemOmit
+    orderCounter?: OrderCounterOmit
     payment?: PaymentOmit
     table?: TableOmit
     staff?: StaffOmit
@@ -1833,6 +1924,7 @@ export namespace Prisma {
     tables: number
     staff: number
     expenses: number
+    orderCounters: number
   }
 
   export type CafeCountOutputTypeSelect<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
@@ -1843,6 +1935,7 @@ export namespace Prisma {
     tables?: boolean | CafeCountOutputTypeCountTablesArgs
     staff?: boolean | CafeCountOutputTypeCountStaffArgs
     expenses?: boolean | CafeCountOutputTypeCountExpensesArgs
+    orderCounters?: boolean | CafeCountOutputTypeCountOrderCountersArgs
   }
 
   // Custom InputTypes
@@ -1903,6 +1996,13 @@ export namespace Prisma {
    */
   export type CafeCountOutputTypeCountExpensesArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     where?: ExpenseWhereInput
+  }
+
+  /**
+   * CafeCountOutputType without action
+   */
+  export type CafeCountOutputTypeCountOrderCountersArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    where?: OrderCounterWhereInput
   }
 
 
@@ -2317,6 +2417,7 @@ export namespace Prisma {
     tables?: boolean | Cafe$tablesArgs<ExtArgs>
     staff?: boolean | Cafe$staffArgs<ExtArgs>
     expenses?: boolean | Cafe$expensesArgs<ExtArgs>
+    orderCounters?: boolean | Cafe$orderCountersArgs<ExtArgs>
     _count?: boolean | CafeCountOutputTypeDefaultArgs<ExtArgs>
   }, ExtArgs["result"]["cafe"]>
 
@@ -2380,6 +2481,7 @@ export namespace Prisma {
     tables?: boolean | Cafe$tablesArgs<ExtArgs>
     staff?: boolean | Cafe$staffArgs<ExtArgs>
     expenses?: boolean | Cafe$expensesArgs<ExtArgs>
+    orderCounters?: boolean | Cafe$orderCountersArgs<ExtArgs>
     _count?: boolean | CafeCountOutputTypeDefaultArgs<ExtArgs>
   }
   export type CafeIncludeCreateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {}
@@ -2395,6 +2497,7 @@ export namespace Prisma {
       tables: Prisma.$TablePayload<ExtArgs>[]
       staff: Prisma.$StaffPayload<ExtArgs>[]
       expenses: Prisma.$ExpensePayload<ExtArgs>[]
+      orderCounters: Prisma.$OrderCounterPayload<ExtArgs>[]
     }
     scalars: $Extensions.GetPayloadResult<{
       id: string
@@ -2812,6 +2915,7 @@ export namespace Prisma {
     tables<T extends Cafe$tablesArgs<ExtArgs> = {}>(args?: Subset<T, Cafe$tablesArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$TablePayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
     staff<T extends Cafe$staffArgs<ExtArgs> = {}>(args?: Subset<T, Cafe$staffArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$StaffPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
     expenses<T extends Cafe$expensesArgs<ExtArgs> = {}>(args?: Subset<T, Cafe$expensesArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$ExpensePayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
+    orderCounters<T extends Cafe$orderCountersArgs<ExtArgs> = {}>(args?: Subset<T, Cafe$orderCountersArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$OrderCounterPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
     /**
      * Attaches callbacks for the resolution and/or rejection of the Promise.
      * @param onfulfilled The callback to execute when the Promise is resolved.
@@ -3413,6 +3517,30 @@ export namespace Prisma {
     take?: number
     skip?: number
     distinct?: ExpenseScalarFieldEnum | ExpenseScalarFieldEnum[]
+  }
+
+  /**
+   * Cafe.orderCounters
+   */
+  export type Cafe$orderCountersArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the OrderCounter
+     */
+    select?: OrderCounterSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the OrderCounter
+     */
+    omit?: OrderCounterOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: OrderCounterInclude<ExtArgs> | null
+    where?: OrderCounterWhereInput
+    orderBy?: OrderCounterOrderByWithRelationInput | OrderCounterOrderByWithRelationInput[]
+    cursor?: OrderCounterWhereUniqueInput
+    take?: number
+    skip?: number
+    distinct?: OrderCounterScalarFieldEnum | OrderCounterScalarFieldEnum[]
   }
 
   /**
@@ -9451,6 +9579,1077 @@ export namespace Prisma {
 
 
   /**
+   * Model OrderCounter
+   */
+
+  export type AggregateOrderCounter = {
+    _count: OrderCounterCountAggregateOutputType | null
+    _avg: OrderCounterAvgAggregateOutputType | null
+    _sum: OrderCounterSumAggregateOutputType | null
+    _min: OrderCounterMinAggregateOutputType | null
+    _max: OrderCounterMaxAggregateOutputType | null
+  }
+
+  export type OrderCounterAvgAggregateOutputType = {
+    count: number | null
+  }
+
+  export type OrderCounterSumAggregateOutputType = {
+    count: number | null
+  }
+
+  export type OrderCounterMinAggregateOutputType = {
+    cafeId: string | null
+    dateKey: string | null
+    count: number | null
+  }
+
+  export type OrderCounterMaxAggregateOutputType = {
+    cafeId: string | null
+    dateKey: string | null
+    count: number | null
+  }
+
+  export type OrderCounterCountAggregateOutputType = {
+    cafeId: number
+    dateKey: number
+    count: number
+    _all: number
+  }
+
+
+  export type OrderCounterAvgAggregateInputType = {
+    count?: true
+  }
+
+  export type OrderCounterSumAggregateInputType = {
+    count?: true
+  }
+
+  export type OrderCounterMinAggregateInputType = {
+    cafeId?: true
+    dateKey?: true
+    count?: true
+  }
+
+  export type OrderCounterMaxAggregateInputType = {
+    cafeId?: true
+    dateKey?: true
+    count?: true
+  }
+
+  export type OrderCounterCountAggregateInputType = {
+    cafeId?: true
+    dateKey?: true
+    count?: true
+    _all?: true
+  }
+
+  export type OrderCounterAggregateArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Filter which OrderCounter to aggregate.
+     */
+    where?: OrderCounterWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of OrderCounters to fetch.
+     */
+    orderBy?: OrderCounterOrderByWithRelationInput | OrderCounterOrderByWithRelationInput[]
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the start position
+     */
+    cursor?: OrderCounterWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` OrderCounters from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` OrderCounters.
+     */
+    skip?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Count returned OrderCounters
+    **/
+    _count?: true | OrderCounterCountAggregateInputType
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Select which fields to average
+    **/
+    _avg?: OrderCounterAvgAggregateInputType
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Select which fields to sum
+    **/
+    _sum?: OrderCounterSumAggregateInputType
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Select which fields to find the minimum value
+    **/
+    _min?: OrderCounterMinAggregateInputType
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Select which fields to find the maximum value
+    **/
+    _max?: OrderCounterMaxAggregateInputType
+  }
+
+  export type GetOrderCounterAggregateType<T extends OrderCounterAggregateArgs> = {
+        [P in keyof T & keyof AggregateOrderCounter]: P extends '_count' | 'count'
+      ? T[P] extends true
+        ? number
+        : GetScalarType<T[P], AggregateOrderCounter[P]>
+      : GetScalarType<T[P], AggregateOrderCounter[P]>
+  }
+
+
+
+
+  export type OrderCounterGroupByArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    where?: OrderCounterWhereInput
+    orderBy?: OrderCounterOrderByWithAggregationInput | OrderCounterOrderByWithAggregationInput[]
+    by: OrderCounterScalarFieldEnum[] | OrderCounterScalarFieldEnum
+    having?: OrderCounterScalarWhereWithAggregatesInput
+    take?: number
+    skip?: number
+    _count?: OrderCounterCountAggregateInputType | true
+    _avg?: OrderCounterAvgAggregateInputType
+    _sum?: OrderCounterSumAggregateInputType
+    _min?: OrderCounterMinAggregateInputType
+    _max?: OrderCounterMaxAggregateInputType
+  }
+
+  export type OrderCounterGroupByOutputType = {
+    cafeId: string
+    dateKey: string
+    count: number
+    _count: OrderCounterCountAggregateOutputType | null
+    _avg: OrderCounterAvgAggregateOutputType | null
+    _sum: OrderCounterSumAggregateOutputType | null
+    _min: OrderCounterMinAggregateOutputType | null
+    _max: OrderCounterMaxAggregateOutputType | null
+  }
+
+  type GetOrderCounterGroupByPayload<T extends OrderCounterGroupByArgs> = Prisma.PrismaPromise<
+    Array<
+      PickEnumerable<OrderCounterGroupByOutputType, T['by']> &
+        {
+          [P in ((keyof T) & (keyof OrderCounterGroupByOutputType))]: P extends '_count'
+            ? T[P] extends boolean
+              ? number
+              : GetScalarType<T[P], OrderCounterGroupByOutputType[P]>
+            : GetScalarType<T[P], OrderCounterGroupByOutputType[P]>
+        }
+      >
+    >
+
+
+  export type OrderCounterSelect<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
+    cafeId?: boolean
+    dateKey?: boolean
+    count?: boolean
+    cafe?: boolean | CafeDefaultArgs<ExtArgs>
+  }, ExtArgs["result"]["orderCounter"]>
+
+  export type OrderCounterSelectCreateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
+    cafeId?: boolean
+    dateKey?: boolean
+    count?: boolean
+    cafe?: boolean | CafeDefaultArgs<ExtArgs>
+  }, ExtArgs["result"]["orderCounter"]>
+
+  export type OrderCounterSelectUpdateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
+    cafeId?: boolean
+    dateKey?: boolean
+    count?: boolean
+    cafe?: boolean | CafeDefaultArgs<ExtArgs>
+  }, ExtArgs["result"]["orderCounter"]>
+
+  export type OrderCounterSelectScalar = {
+    cafeId?: boolean
+    dateKey?: boolean
+    count?: boolean
+  }
+
+  export type OrderCounterOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"cafeId" | "dateKey" | "count", ExtArgs["result"]["orderCounter"]>
+  export type OrderCounterInclude<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    cafe?: boolean | CafeDefaultArgs<ExtArgs>
+  }
+  export type OrderCounterIncludeCreateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    cafe?: boolean | CafeDefaultArgs<ExtArgs>
+  }
+  export type OrderCounterIncludeUpdateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    cafe?: boolean | CafeDefaultArgs<ExtArgs>
+  }
+
+  export type $OrderCounterPayload<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    name: "OrderCounter"
+    objects: {
+      cafe: Prisma.$CafePayload<ExtArgs>
+    }
+    scalars: $Extensions.GetPayloadResult<{
+      cafeId: string
+      dateKey: string
+      count: number
+    }, ExtArgs["result"]["orderCounter"]>
+    composites: {}
+  }
+
+  type OrderCounterGetPayload<S extends boolean | null | undefined | OrderCounterDefaultArgs> = $Result.GetResult<Prisma.$OrderCounterPayload, S>
+
+  type OrderCounterCountArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> =
+    Omit<OrderCounterFindManyArgs, 'select' | 'include' | 'distinct' | 'omit'> & {
+      select?: OrderCounterCountAggregateInputType | true
+    }
+
+  export interface OrderCounterDelegate<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs, GlobalOmitOptions = {}> {
+    [K: symbol]: { types: Prisma.TypeMap<ExtArgs>['model']['OrderCounter'], meta: { name: 'OrderCounter' } }
+    /**
+     * Find zero or one OrderCounter that matches the filter.
+     * @param {OrderCounterFindUniqueArgs} args - Arguments to find a OrderCounter
+     * @example
+     * // Get one OrderCounter
+     * const orderCounter = await prisma.orderCounter.findUnique({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     */
+    findUnique<T extends OrderCounterFindUniqueArgs>(args: SelectSubset<T, OrderCounterFindUniqueArgs<ExtArgs>>): Prisma__OrderCounterClient<$Result.GetResult<Prisma.$OrderCounterPayload<ExtArgs>, T, "findUnique", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Find one OrderCounter that matches the filter or throw an error with `error.code='P2025'`
+     * if no matches were found.
+     * @param {OrderCounterFindUniqueOrThrowArgs} args - Arguments to find a OrderCounter
+     * @example
+     * // Get one OrderCounter
+     * const orderCounter = await prisma.orderCounter.findUniqueOrThrow({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     */
+    findUniqueOrThrow<T extends OrderCounterFindUniqueOrThrowArgs>(args: SelectSubset<T, OrderCounterFindUniqueOrThrowArgs<ExtArgs>>): Prisma__OrderCounterClient<$Result.GetResult<Prisma.$OrderCounterPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Find the first OrderCounter that matches the filter.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {OrderCounterFindFirstArgs} args - Arguments to find a OrderCounter
+     * @example
+     * // Get one OrderCounter
+     * const orderCounter = await prisma.orderCounter.findFirst({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     */
+    findFirst<T extends OrderCounterFindFirstArgs>(args?: SelectSubset<T, OrderCounterFindFirstArgs<ExtArgs>>): Prisma__OrderCounterClient<$Result.GetResult<Prisma.$OrderCounterPayload<ExtArgs>, T, "findFirst", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Find the first OrderCounter that matches the filter or
+     * throw `PrismaKnownClientError` with `P2025` code if no matches were found.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {OrderCounterFindFirstOrThrowArgs} args - Arguments to find a OrderCounter
+     * @example
+     * // Get one OrderCounter
+     * const orderCounter = await prisma.orderCounter.findFirstOrThrow({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     */
+    findFirstOrThrow<T extends OrderCounterFindFirstOrThrowArgs>(args?: SelectSubset<T, OrderCounterFindFirstOrThrowArgs<ExtArgs>>): Prisma__OrderCounterClient<$Result.GetResult<Prisma.$OrderCounterPayload<ExtArgs>, T, "findFirstOrThrow", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Find zero or more OrderCounters that matches the filter.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {OrderCounterFindManyArgs} args - Arguments to filter and select certain fields only.
+     * @example
+     * // Get all OrderCounters
+     * const orderCounters = await prisma.orderCounter.findMany()
+     * 
+     * // Get first 10 OrderCounters
+     * const orderCounters = await prisma.orderCounter.findMany({ take: 10 })
+     * 
+     * // Only select the `cafeId`
+     * const orderCounterWithCafeIdOnly = await prisma.orderCounter.findMany({ select: { cafeId: true } })
+     * 
+     */
+    findMany<T extends OrderCounterFindManyArgs>(args?: SelectSubset<T, OrderCounterFindManyArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$OrderCounterPayload<ExtArgs>, T, "findMany", GlobalOmitOptions>>
+
+    /**
+     * Create a OrderCounter.
+     * @param {OrderCounterCreateArgs} args - Arguments to create a OrderCounter.
+     * @example
+     * // Create one OrderCounter
+     * const OrderCounter = await prisma.orderCounter.create({
+     *   data: {
+     *     // ... data to create a OrderCounter
+     *   }
+     * })
+     * 
+     */
+    create<T extends OrderCounterCreateArgs>(args: SelectSubset<T, OrderCounterCreateArgs<ExtArgs>>): Prisma__OrderCounterClient<$Result.GetResult<Prisma.$OrderCounterPayload<ExtArgs>, T, "create", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Create many OrderCounters.
+     * @param {OrderCounterCreateManyArgs} args - Arguments to create many OrderCounters.
+     * @example
+     * // Create many OrderCounters
+     * const orderCounter = await prisma.orderCounter.createMany({
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     *     
+     */
+    createMany<T extends OrderCounterCreateManyArgs>(args?: SelectSubset<T, OrderCounterCreateManyArgs<ExtArgs>>): Prisma.PrismaPromise<BatchPayload>
+
+    /**
+     * Create many OrderCounters and returns the data saved in the database.
+     * @param {OrderCounterCreateManyAndReturnArgs} args - Arguments to create many OrderCounters.
+     * @example
+     * // Create many OrderCounters
+     * const orderCounter = await prisma.orderCounter.createManyAndReturn({
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     * 
+     * // Create many OrderCounters and only return the `cafeId`
+     * const orderCounterWithCafeIdOnly = await prisma.orderCounter.createManyAndReturn({
+     *   select: { cafeId: true },
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * 
+     */
+    createManyAndReturn<T extends OrderCounterCreateManyAndReturnArgs>(args?: SelectSubset<T, OrderCounterCreateManyAndReturnArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$OrderCounterPayload<ExtArgs>, T, "createManyAndReturn", GlobalOmitOptions>>
+
+    /**
+     * Delete a OrderCounter.
+     * @param {OrderCounterDeleteArgs} args - Arguments to delete one OrderCounter.
+     * @example
+     * // Delete one OrderCounter
+     * const OrderCounter = await prisma.orderCounter.delete({
+     *   where: {
+     *     // ... filter to delete one OrderCounter
+     *   }
+     * })
+     * 
+     */
+    delete<T extends OrderCounterDeleteArgs>(args: SelectSubset<T, OrderCounterDeleteArgs<ExtArgs>>): Prisma__OrderCounterClient<$Result.GetResult<Prisma.$OrderCounterPayload<ExtArgs>, T, "delete", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Update one OrderCounter.
+     * @param {OrderCounterUpdateArgs} args - Arguments to update one OrderCounter.
+     * @example
+     * // Update one OrderCounter
+     * const orderCounter = await prisma.orderCounter.update({
+     *   where: {
+     *     // ... provide filter here
+     *   },
+     *   data: {
+     *     // ... provide data here
+     *   }
+     * })
+     * 
+     */
+    update<T extends OrderCounterUpdateArgs>(args: SelectSubset<T, OrderCounterUpdateArgs<ExtArgs>>): Prisma__OrderCounterClient<$Result.GetResult<Prisma.$OrderCounterPayload<ExtArgs>, T, "update", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Delete zero or more OrderCounters.
+     * @param {OrderCounterDeleteManyArgs} args - Arguments to filter OrderCounters to delete.
+     * @example
+     * // Delete a few OrderCounters
+     * const { count } = await prisma.orderCounter.deleteMany({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     * 
+     */
+    deleteMany<T extends OrderCounterDeleteManyArgs>(args?: SelectSubset<T, OrderCounterDeleteManyArgs<ExtArgs>>): Prisma.PrismaPromise<BatchPayload>
+
+    /**
+     * Update zero or more OrderCounters.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {OrderCounterUpdateManyArgs} args - Arguments to update one or more rows.
+     * @example
+     * // Update many OrderCounters
+     * const orderCounter = await prisma.orderCounter.updateMany({
+     *   where: {
+     *     // ... provide filter here
+     *   },
+     *   data: {
+     *     // ... provide data here
+     *   }
+     * })
+     * 
+     */
+    updateMany<T extends OrderCounterUpdateManyArgs>(args: SelectSubset<T, OrderCounterUpdateManyArgs<ExtArgs>>): Prisma.PrismaPromise<BatchPayload>
+
+    /**
+     * Update zero or more OrderCounters and returns the data updated in the database.
+     * @param {OrderCounterUpdateManyAndReturnArgs} args - Arguments to update many OrderCounters.
+     * @example
+     * // Update many OrderCounters
+     * const orderCounter = await prisma.orderCounter.updateManyAndReturn({
+     *   where: {
+     *     // ... provide filter here
+     *   },
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     * 
+     * // Update zero or more OrderCounters and only return the `cafeId`
+     * const orderCounterWithCafeIdOnly = await prisma.orderCounter.updateManyAndReturn({
+     *   select: { cafeId: true },
+     *   where: {
+     *     // ... provide filter here
+     *   },
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * 
+     */
+    updateManyAndReturn<T extends OrderCounterUpdateManyAndReturnArgs>(args: SelectSubset<T, OrderCounterUpdateManyAndReturnArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$OrderCounterPayload<ExtArgs>, T, "updateManyAndReturn", GlobalOmitOptions>>
+
+    /**
+     * Create or update one OrderCounter.
+     * @param {OrderCounterUpsertArgs} args - Arguments to update or create a OrderCounter.
+     * @example
+     * // Update or create a OrderCounter
+     * const orderCounter = await prisma.orderCounter.upsert({
+     *   create: {
+     *     // ... data to create a OrderCounter
+     *   },
+     *   update: {
+     *     // ... in case it already exists, update
+     *   },
+     *   where: {
+     *     // ... the filter for the OrderCounter we want to update
+     *   }
+     * })
+     */
+    upsert<T extends OrderCounterUpsertArgs>(args: SelectSubset<T, OrderCounterUpsertArgs<ExtArgs>>): Prisma__OrderCounterClient<$Result.GetResult<Prisma.$OrderCounterPayload<ExtArgs>, T, "upsert", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+
+    /**
+     * Count the number of OrderCounters.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {OrderCounterCountArgs} args - Arguments to filter OrderCounters to count.
+     * @example
+     * // Count the number of OrderCounters
+     * const count = await prisma.orderCounter.count({
+     *   where: {
+     *     // ... the filter for the OrderCounters we want to count
+     *   }
+     * })
+    **/
+    count<T extends OrderCounterCountArgs>(
+      args?: Subset<T, OrderCounterCountArgs>,
+    ): Prisma.PrismaPromise<
+      T extends $Utils.Record<'select', any>
+        ? T['select'] extends true
+          ? number
+          : GetScalarType<T['select'], OrderCounterCountAggregateOutputType>
+        : number
+    >
+
+    /**
+     * Allows you to perform aggregations operations on a OrderCounter.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {OrderCounterAggregateArgs} args - Select which aggregations you would like to apply and on what fields.
+     * @example
+     * // Ordered by age ascending
+     * // Where email contains prisma.io
+     * // Limited to the 10 users
+     * const aggregations = await prisma.user.aggregate({
+     *   _avg: {
+     *     age: true,
+     *   },
+     *   where: {
+     *     email: {
+     *       contains: "prisma.io",
+     *     },
+     *   },
+     *   orderBy: {
+     *     age: "asc",
+     *   },
+     *   take: 10,
+     * })
+    **/
+    aggregate<T extends OrderCounterAggregateArgs>(args: Subset<T, OrderCounterAggregateArgs>): Prisma.PrismaPromise<GetOrderCounterAggregateType<T>>
+
+    /**
+     * Group by OrderCounter.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {OrderCounterGroupByArgs} args - Group by arguments.
+     * @example
+     * // Group by city, order by createdAt, get count
+     * const result = await prisma.user.groupBy({
+     *   by: ['city', 'createdAt'],
+     *   orderBy: {
+     *     createdAt: true
+     *   },
+     *   _count: {
+     *     _all: true
+     *   },
+     * })
+     * 
+    **/
+    groupBy<
+      T extends OrderCounterGroupByArgs,
+      HasSelectOrTake extends Or<
+        Extends<'skip', Keys<T>>,
+        Extends<'take', Keys<T>>
+      >,
+      OrderByArg extends True extends HasSelectOrTake
+        ? { orderBy: OrderCounterGroupByArgs['orderBy'] }
+        : { orderBy?: OrderCounterGroupByArgs['orderBy'] },
+      OrderFields extends ExcludeUnderscoreKeys<Keys<MaybeTupleToUnion<T['orderBy']>>>,
+      ByFields extends MaybeTupleToUnion<T['by']>,
+      ByValid extends Has<ByFields, OrderFields>,
+      HavingFields extends GetHavingFields<T['having']>,
+      HavingValid extends Has<ByFields, HavingFields>,
+      ByEmpty extends T['by'] extends never[] ? True : False,
+      InputErrors extends ByEmpty extends True
+      ? `Error: "by" must not be empty.`
+      : HavingValid extends False
+      ? {
+          [P in HavingFields]: P extends ByFields
+            ? never
+            : P extends string
+            ? `Error: Field "${P}" used in "having" needs to be provided in "by".`
+            : [
+                Error,
+                'Field ',
+                P,
+                ` in "having" needs to be provided in "by"`,
+              ]
+        }[HavingFields]
+      : 'take' extends Keys<T>
+      ? 'orderBy' extends Keys<T>
+        ? ByValid extends True
+          ? {}
+          : {
+              [P in OrderFields]: P extends ByFields
+                ? never
+                : `Error: Field "${P}" in "orderBy" needs to be provided in "by"`
+            }[OrderFields]
+        : 'Error: If you provide "take", you also need to provide "orderBy"'
+      : 'skip' extends Keys<T>
+      ? 'orderBy' extends Keys<T>
+        ? ByValid extends True
+          ? {}
+          : {
+              [P in OrderFields]: P extends ByFields
+                ? never
+                : `Error: Field "${P}" in "orderBy" needs to be provided in "by"`
+            }[OrderFields]
+        : 'Error: If you provide "skip", you also need to provide "orderBy"'
+      : ByValid extends True
+      ? {}
+      : {
+          [P in OrderFields]: P extends ByFields
+            ? never
+            : `Error: Field "${P}" in "orderBy" needs to be provided in "by"`
+        }[OrderFields]
+    >(args: SubsetIntersection<T, OrderCounterGroupByArgs, OrderByArg> & InputErrors): {} extends InputErrors ? GetOrderCounterGroupByPayload<T> : Prisma.PrismaPromise<InputErrors>
+  /**
+   * Fields of the OrderCounter model
+   */
+  readonly fields: OrderCounterFieldRefs;
+  }
+
+  /**
+   * The delegate class that acts as a "Promise-like" for OrderCounter.
+   * Why is this prefixed with `Prisma__`?
+   * Because we want to prevent naming conflicts as mentioned in
+   * https://github.com/prisma/prisma-client-js/issues/707
+   */
+  export interface Prisma__OrderCounterClient<T, Null = never, ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs, GlobalOmitOptions = {}> extends Prisma.PrismaPromise<T> {
+    readonly [Symbol.toStringTag]: "PrismaPromise"
+    cafe<T extends CafeDefaultArgs<ExtArgs> = {}>(args?: Subset<T, CafeDefaultArgs<ExtArgs>>): Prisma__CafeClient<$Result.GetResult<Prisma.$CafePayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | Null, Null, ExtArgs, GlobalOmitOptions>
+    /**
+     * Attaches callbacks for the resolution and/or rejection of the Promise.
+     * @param onfulfilled The callback to execute when the Promise is resolved.
+     * @param onrejected The callback to execute when the Promise is rejected.
+     * @returns A Promise for the completion of which ever callback is executed.
+     */
+    then<TResult1 = T, TResult2 = never>(onfulfilled?: ((value: T) => TResult1 | PromiseLike<TResult1>) | undefined | null, onrejected?: ((reason: any) => TResult2 | PromiseLike<TResult2>) | undefined | null): $Utils.JsPromise<TResult1 | TResult2>
+    /**
+     * Attaches a callback for only the rejection of the Promise.
+     * @param onrejected The callback to execute when the Promise is rejected.
+     * @returns A Promise for the completion of the callback.
+     */
+    catch<TResult = never>(onrejected?: ((reason: any) => TResult | PromiseLike<TResult>) | undefined | null): $Utils.JsPromise<T | TResult>
+    /**
+     * Attaches a callback that is invoked when the Promise is settled (fulfilled or rejected). The
+     * resolved value cannot be modified from the callback.
+     * @param onfinally The callback to execute when the Promise is settled (fulfilled or rejected).
+     * @returns A Promise for the completion of the callback.
+     */
+    finally(onfinally?: (() => void) | undefined | null): $Utils.JsPromise<T>
+  }
+
+
+
+
+  /**
+   * Fields of the OrderCounter model
+   */
+  interface OrderCounterFieldRefs {
+    readonly cafeId: FieldRef<"OrderCounter", 'String'>
+    readonly dateKey: FieldRef<"OrderCounter", 'String'>
+    readonly count: FieldRef<"OrderCounter", 'Int'>
+  }
+    
+
+  // Custom InputTypes
+  /**
+   * OrderCounter findUnique
+   */
+  export type OrderCounterFindUniqueArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the OrderCounter
+     */
+    select?: OrderCounterSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the OrderCounter
+     */
+    omit?: OrderCounterOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: OrderCounterInclude<ExtArgs> | null
+    /**
+     * Filter, which OrderCounter to fetch.
+     */
+    where: OrderCounterWhereUniqueInput
+  }
+
+  /**
+   * OrderCounter findUniqueOrThrow
+   */
+  export type OrderCounterFindUniqueOrThrowArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the OrderCounter
+     */
+    select?: OrderCounterSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the OrderCounter
+     */
+    omit?: OrderCounterOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: OrderCounterInclude<ExtArgs> | null
+    /**
+     * Filter, which OrderCounter to fetch.
+     */
+    where: OrderCounterWhereUniqueInput
+  }
+
+  /**
+   * OrderCounter findFirst
+   */
+  export type OrderCounterFindFirstArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the OrderCounter
+     */
+    select?: OrderCounterSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the OrderCounter
+     */
+    omit?: OrderCounterOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: OrderCounterInclude<ExtArgs> | null
+    /**
+     * Filter, which OrderCounter to fetch.
+     */
+    where?: OrderCounterWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of OrderCounters to fetch.
+     */
+    orderBy?: OrderCounterOrderByWithRelationInput | OrderCounterOrderByWithRelationInput[]
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the position for searching for OrderCounters.
+     */
+    cursor?: OrderCounterWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` OrderCounters from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` OrderCounters.
+     */
+    skip?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/distinct Distinct Docs}
+     * 
+     * Filter by unique combinations of OrderCounters.
+     */
+    distinct?: OrderCounterScalarFieldEnum | OrderCounterScalarFieldEnum[]
+  }
+
+  /**
+   * OrderCounter findFirstOrThrow
+   */
+  export type OrderCounterFindFirstOrThrowArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the OrderCounter
+     */
+    select?: OrderCounterSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the OrderCounter
+     */
+    omit?: OrderCounterOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: OrderCounterInclude<ExtArgs> | null
+    /**
+     * Filter, which OrderCounter to fetch.
+     */
+    where?: OrderCounterWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of OrderCounters to fetch.
+     */
+    orderBy?: OrderCounterOrderByWithRelationInput | OrderCounterOrderByWithRelationInput[]
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the position for searching for OrderCounters.
+     */
+    cursor?: OrderCounterWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` OrderCounters from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` OrderCounters.
+     */
+    skip?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/distinct Distinct Docs}
+     * 
+     * Filter by unique combinations of OrderCounters.
+     */
+    distinct?: OrderCounterScalarFieldEnum | OrderCounterScalarFieldEnum[]
+  }
+
+  /**
+   * OrderCounter findMany
+   */
+  export type OrderCounterFindManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the OrderCounter
+     */
+    select?: OrderCounterSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the OrderCounter
+     */
+    omit?: OrderCounterOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: OrderCounterInclude<ExtArgs> | null
+    /**
+     * Filter, which OrderCounters to fetch.
+     */
+    where?: OrderCounterWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of OrderCounters to fetch.
+     */
+    orderBy?: OrderCounterOrderByWithRelationInput | OrderCounterOrderByWithRelationInput[]
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the position for listing OrderCounters.
+     */
+    cursor?: OrderCounterWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` OrderCounters from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` OrderCounters.
+     */
+    skip?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/distinct Distinct Docs}
+     * 
+     * Filter by unique combinations of OrderCounters.
+     */
+    distinct?: OrderCounterScalarFieldEnum | OrderCounterScalarFieldEnum[]
+  }
+
+  /**
+   * OrderCounter create
+   */
+  export type OrderCounterCreateArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the OrderCounter
+     */
+    select?: OrderCounterSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the OrderCounter
+     */
+    omit?: OrderCounterOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: OrderCounterInclude<ExtArgs> | null
+    /**
+     * The data needed to create a OrderCounter.
+     */
+    data: XOR<OrderCounterCreateInput, OrderCounterUncheckedCreateInput>
+  }
+
+  /**
+   * OrderCounter createMany
+   */
+  export type OrderCounterCreateManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * The data used to create many OrderCounters.
+     */
+    data: OrderCounterCreateManyInput | OrderCounterCreateManyInput[]
+    skipDuplicates?: boolean
+  }
+
+  /**
+   * OrderCounter createManyAndReturn
+   */
+  export type OrderCounterCreateManyAndReturnArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the OrderCounter
+     */
+    select?: OrderCounterSelectCreateManyAndReturn<ExtArgs> | null
+    /**
+     * Omit specific fields from the OrderCounter
+     */
+    omit?: OrderCounterOmit<ExtArgs> | null
+    /**
+     * The data used to create many OrderCounters.
+     */
+    data: OrderCounterCreateManyInput | OrderCounterCreateManyInput[]
+    skipDuplicates?: boolean
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: OrderCounterIncludeCreateManyAndReturn<ExtArgs> | null
+  }
+
+  /**
+   * OrderCounter update
+   */
+  export type OrderCounterUpdateArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the OrderCounter
+     */
+    select?: OrderCounterSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the OrderCounter
+     */
+    omit?: OrderCounterOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: OrderCounterInclude<ExtArgs> | null
+    /**
+     * The data needed to update a OrderCounter.
+     */
+    data: XOR<OrderCounterUpdateInput, OrderCounterUncheckedUpdateInput>
+    /**
+     * Choose, which OrderCounter to update.
+     */
+    where: OrderCounterWhereUniqueInput
+  }
+
+  /**
+   * OrderCounter updateMany
+   */
+  export type OrderCounterUpdateManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * The data used to update OrderCounters.
+     */
+    data: XOR<OrderCounterUpdateManyMutationInput, OrderCounterUncheckedUpdateManyInput>
+    /**
+     * Filter which OrderCounters to update
+     */
+    where?: OrderCounterWhereInput
+    /**
+     * Limit how many OrderCounters to update.
+     */
+    limit?: number
+  }
+
+  /**
+   * OrderCounter updateManyAndReturn
+   */
+  export type OrderCounterUpdateManyAndReturnArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the OrderCounter
+     */
+    select?: OrderCounterSelectUpdateManyAndReturn<ExtArgs> | null
+    /**
+     * Omit specific fields from the OrderCounter
+     */
+    omit?: OrderCounterOmit<ExtArgs> | null
+    /**
+     * The data used to update OrderCounters.
+     */
+    data: XOR<OrderCounterUpdateManyMutationInput, OrderCounterUncheckedUpdateManyInput>
+    /**
+     * Filter which OrderCounters to update
+     */
+    where?: OrderCounterWhereInput
+    /**
+     * Limit how many OrderCounters to update.
+     */
+    limit?: number
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: OrderCounterIncludeUpdateManyAndReturn<ExtArgs> | null
+  }
+
+  /**
+   * OrderCounter upsert
+   */
+  export type OrderCounterUpsertArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the OrderCounter
+     */
+    select?: OrderCounterSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the OrderCounter
+     */
+    omit?: OrderCounterOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: OrderCounterInclude<ExtArgs> | null
+    /**
+     * The filter to search for the OrderCounter to update in case it exists.
+     */
+    where: OrderCounterWhereUniqueInput
+    /**
+     * In case the OrderCounter found by the `where` argument doesn't exist, create a new OrderCounter with this data.
+     */
+    create: XOR<OrderCounterCreateInput, OrderCounterUncheckedCreateInput>
+    /**
+     * In case the OrderCounter was found with the provided `where` argument, update it with this data.
+     */
+    update: XOR<OrderCounterUpdateInput, OrderCounterUncheckedUpdateInput>
+  }
+
+  /**
+   * OrderCounter delete
+   */
+  export type OrderCounterDeleteArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the OrderCounter
+     */
+    select?: OrderCounterSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the OrderCounter
+     */
+    omit?: OrderCounterOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: OrderCounterInclude<ExtArgs> | null
+    /**
+     * Filter which OrderCounter to delete.
+     */
+    where: OrderCounterWhereUniqueInput
+  }
+
+  /**
+   * OrderCounter deleteMany
+   */
+  export type OrderCounterDeleteManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Filter which OrderCounters to delete
+     */
+    where?: OrderCounterWhereInput
+    /**
+     * Limit how many OrderCounters to delete.
+     */
+    limit?: number
+  }
+
+  /**
+   * OrderCounter without action
+   */
+  export type OrderCounterDefaultArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the OrderCounter
+     */
+    select?: OrderCounterSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the OrderCounter
+     */
+    omit?: OrderCounterOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: OrderCounterInclude<ExtArgs> | null
+  }
+
+
+  /**
    * Model Payment
    */
 
@@ -15236,6 +16435,15 @@ export namespace Prisma {
   export type OrderItemScalarFieldEnum = (typeof OrderItemScalarFieldEnum)[keyof typeof OrderItemScalarFieldEnum]
 
 
+  export const OrderCounterScalarFieldEnum: {
+    cafeId: 'cafeId',
+    dateKey: 'dateKey',
+    count: 'count'
+  };
+
+  export type OrderCounterScalarFieldEnum = (typeof OrderCounterScalarFieldEnum)[keyof typeof OrderCounterScalarFieldEnum]
+
+
   export const PaymentScalarFieldEnum: {
     id: 'id',
     orderId: 'orderId',
@@ -15501,6 +16709,7 @@ export namespace Prisma {
     tables?: TableListRelationFilter
     staff?: StaffListRelationFilter
     expenses?: ExpenseListRelationFilter
+    orderCounters?: OrderCounterListRelationFilter
   }
 
   export type CafeOrderByWithRelationInput = {
@@ -15525,6 +16734,7 @@ export namespace Prisma {
     tables?: TableOrderByRelationAggregateInput
     staff?: StaffOrderByRelationAggregateInput
     expenses?: ExpenseOrderByRelationAggregateInput
+    orderCounters?: OrderCounterOrderByRelationAggregateInput
   }
 
   export type CafeWhereUniqueInput = Prisma.AtLeast<{
@@ -15552,6 +16762,7 @@ export namespace Prisma {
     tables?: TableListRelationFilter
     staff?: StaffListRelationFilter
     expenses?: ExpenseListRelationFilter
+    orderCounters?: OrderCounterListRelationFilter
   }, "id" | "slug">
 
   export type CafeOrderByWithAggregationInput = {
@@ -15880,12 +17091,12 @@ export namespace Prisma {
 
   export type OrderWhereUniqueInput = Prisma.AtLeast<{
     id?: string
+    orderNumber?: string
     idempotencyKey?: string
     AND?: OrderWhereInput | OrderWhereInput[]
     OR?: OrderWhereInput[]
     NOT?: OrderWhereInput | OrderWhereInput[]
     cafeId?: StringFilter<"Order"> | string
-    orderNumber?: StringFilter<"Order"> | string
     status?: EnumOrderStatusFilter<"Order"> | $Enums.OrderStatus
     totalPaise?: IntFilter<"Order"> | number
     customerName?: StringNullableFilter<"Order"> | string | null
@@ -15899,7 +17110,7 @@ export namespace Prisma {
     table?: XOR<TableNullableScalarRelationFilter, TableWhereInput> | null
     items?: OrderItemListRelationFilter
     payments?: PaymentListRelationFilter
-  }, "id" | "idempotencyKey">
+  }, "id" | "orderNumber" | "idempotencyKey">
 
   export type OrderOrderByWithAggregationInput = {
     id?: SortOrder
@@ -16009,6 +17220,54 @@ export namespace Prisma {
     itemPricePaise?: IntWithAggregatesFilter<"OrderItem"> | number
     quantity?: IntWithAggregatesFilter<"OrderItem"> | number
     subtotalPaise?: IntWithAggregatesFilter<"OrderItem"> | number
+  }
+
+  export type OrderCounterWhereInput = {
+    AND?: OrderCounterWhereInput | OrderCounterWhereInput[]
+    OR?: OrderCounterWhereInput[]
+    NOT?: OrderCounterWhereInput | OrderCounterWhereInput[]
+    cafeId?: StringFilter<"OrderCounter"> | string
+    dateKey?: StringFilter<"OrderCounter"> | string
+    count?: IntFilter<"OrderCounter"> | number
+    cafe?: XOR<CafeScalarRelationFilter, CafeWhereInput>
+  }
+
+  export type OrderCounterOrderByWithRelationInput = {
+    cafeId?: SortOrder
+    dateKey?: SortOrder
+    count?: SortOrder
+    cafe?: CafeOrderByWithRelationInput
+  }
+
+  export type OrderCounterWhereUniqueInput = Prisma.AtLeast<{
+    cafeId_dateKey?: OrderCounterCafeIdDateKeyCompoundUniqueInput
+    AND?: OrderCounterWhereInput | OrderCounterWhereInput[]
+    OR?: OrderCounterWhereInput[]
+    NOT?: OrderCounterWhereInput | OrderCounterWhereInput[]
+    cafeId?: StringFilter<"OrderCounter"> | string
+    dateKey?: StringFilter<"OrderCounter"> | string
+    count?: IntFilter<"OrderCounter"> | number
+    cafe?: XOR<CafeScalarRelationFilter, CafeWhereInput>
+  }, "cafeId_dateKey">
+
+  export type OrderCounterOrderByWithAggregationInput = {
+    cafeId?: SortOrder
+    dateKey?: SortOrder
+    count?: SortOrder
+    _count?: OrderCounterCountOrderByAggregateInput
+    _avg?: OrderCounterAvgOrderByAggregateInput
+    _max?: OrderCounterMaxOrderByAggregateInput
+    _min?: OrderCounterMinOrderByAggregateInput
+    _sum?: OrderCounterSumOrderByAggregateInput
+  }
+
+  export type OrderCounterScalarWhereWithAggregatesInput = {
+    AND?: OrderCounterScalarWhereWithAggregatesInput | OrderCounterScalarWhereWithAggregatesInput[]
+    OR?: OrderCounterScalarWhereWithAggregatesInput[]
+    NOT?: OrderCounterScalarWhereWithAggregatesInput | OrderCounterScalarWhereWithAggregatesInput[]
+    cafeId?: StringWithAggregatesFilter<"OrderCounter"> | string
+    dateKey?: StringWithAggregatesFilter<"OrderCounter"> | string
+    count?: IntWithAggregatesFilter<"OrderCounter"> | number
   }
 
   export type PaymentWhereInput = {
@@ -16402,6 +17661,7 @@ export namespace Prisma {
     tables?: TableCreateNestedManyWithoutCafeInput
     staff?: StaffCreateNestedManyWithoutCafeInput
     expenses?: ExpenseCreateNestedManyWithoutCafeInput
+    orderCounters?: OrderCounterCreateNestedManyWithoutCafeInput
   }
 
   export type CafeUncheckedCreateInput = {
@@ -16426,6 +17686,7 @@ export namespace Prisma {
     tables?: TableUncheckedCreateNestedManyWithoutCafeInput
     staff?: StaffUncheckedCreateNestedManyWithoutCafeInput
     expenses?: ExpenseUncheckedCreateNestedManyWithoutCafeInput
+    orderCounters?: OrderCounterUncheckedCreateNestedManyWithoutCafeInput
   }
 
   export type CafeUpdateInput = {
@@ -16450,6 +17711,7 @@ export namespace Prisma {
     tables?: TableUpdateManyWithoutCafeNestedInput
     staff?: StaffUpdateManyWithoutCafeNestedInput
     expenses?: ExpenseUpdateManyWithoutCafeNestedInput
+    orderCounters?: OrderCounterUpdateManyWithoutCafeNestedInput
   }
 
   export type CafeUncheckedUpdateInput = {
@@ -16474,6 +17736,7 @@ export namespace Prisma {
     tables?: TableUncheckedUpdateManyWithoutCafeNestedInput
     staff?: StaffUncheckedUpdateManyWithoutCafeNestedInput
     expenses?: ExpenseUncheckedUpdateManyWithoutCafeNestedInput
+    orderCounters?: OrderCounterUncheckedUpdateManyWithoutCafeNestedInput
   }
 
   export type CafeCreateManyInput = {
@@ -16973,6 +18236,47 @@ export namespace Prisma {
     subtotalPaise?: IntFieldUpdateOperationsInput | number
   }
 
+  export type OrderCounterCreateInput = {
+    dateKey: string
+    count?: number
+    cafe: CafeCreateNestedOneWithoutOrderCountersInput
+  }
+
+  export type OrderCounterUncheckedCreateInput = {
+    cafeId: string
+    dateKey: string
+    count?: number
+  }
+
+  export type OrderCounterUpdateInput = {
+    dateKey?: StringFieldUpdateOperationsInput | string
+    count?: IntFieldUpdateOperationsInput | number
+    cafe?: CafeUpdateOneRequiredWithoutOrderCountersNestedInput
+  }
+
+  export type OrderCounterUncheckedUpdateInput = {
+    cafeId?: StringFieldUpdateOperationsInput | string
+    dateKey?: StringFieldUpdateOperationsInput | string
+    count?: IntFieldUpdateOperationsInput | number
+  }
+
+  export type OrderCounterCreateManyInput = {
+    cafeId: string
+    dateKey: string
+    count?: number
+  }
+
+  export type OrderCounterUpdateManyMutationInput = {
+    dateKey?: StringFieldUpdateOperationsInput | string
+    count?: IntFieldUpdateOperationsInput | number
+  }
+
+  export type OrderCounterUncheckedUpdateManyInput = {
+    cafeId?: StringFieldUpdateOperationsInput | string
+    dateKey?: StringFieldUpdateOperationsInput | string
+    count?: IntFieldUpdateOperationsInput | number
+  }
+
   export type PaymentCreateInput = {
     id?: string
     amountPaise: number
@@ -17459,6 +18763,12 @@ export namespace Prisma {
     none?: ExpenseWhereInput
   }
 
+  export type OrderCounterListRelationFilter = {
+    every?: OrderCounterWhereInput
+    some?: OrderCounterWhereInput
+    none?: OrderCounterWhereInput
+  }
+
   export type SortOrderInput = {
     sort: SortOrder
     nulls?: NullsOrder
@@ -17489,6 +18799,10 @@ export namespace Prisma {
   }
 
   export type ExpenseOrderByRelationAggregateInput = {
+    _count?: SortOrder
+  }
+
+  export type OrderCounterOrderByRelationAggregateInput = {
     _count?: SortOrder
   }
 
@@ -17946,6 +19260,37 @@ export namespace Prisma {
     subtotalPaise?: SortOrder
   }
 
+  export type OrderCounterCafeIdDateKeyCompoundUniqueInput = {
+    cafeId: string
+    dateKey: string
+  }
+
+  export type OrderCounterCountOrderByAggregateInput = {
+    cafeId?: SortOrder
+    dateKey?: SortOrder
+    count?: SortOrder
+  }
+
+  export type OrderCounterAvgOrderByAggregateInput = {
+    count?: SortOrder
+  }
+
+  export type OrderCounterMaxOrderByAggregateInput = {
+    cafeId?: SortOrder
+    dateKey?: SortOrder
+    count?: SortOrder
+  }
+
+  export type OrderCounterMinOrderByAggregateInput = {
+    cafeId?: SortOrder
+    dateKey?: SortOrder
+    count?: SortOrder
+  }
+
+  export type OrderCounterSumOrderByAggregateInput = {
+    count?: SortOrder
+  }
+
   export type EnumPaymentStatusFilter<$PrismaModel = never> = {
     equals?: $Enums.PaymentStatus | EnumPaymentStatusFieldRefInput<$PrismaModel>
     in?: $Enums.PaymentStatus[] | ListEnumPaymentStatusFieldRefInput<$PrismaModel>
@@ -18280,6 +19625,13 @@ export namespace Prisma {
     connect?: ExpenseWhereUniqueInput | ExpenseWhereUniqueInput[]
   }
 
+  export type OrderCounterCreateNestedManyWithoutCafeInput = {
+    create?: XOR<OrderCounterCreateWithoutCafeInput, OrderCounterUncheckedCreateWithoutCafeInput> | OrderCounterCreateWithoutCafeInput[] | OrderCounterUncheckedCreateWithoutCafeInput[]
+    connectOrCreate?: OrderCounterCreateOrConnectWithoutCafeInput | OrderCounterCreateOrConnectWithoutCafeInput[]
+    createMany?: OrderCounterCreateManyCafeInputEnvelope
+    connect?: OrderCounterWhereUniqueInput | OrderCounterWhereUniqueInput[]
+  }
+
   export type UserUncheckedCreateNestedManyWithoutCafeInput = {
     create?: XOR<UserCreateWithoutCafeInput, UserUncheckedCreateWithoutCafeInput> | UserCreateWithoutCafeInput[] | UserUncheckedCreateWithoutCafeInput[]
     connectOrCreate?: UserCreateOrConnectWithoutCafeInput | UserCreateOrConnectWithoutCafeInput[]
@@ -18327,6 +19679,13 @@ export namespace Prisma {
     connectOrCreate?: ExpenseCreateOrConnectWithoutCafeInput | ExpenseCreateOrConnectWithoutCafeInput[]
     createMany?: ExpenseCreateManyCafeInputEnvelope
     connect?: ExpenseWhereUniqueInput | ExpenseWhereUniqueInput[]
+  }
+
+  export type OrderCounterUncheckedCreateNestedManyWithoutCafeInput = {
+    create?: XOR<OrderCounterCreateWithoutCafeInput, OrderCounterUncheckedCreateWithoutCafeInput> | OrderCounterCreateWithoutCafeInput[] | OrderCounterUncheckedCreateWithoutCafeInput[]
+    connectOrCreate?: OrderCounterCreateOrConnectWithoutCafeInput | OrderCounterCreateOrConnectWithoutCafeInput[]
+    createMany?: OrderCounterCreateManyCafeInputEnvelope
+    connect?: OrderCounterWhereUniqueInput | OrderCounterWhereUniqueInput[]
   }
 
   export type StringFieldUpdateOperationsInput = {
@@ -18443,6 +19802,20 @@ export namespace Prisma {
     deleteMany?: ExpenseScalarWhereInput | ExpenseScalarWhereInput[]
   }
 
+  export type OrderCounterUpdateManyWithoutCafeNestedInput = {
+    create?: XOR<OrderCounterCreateWithoutCafeInput, OrderCounterUncheckedCreateWithoutCafeInput> | OrderCounterCreateWithoutCafeInput[] | OrderCounterUncheckedCreateWithoutCafeInput[]
+    connectOrCreate?: OrderCounterCreateOrConnectWithoutCafeInput | OrderCounterCreateOrConnectWithoutCafeInput[]
+    upsert?: OrderCounterUpsertWithWhereUniqueWithoutCafeInput | OrderCounterUpsertWithWhereUniqueWithoutCafeInput[]
+    createMany?: OrderCounterCreateManyCafeInputEnvelope
+    set?: OrderCounterWhereUniqueInput | OrderCounterWhereUniqueInput[]
+    disconnect?: OrderCounterWhereUniqueInput | OrderCounterWhereUniqueInput[]
+    delete?: OrderCounterWhereUniqueInput | OrderCounterWhereUniqueInput[]
+    connect?: OrderCounterWhereUniqueInput | OrderCounterWhereUniqueInput[]
+    update?: OrderCounterUpdateWithWhereUniqueWithoutCafeInput | OrderCounterUpdateWithWhereUniqueWithoutCafeInput[]
+    updateMany?: OrderCounterUpdateManyWithWhereWithoutCafeInput | OrderCounterUpdateManyWithWhereWithoutCafeInput[]
+    deleteMany?: OrderCounterScalarWhereInput | OrderCounterScalarWhereInput[]
+  }
+
   export type UserUncheckedUpdateManyWithoutCafeNestedInput = {
     create?: XOR<UserCreateWithoutCafeInput, UserUncheckedCreateWithoutCafeInput> | UserCreateWithoutCafeInput[] | UserUncheckedCreateWithoutCafeInput[]
     connectOrCreate?: UserCreateOrConnectWithoutCafeInput | UserCreateOrConnectWithoutCafeInput[]
@@ -18539,6 +19912,20 @@ export namespace Prisma {
     update?: ExpenseUpdateWithWhereUniqueWithoutCafeInput | ExpenseUpdateWithWhereUniqueWithoutCafeInput[]
     updateMany?: ExpenseUpdateManyWithWhereWithoutCafeInput | ExpenseUpdateManyWithWhereWithoutCafeInput[]
     deleteMany?: ExpenseScalarWhereInput | ExpenseScalarWhereInput[]
+  }
+
+  export type OrderCounterUncheckedUpdateManyWithoutCafeNestedInput = {
+    create?: XOR<OrderCounterCreateWithoutCafeInput, OrderCounterUncheckedCreateWithoutCafeInput> | OrderCounterCreateWithoutCafeInput[] | OrderCounterUncheckedCreateWithoutCafeInput[]
+    connectOrCreate?: OrderCounterCreateOrConnectWithoutCafeInput | OrderCounterCreateOrConnectWithoutCafeInput[]
+    upsert?: OrderCounterUpsertWithWhereUniqueWithoutCafeInput | OrderCounterUpsertWithWhereUniqueWithoutCafeInput[]
+    createMany?: OrderCounterCreateManyCafeInputEnvelope
+    set?: OrderCounterWhereUniqueInput | OrderCounterWhereUniqueInput[]
+    disconnect?: OrderCounterWhereUniqueInput | OrderCounterWhereUniqueInput[]
+    delete?: OrderCounterWhereUniqueInput | OrderCounterWhereUniqueInput[]
+    connect?: OrderCounterWhereUniqueInput | OrderCounterWhereUniqueInput[]
+    update?: OrderCounterUpdateWithWhereUniqueWithoutCafeInput | OrderCounterUpdateWithWhereUniqueWithoutCafeInput[]
+    updateMany?: OrderCounterUpdateManyWithWhereWithoutCafeInput | OrderCounterUpdateManyWithWhereWithoutCafeInput[]
+    deleteMany?: OrderCounterScalarWhereInput | OrderCounterScalarWhereInput[]
   }
 
   export type CafeCreateNestedOneWithoutUsersInput = {
@@ -18887,6 +20274,20 @@ export namespace Prisma {
     upsert?: MenuItemUpsertWithoutOrderItemsInput
     connect?: MenuItemWhereUniqueInput
     update?: XOR<XOR<MenuItemUpdateToOneWithWhereWithoutOrderItemsInput, MenuItemUpdateWithoutOrderItemsInput>, MenuItemUncheckedUpdateWithoutOrderItemsInput>
+  }
+
+  export type CafeCreateNestedOneWithoutOrderCountersInput = {
+    create?: XOR<CafeCreateWithoutOrderCountersInput, CafeUncheckedCreateWithoutOrderCountersInput>
+    connectOrCreate?: CafeCreateOrConnectWithoutOrderCountersInput
+    connect?: CafeWhereUniqueInput
+  }
+
+  export type CafeUpdateOneRequiredWithoutOrderCountersNestedInput = {
+    create?: XOR<CafeCreateWithoutOrderCountersInput, CafeUncheckedCreateWithoutOrderCountersInput>
+    connectOrCreate?: CafeCreateOrConnectWithoutOrderCountersInput
+    upsert?: CafeUpsertWithoutOrderCountersInput
+    connect?: CafeWhereUniqueInput
+    update?: XOR<XOR<CafeUpdateToOneWithWhereWithoutOrderCountersInput, CafeUpdateWithoutOrderCountersInput>, CafeUncheckedUpdateWithoutOrderCountersInput>
   }
 
   export type OrderCreateNestedOneWithoutPaymentsInput = {
@@ -19493,6 +20894,26 @@ export namespace Prisma {
     skipDuplicates?: boolean
   }
 
+  export type OrderCounterCreateWithoutCafeInput = {
+    dateKey: string
+    count?: number
+  }
+
+  export type OrderCounterUncheckedCreateWithoutCafeInput = {
+    dateKey: string
+    count?: number
+  }
+
+  export type OrderCounterCreateOrConnectWithoutCafeInput = {
+    where: OrderCounterWhereUniqueInput
+    create: XOR<OrderCounterCreateWithoutCafeInput, OrderCounterUncheckedCreateWithoutCafeInput>
+  }
+
+  export type OrderCounterCreateManyCafeInputEnvelope = {
+    data: OrderCounterCreateManyCafeInput | OrderCounterCreateManyCafeInput[]
+    skipDuplicates?: boolean
+  }
+
   export type UserUpsertWithWhereUniqueWithoutCafeInput = {
     where: UserWhereUniqueInput
     update: XOR<UserUpdateWithoutCafeInput, UserUncheckedUpdateWithoutCafeInput>
@@ -19709,6 +21130,31 @@ export namespace Prisma {
     updatedAt?: DateTimeFilter<"Expense"> | Date | string
   }
 
+  export type OrderCounterUpsertWithWhereUniqueWithoutCafeInput = {
+    where: OrderCounterWhereUniqueInput
+    update: XOR<OrderCounterUpdateWithoutCafeInput, OrderCounterUncheckedUpdateWithoutCafeInput>
+    create: XOR<OrderCounterCreateWithoutCafeInput, OrderCounterUncheckedCreateWithoutCafeInput>
+  }
+
+  export type OrderCounterUpdateWithWhereUniqueWithoutCafeInput = {
+    where: OrderCounterWhereUniqueInput
+    data: XOR<OrderCounterUpdateWithoutCafeInput, OrderCounterUncheckedUpdateWithoutCafeInput>
+  }
+
+  export type OrderCounterUpdateManyWithWhereWithoutCafeInput = {
+    where: OrderCounterScalarWhereInput
+    data: XOR<OrderCounterUpdateManyMutationInput, OrderCounterUncheckedUpdateManyWithoutCafeInput>
+  }
+
+  export type OrderCounterScalarWhereInput = {
+    AND?: OrderCounterScalarWhereInput | OrderCounterScalarWhereInput[]
+    OR?: OrderCounterScalarWhereInput[]
+    NOT?: OrderCounterScalarWhereInput | OrderCounterScalarWhereInput[]
+    cafeId?: StringFilter<"OrderCounter"> | string
+    dateKey?: StringFilter<"OrderCounter"> | string
+    count?: IntFilter<"OrderCounter"> | number
+  }
+
   export type CafeCreateWithoutUsersInput = {
     id?: string
     name: string
@@ -19730,6 +21176,7 @@ export namespace Prisma {
     tables?: TableCreateNestedManyWithoutCafeInput
     staff?: StaffCreateNestedManyWithoutCafeInput
     expenses?: ExpenseCreateNestedManyWithoutCafeInput
+    orderCounters?: OrderCounterCreateNestedManyWithoutCafeInput
   }
 
   export type CafeUncheckedCreateWithoutUsersInput = {
@@ -19753,6 +21200,7 @@ export namespace Prisma {
     tables?: TableUncheckedCreateNestedManyWithoutCafeInput
     staff?: StaffUncheckedCreateNestedManyWithoutCafeInput
     expenses?: ExpenseUncheckedCreateNestedManyWithoutCafeInput
+    orderCounters?: OrderCounterUncheckedCreateNestedManyWithoutCafeInput
   }
 
   export type CafeCreateOrConnectWithoutUsersInput = {
@@ -19822,6 +21270,7 @@ export namespace Prisma {
     tables?: TableUpdateManyWithoutCafeNestedInput
     staff?: StaffUpdateManyWithoutCafeNestedInput
     expenses?: ExpenseUpdateManyWithoutCafeNestedInput
+    orderCounters?: OrderCounterUpdateManyWithoutCafeNestedInput
   }
 
   export type CafeUncheckedUpdateWithoutUsersInput = {
@@ -19845,6 +21294,7 @@ export namespace Prisma {
     tables?: TableUncheckedUpdateManyWithoutCafeNestedInput
     staff?: StaffUncheckedUpdateManyWithoutCafeNestedInput
     expenses?: ExpenseUncheckedUpdateManyWithoutCafeNestedInput
+    orderCounters?: OrderCounterUncheckedUpdateManyWithoutCafeNestedInput
   }
 
   export type AuditLogUpsertWithWhereUniqueWithoutActorInput = {
@@ -19898,6 +21348,7 @@ export namespace Prisma {
     tables?: TableCreateNestedManyWithoutCafeInput
     staff?: StaffCreateNestedManyWithoutCafeInput
     expenses?: ExpenseCreateNestedManyWithoutCafeInput
+    orderCounters?: OrderCounterCreateNestedManyWithoutCafeInput
   }
 
   export type CafeUncheckedCreateWithoutCategoriesInput = {
@@ -19921,6 +21372,7 @@ export namespace Prisma {
     tables?: TableUncheckedCreateNestedManyWithoutCafeInput
     staff?: StaffUncheckedCreateNestedManyWithoutCafeInput
     expenses?: ExpenseUncheckedCreateNestedManyWithoutCafeInput
+    orderCounters?: OrderCounterUncheckedCreateNestedManyWithoutCafeInput
   }
 
   export type CafeCreateOrConnectWithoutCategoriesInput = {
@@ -20000,6 +21452,7 @@ export namespace Prisma {
     tables?: TableUpdateManyWithoutCafeNestedInput
     staff?: StaffUpdateManyWithoutCafeNestedInput
     expenses?: ExpenseUpdateManyWithoutCafeNestedInput
+    orderCounters?: OrderCounterUpdateManyWithoutCafeNestedInput
   }
 
   export type CafeUncheckedUpdateWithoutCategoriesInput = {
@@ -20023,6 +21476,7 @@ export namespace Prisma {
     tables?: TableUncheckedUpdateManyWithoutCafeNestedInput
     staff?: StaffUncheckedUpdateManyWithoutCafeNestedInput
     expenses?: ExpenseUncheckedUpdateManyWithoutCafeNestedInput
+    orderCounters?: OrderCounterUncheckedUpdateManyWithoutCafeNestedInput
   }
 
   export type MenuItemUpsertWithWhereUniqueWithoutCategoryInput = {
@@ -20062,6 +21516,7 @@ export namespace Prisma {
     tables?: TableCreateNestedManyWithoutCafeInput
     staff?: StaffCreateNestedManyWithoutCafeInput
     expenses?: ExpenseCreateNestedManyWithoutCafeInput
+    orderCounters?: OrderCounterCreateNestedManyWithoutCafeInput
   }
 
   export type CafeUncheckedCreateWithoutMenuItemsInput = {
@@ -20085,6 +21540,7 @@ export namespace Prisma {
     tables?: TableUncheckedCreateNestedManyWithoutCafeInput
     staff?: StaffUncheckedCreateNestedManyWithoutCafeInput
     expenses?: ExpenseUncheckedCreateNestedManyWithoutCafeInput
+    orderCounters?: OrderCounterUncheckedCreateNestedManyWithoutCafeInput
   }
 
   export type CafeCreateOrConnectWithoutMenuItemsInput = {
@@ -20175,6 +21631,7 @@ export namespace Prisma {
     tables?: TableUpdateManyWithoutCafeNestedInput
     staff?: StaffUpdateManyWithoutCafeNestedInput
     expenses?: ExpenseUpdateManyWithoutCafeNestedInput
+    orderCounters?: OrderCounterUpdateManyWithoutCafeNestedInput
   }
 
   export type CafeUncheckedUpdateWithoutMenuItemsInput = {
@@ -20198,6 +21655,7 @@ export namespace Prisma {
     tables?: TableUncheckedUpdateManyWithoutCafeNestedInput
     staff?: StaffUncheckedUpdateManyWithoutCafeNestedInput
     expenses?: ExpenseUncheckedUpdateManyWithoutCafeNestedInput
+    orderCounters?: OrderCounterUncheckedUpdateManyWithoutCafeNestedInput
   }
 
   export type MenuCategoryUpsertWithoutItemsInput = {
@@ -20279,6 +21737,7 @@ export namespace Prisma {
     tables?: TableCreateNestedManyWithoutCafeInput
     staff?: StaffCreateNestedManyWithoutCafeInput
     expenses?: ExpenseCreateNestedManyWithoutCafeInput
+    orderCounters?: OrderCounterCreateNestedManyWithoutCafeInput
   }
 
   export type CafeUncheckedCreateWithoutOrdersInput = {
@@ -20302,6 +21761,7 @@ export namespace Prisma {
     tables?: TableUncheckedCreateNestedManyWithoutCafeInput
     staff?: StaffUncheckedCreateNestedManyWithoutCafeInput
     expenses?: ExpenseUncheckedCreateNestedManyWithoutCafeInput
+    orderCounters?: OrderCounterUncheckedCreateNestedManyWithoutCafeInput
   }
 
   export type CafeCreateOrConnectWithoutOrdersInput = {
@@ -20428,6 +21888,7 @@ export namespace Prisma {
     tables?: TableUpdateManyWithoutCafeNestedInput
     staff?: StaffUpdateManyWithoutCafeNestedInput
     expenses?: ExpenseUpdateManyWithoutCafeNestedInput
+    orderCounters?: OrderCounterUpdateManyWithoutCafeNestedInput
   }
 
   export type CafeUncheckedUpdateWithoutOrdersInput = {
@@ -20451,6 +21912,7 @@ export namespace Prisma {
     tables?: TableUncheckedUpdateManyWithoutCafeNestedInput
     staff?: StaffUncheckedUpdateManyWithoutCafeNestedInput
     expenses?: ExpenseUncheckedUpdateManyWithoutCafeNestedInput
+    orderCounters?: OrderCounterUncheckedUpdateManyWithoutCafeNestedInput
   }
 
   export type TableUpsertWithoutOrdersInput = {
@@ -20690,6 +22152,118 @@ export namespace Prisma {
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
   }
 
+  export type CafeCreateWithoutOrderCountersInput = {
+    id?: string
+    name: string
+    slug: string
+    address?: string | null
+    phone?: string | null
+    imageUrl?: string | null
+    isActive?: boolean
+    openingTime?: string | null
+    closingTime?: string | null
+    phonepeMerchantId?: string | null
+    phonepeSaltKey?: string | null
+    phonepeSaltIndex?: string | null
+    createdAt?: Date | string
+    updatedAt?: Date | string
+    users?: UserCreateNestedManyWithoutCafeInput
+    categories?: MenuCategoryCreateNestedManyWithoutCafeInput
+    menuItems?: MenuItemCreateNestedManyWithoutCafeInput
+    orders?: OrderCreateNestedManyWithoutCafeInput
+    tables?: TableCreateNestedManyWithoutCafeInput
+    staff?: StaffCreateNestedManyWithoutCafeInput
+    expenses?: ExpenseCreateNestedManyWithoutCafeInput
+  }
+
+  export type CafeUncheckedCreateWithoutOrderCountersInput = {
+    id?: string
+    name: string
+    slug: string
+    address?: string | null
+    phone?: string | null
+    imageUrl?: string | null
+    isActive?: boolean
+    openingTime?: string | null
+    closingTime?: string | null
+    phonepeMerchantId?: string | null
+    phonepeSaltKey?: string | null
+    phonepeSaltIndex?: string | null
+    createdAt?: Date | string
+    updatedAt?: Date | string
+    users?: UserUncheckedCreateNestedManyWithoutCafeInput
+    categories?: MenuCategoryUncheckedCreateNestedManyWithoutCafeInput
+    menuItems?: MenuItemUncheckedCreateNestedManyWithoutCafeInput
+    orders?: OrderUncheckedCreateNestedManyWithoutCafeInput
+    tables?: TableUncheckedCreateNestedManyWithoutCafeInput
+    staff?: StaffUncheckedCreateNestedManyWithoutCafeInput
+    expenses?: ExpenseUncheckedCreateNestedManyWithoutCafeInput
+  }
+
+  export type CafeCreateOrConnectWithoutOrderCountersInput = {
+    where: CafeWhereUniqueInput
+    create: XOR<CafeCreateWithoutOrderCountersInput, CafeUncheckedCreateWithoutOrderCountersInput>
+  }
+
+  export type CafeUpsertWithoutOrderCountersInput = {
+    update: XOR<CafeUpdateWithoutOrderCountersInput, CafeUncheckedUpdateWithoutOrderCountersInput>
+    create: XOR<CafeCreateWithoutOrderCountersInput, CafeUncheckedCreateWithoutOrderCountersInput>
+    where?: CafeWhereInput
+  }
+
+  export type CafeUpdateToOneWithWhereWithoutOrderCountersInput = {
+    where?: CafeWhereInput
+    data: XOR<CafeUpdateWithoutOrderCountersInput, CafeUncheckedUpdateWithoutOrderCountersInput>
+  }
+
+  export type CafeUpdateWithoutOrderCountersInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    name?: StringFieldUpdateOperationsInput | string
+    slug?: StringFieldUpdateOperationsInput | string
+    address?: NullableStringFieldUpdateOperationsInput | string | null
+    phone?: NullableStringFieldUpdateOperationsInput | string | null
+    imageUrl?: NullableStringFieldUpdateOperationsInput | string | null
+    isActive?: BoolFieldUpdateOperationsInput | boolean
+    openingTime?: NullableStringFieldUpdateOperationsInput | string | null
+    closingTime?: NullableStringFieldUpdateOperationsInput | string | null
+    phonepeMerchantId?: NullableStringFieldUpdateOperationsInput | string | null
+    phonepeSaltKey?: NullableStringFieldUpdateOperationsInput | string | null
+    phonepeSaltIndex?: NullableStringFieldUpdateOperationsInput | string | null
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    users?: UserUpdateManyWithoutCafeNestedInput
+    categories?: MenuCategoryUpdateManyWithoutCafeNestedInput
+    menuItems?: MenuItemUpdateManyWithoutCafeNestedInput
+    orders?: OrderUpdateManyWithoutCafeNestedInput
+    tables?: TableUpdateManyWithoutCafeNestedInput
+    staff?: StaffUpdateManyWithoutCafeNestedInput
+    expenses?: ExpenseUpdateManyWithoutCafeNestedInput
+  }
+
+  export type CafeUncheckedUpdateWithoutOrderCountersInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    name?: StringFieldUpdateOperationsInput | string
+    slug?: StringFieldUpdateOperationsInput | string
+    address?: NullableStringFieldUpdateOperationsInput | string | null
+    phone?: NullableStringFieldUpdateOperationsInput | string | null
+    imageUrl?: NullableStringFieldUpdateOperationsInput | string | null
+    isActive?: BoolFieldUpdateOperationsInput | boolean
+    openingTime?: NullableStringFieldUpdateOperationsInput | string | null
+    closingTime?: NullableStringFieldUpdateOperationsInput | string | null
+    phonepeMerchantId?: NullableStringFieldUpdateOperationsInput | string | null
+    phonepeSaltKey?: NullableStringFieldUpdateOperationsInput | string | null
+    phonepeSaltIndex?: NullableStringFieldUpdateOperationsInput | string | null
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    users?: UserUncheckedUpdateManyWithoutCafeNestedInput
+    categories?: MenuCategoryUncheckedUpdateManyWithoutCafeNestedInput
+    menuItems?: MenuItemUncheckedUpdateManyWithoutCafeNestedInput
+    orders?: OrderUncheckedUpdateManyWithoutCafeNestedInput
+    tables?: TableUncheckedUpdateManyWithoutCafeNestedInput
+    staff?: StaffUncheckedUpdateManyWithoutCafeNestedInput
+    expenses?: ExpenseUncheckedUpdateManyWithoutCafeNestedInput
+  }
+
   export type OrderCreateWithoutPaymentsInput = {
     id?: string
     orderNumber: string
@@ -20795,6 +22369,7 @@ export namespace Prisma {
     orders?: OrderCreateNestedManyWithoutCafeInput
     staff?: StaffCreateNestedManyWithoutCafeInput
     expenses?: ExpenseCreateNestedManyWithoutCafeInput
+    orderCounters?: OrderCounterCreateNestedManyWithoutCafeInput
   }
 
   export type CafeUncheckedCreateWithoutTablesInput = {
@@ -20818,6 +22393,7 @@ export namespace Prisma {
     orders?: OrderUncheckedCreateNestedManyWithoutCafeInput
     staff?: StaffUncheckedCreateNestedManyWithoutCafeInput
     expenses?: ExpenseUncheckedCreateNestedManyWithoutCafeInput
+    orderCounters?: OrderCounterUncheckedCreateNestedManyWithoutCafeInput
   }
 
   export type CafeCreateOrConnectWithoutTablesInput = {
@@ -20901,6 +22477,7 @@ export namespace Prisma {
     orders?: OrderUpdateManyWithoutCafeNestedInput
     staff?: StaffUpdateManyWithoutCafeNestedInput
     expenses?: ExpenseUpdateManyWithoutCafeNestedInput
+    orderCounters?: OrderCounterUpdateManyWithoutCafeNestedInput
   }
 
   export type CafeUncheckedUpdateWithoutTablesInput = {
@@ -20924,6 +22501,7 @@ export namespace Prisma {
     orders?: OrderUncheckedUpdateManyWithoutCafeNestedInput
     staff?: StaffUncheckedUpdateManyWithoutCafeNestedInput
     expenses?: ExpenseUncheckedUpdateManyWithoutCafeNestedInput
+    orderCounters?: OrderCounterUncheckedUpdateManyWithoutCafeNestedInput
   }
 
   export type OrderUpsertWithWhereUniqueWithoutTableInput = {
@@ -20963,6 +22541,7 @@ export namespace Prisma {
     orders?: OrderCreateNestedManyWithoutCafeInput
     tables?: TableCreateNestedManyWithoutCafeInput
     expenses?: ExpenseCreateNestedManyWithoutCafeInput
+    orderCounters?: OrderCounterCreateNestedManyWithoutCafeInput
   }
 
   export type CafeUncheckedCreateWithoutStaffInput = {
@@ -20986,6 +22565,7 @@ export namespace Prisma {
     orders?: OrderUncheckedCreateNestedManyWithoutCafeInput
     tables?: TableUncheckedCreateNestedManyWithoutCafeInput
     expenses?: ExpenseUncheckedCreateNestedManyWithoutCafeInput
+    orderCounters?: OrderCounterUncheckedCreateNestedManyWithoutCafeInput
   }
 
   export type CafeCreateOrConnectWithoutStaffInput = {
@@ -21025,6 +22605,7 @@ export namespace Prisma {
     orders?: OrderUpdateManyWithoutCafeNestedInput
     tables?: TableUpdateManyWithoutCafeNestedInput
     expenses?: ExpenseUpdateManyWithoutCafeNestedInput
+    orderCounters?: OrderCounterUpdateManyWithoutCafeNestedInput
   }
 
   export type CafeUncheckedUpdateWithoutStaffInput = {
@@ -21048,6 +22629,7 @@ export namespace Prisma {
     orders?: OrderUncheckedUpdateManyWithoutCafeNestedInput
     tables?: TableUncheckedUpdateManyWithoutCafeNestedInput
     expenses?: ExpenseUncheckedUpdateManyWithoutCafeNestedInput
+    orderCounters?: OrderCounterUncheckedUpdateManyWithoutCafeNestedInput
   }
 
   export type CafeCreateWithoutExpensesInput = {
@@ -21071,6 +22653,7 @@ export namespace Prisma {
     orders?: OrderCreateNestedManyWithoutCafeInput
     tables?: TableCreateNestedManyWithoutCafeInput
     staff?: StaffCreateNestedManyWithoutCafeInput
+    orderCounters?: OrderCounterCreateNestedManyWithoutCafeInput
   }
 
   export type CafeUncheckedCreateWithoutExpensesInput = {
@@ -21094,6 +22677,7 @@ export namespace Prisma {
     orders?: OrderUncheckedCreateNestedManyWithoutCafeInput
     tables?: TableUncheckedCreateNestedManyWithoutCafeInput
     staff?: StaffUncheckedCreateNestedManyWithoutCafeInput
+    orderCounters?: OrderCounterUncheckedCreateNestedManyWithoutCafeInput
   }
 
   export type CafeCreateOrConnectWithoutExpensesInput = {
@@ -21133,6 +22717,7 @@ export namespace Prisma {
     orders?: OrderUpdateManyWithoutCafeNestedInput
     tables?: TableUpdateManyWithoutCafeNestedInput
     staff?: StaffUpdateManyWithoutCafeNestedInput
+    orderCounters?: OrderCounterUpdateManyWithoutCafeNestedInput
   }
 
   export type CafeUncheckedUpdateWithoutExpensesInput = {
@@ -21156,6 +22741,7 @@ export namespace Prisma {
     orders?: OrderUncheckedUpdateManyWithoutCafeNestedInput
     tables?: TableUncheckedUpdateManyWithoutCafeNestedInput
     staff?: StaffUncheckedUpdateManyWithoutCafeNestedInput
+    orderCounters?: OrderCounterUncheckedUpdateManyWithoutCafeNestedInput
   }
 
   export type UserCreateWithoutAuditLogsInput = {
@@ -21296,6 +22882,11 @@ export namespace Prisma {
     date?: Date | string
     createdAt?: Date | string
     updatedAt?: Date | string
+  }
+
+  export type OrderCounterCreateManyCafeInput = {
+    dateKey: string
+    count?: number
   }
 
   export type UserUpdateWithoutCafeInput = {
@@ -21536,6 +23127,21 @@ export namespace Prisma {
     date?: DateTimeFieldUpdateOperationsInput | Date | string
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
+  export type OrderCounterUpdateWithoutCafeInput = {
+    dateKey?: StringFieldUpdateOperationsInput | string
+    count?: IntFieldUpdateOperationsInput | number
+  }
+
+  export type OrderCounterUncheckedUpdateWithoutCafeInput = {
+    dateKey?: StringFieldUpdateOperationsInput | string
+    count?: IntFieldUpdateOperationsInput | number
+  }
+
+  export type OrderCounterUncheckedUpdateManyWithoutCafeInput = {
+    dateKey?: StringFieldUpdateOperationsInput | string
+    count?: IntFieldUpdateOperationsInput | number
   }
 
   export type AuditLogCreateManyActorInput = {

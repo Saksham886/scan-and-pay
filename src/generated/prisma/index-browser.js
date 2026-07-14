@@ -199,6 +199,12 @@ exports.Prisma.OrderItemScalarFieldEnum = {
   subtotalPaise: 'subtotalPaise'
 };
 
+exports.Prisma.OrderCounterScalarFieldEnum = {
+  cafeId: 'cafeId',
+  dateKey: 'dateKey',
+  count: 'count'
+};
+
 exports.Prisma.PaymentScalarFieldEnum = {
   id: 'id',
   orderId: 'orderId',
@@ -312,6 +318,7 @@ exports.Prisma.ModelName = {
   MenuItem: 'MenuItem',
   Order: 'Order',
   OrderItem: 'OrderItem',
+  OrderCounter: 'OrderCounter',
   Payment: 'Payment',
   Table: 'Table',
   Staff: 'Staff',

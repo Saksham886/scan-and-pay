@@ -51,13 +51,14 @@ model Cafe {
   createdAt          DateTime @default(now()) @map("created_at")
   updatedAt          DateTime @updatedAt @map("updated_at")
 
-  users      User[]
-  categories MenuCategory[]
-  menuItems  MenuItem[]
-  orders     Order[]
-  tables     Table[]
-  staff      Staff[]
-  expenses   Expense[]
+  users         User[]
+  categories    MenuCategory[]
+  menuItems     MenuItem[]
+  orders        Order[]
+  tables        Table[]
+  staff         Staff[]
+  expenses      Expense[]
+  orderCounters OrderCounter[]
 
   @@map("cafes")
 }
@@ -119,7 +120,7 @@ model MenuItem {
 model Order {
   id              String      @id @default(uuid())
   cafeId          String      @map("cafe_id")
-  orderNumber     String      @map("order_number")
+  orderNumber     String      @unique @map("order_number")
   status          OrderStatus @default(CREATED)
   totalPaise      Int         @map("total_paise")
   customerName    String?     @map("customer_name")
@@ -155,6 +156,19 @@ model OrderItem {
 
   @@index([orderId])
   @@map("order_items")
+}
+
+// Backs generateOrderNumber(): one row per cafe per day, incremented
+// atomically via upsert so concurrent orders never race on a shared count.
+model OrderCounter {
+  cafeId  String @map("cafe_id")
+  dateKey String @map("date_key")
+  count   Int    @default(0)
+
+  cafe Cafe @relation(fields: [cafeId], references: [id])
+
+  @@id([cafeId, dateKey])
+  @@map("order_counters")
 }
 
 model Payment {
