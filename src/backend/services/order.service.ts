@@ -9,8 +9,36 @@ import { notifyOrderReady } from "@/backend/lib/whatsapp";
 import type { CreateOrderRequest, CreateOrderResponse, OrderSummary } from "@/shared/types";
 import { v4 as uuid } from "uuid";
 import { after } from "next/server";
+import { Prisma } from "@/generated/prisma";
 
 const APP_URL = process.env.NEXT_PUBLIC_APP_URL || `http://localhost:${process.env.PORT || 3000}`;
+
+type ExistingOrder = NonNullable<Awaited<ReturnType<typeof orderRepository.findByIdempotencyKey>>>;
+
+function existingOrderResponse(existing: ExistingOrder): CreateOrderResponse {
+  const existingPayment = existing.payments[0];
+  if (!existingPayment) {
+    throw new Error("Order exists but no payment found");
+  }
+  return {
+    orderId: existing.id,
+    orderNumber: existing.orderNumber,
+    totalPaise: existing.totalPaise,
+    paymentRedirectUrl: "", // Caller should handle re-initiation
+  };
+}
+
+function isIdempotencyKeyConflict(err: unknown): boolean {
+  if (!(err instanceof Prisma.PrismaClientKnownRequestError) || err.code !== "P2002") {
+    return false;
+  }
+  // The @prisma/adapter-pg driver adapter nests the violated constraint's
+  // field names under meta.driverAdapterError.cause.constraint.fields
+  // rather than the classic engine's flat meta.target array, and that
+  // shape isn't part of the public type surface. Match broadly against
+  // the serialized meta instead of relying on one fixed property path.
+  return JSON.stringify(err.meta ?? {}).toLowerCase().includes("idempotency");
+}
 
 export const orderService = {
   async createOrder(
@@ -19,16 +47,7 @@ export const orderService = {
     // Check idempotency
     const existing = await orderRepository.findByIdempotencyKey(request.idempotencyKey);
     if (existing) {
-      const existingPayment = existing.payments[0];
-      if (!existingPayment) {
-        throw new Error("Order exists but no payment found");
-      }
-      return {
-        orderId: existing.id,
-        orderNumber: existing.orderNumber,
-        totalPaise: existing.totalPaise,
-        paymentRedirectUrl: "", // Caller should handle re-initiation
-      };
+      return existingOrderResponse(existing);
     }
 
     // Resolve cafe
@@ -80,17 +99,30 @@ export const orderService = {
     const orderNumber = await generateOrderNumber(cafe.id, cafe.slug);
 
     // Create order in DB
-    const order = await orderRepository.createOrder({
-      cafeId: cafe.id,
-      orderNumber,
-      totalPaise,
-      customerName: request.customerName,
-      customerPhone: request.customerPhone,
-      customerEmail: request.customerEmail,
-      notes: request.notes,
-      idempotencyKey: request.idempotencyKey,
-      items: orderItems,
-    });
+    let order;
+    try {
+      order = await orderRepository.createOrder({
+        cafeId: cafe.id,
+        orderNumber,
+        totalPaise,
+        customerName: request.customerName,
+        customerPhone: request.customerPhone,
+        customerEmail: request.customerEmail,
+        notes: request.notes,
+        idempotencyKey: request.idempotencyKey,
+        items: orderItems,
+      });
+    } catch (err) {
+      // A concurrent request with the same idempotencyKey (e.g. a client
+      // retry racing a slow-but-successful first attempt) can win the
+      // unique constraint before this one. Return the winner's order
+      // instead of surfacing a false "failed to create order" error.
+      if (isIdempotencyKeyConflict(err)) {
+        const raced = await orderRepository.findByIdempotencyKey(request.idempotencyKey);
+        if (raced) return existingOrderResponse(raced);
+      }
+      throw err;
+    }
 
     // Create payment and initiate PhonePe
     const merchantTxnId = `ORD-${order.id.slice(0, 8)}-${uuid().slice(0, 8)}`;
