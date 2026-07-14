@@ -47,6 +47,32 @@ export const paymentRepository = {
     });
   },
 
+  /**
+   * Conditionally transitions payment status, only if it hasn't already
+   * reached a terminal SUCCESS/REFUNDED state. Returns whether this call
+   * won the race, so callers can skip side effects (SSE broadcast,
+   * notifications) when a concurrent webhook retry already applied it.
+   */
+  async claimPaymentResult(
+    merchantTxnId: string,
+    data: {
+      status: PaymentStatus;
+      phonepeTxnId?: string;
+      paymentMethod?: string;
+      webhookPayload?: Prisma.InputJsonValue;
+      paidAt?: Date;
+    }
+  ): Promise<boolean> {
+    const result = await prisma.payment.updateMany({
+      where: {
+        merchantTxnId,
+        status: { notIn: ["SUCCESS", "REFUNDED"] },
+      },
+      data,
+    });
+    return result.count > 0;
+  },
+
   async getPaymentsForOrder(orderId: string) {
     return prisma.payment.findMany({
       where: { orderId },

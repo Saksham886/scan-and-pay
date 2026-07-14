@@ -102,13 +102,19 @@ export const paymentService = {
     const data = decoded.data as Record<string, unknown> | undefined;
     const instrument = data?.paymentInstrument as Record<string, unknown> | undefined;
 
-    await paymentRepository.updatePaymentStatus(merchantTxnId, {
+    // Atomically claim this payment: only proceed if no other concurrent
+    // webhook retry has already moved it to a terminal state. Prevents
+    // double-broadcasting/double-notifying on duplicate webhook deliveries.
+    const won = await paymentRepository.claimPaymentResult(merchantTxnId, {
       status: isSuccess ? "SUCCESS" : "FAILED",
       phonepeTxnId: data?.transactionId as string | undefined,
       paymentMethod: instrument?.type as string | undefined,
       webhookPayload: decoded as Prisma.InputJsonValue,
       paidAt: isSuccess ? new Date() : undefined,
     });
+    if (!won) {
+      return { success: true, message: "Already processed" };
+    }
 
     const newOrderStatus = isSuccess ? "PAID" : "FAILED";
     const updatedOrder = await orderRepository.updateOrderStatus(
@@ -152,12 +158,13 @@ export const paymentService = {
     const responseData = (result.data?.data ?? result.data) as Record<string, unknown> | undefined;
     const instrument = responseData?.paymentInstrument as Record<string, unknown> | undefined;
 
-    await paymentRepository.updatePaymentStatus(merchantTxnId, {
+    const won = await paymentRepository.claimPaymentResult(merchantTxnId, {
       status: isSuccess ? "SUCCESS" : "FAILED",
       phonepeTxnId: responseData?.transactionId as string | undefined,
       paymentMethod: instrument?.type as string | undefined,
       paidAt: isSuccess ? new Date() : undefined,
     });
+    if (!won) return "already_done";
 
     await orderRepository.updateOrderStatus(payment.orderId, isSuccess ? "PAID" : "FAILED");
 
