@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart' show FilteringTextInputFormatter;
 import 'package:provider/provider.dart';
 
 import '../../models/order.dart';
@@ -179,6 +180,7 @@ class _CheckoutScreenState extends State<CheckoutScreen> {
             controller: _phoneController,
             keyboardType: TextInputType.phone,
             maxLength: 10,
+            inputFormatters: [FilteringTextInputFormatter.digitsOnly],
             decoration: InputDecoration(
               labelText: 'Mobile Number',
               errorText: _phoneError,
