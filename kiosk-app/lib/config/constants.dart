@@ -12,8 +12,11 @@ const Duration kPostPaymentPollInterval = Duration(seconds: 2);
 const int kPostPaymentMaxAttempts = 15;
 const Duration kTransientErrorExtraDelay = Duration(seconds: 3);
 
-const Duration kOrderStatusPollInterval = Duration(seconds: 5);
-const Duration kOrderStatusAutoReset = Duration(seconds: 18);
+/// How long the post-payment receipt stays on screen before the kiosk
+/// resets to the menu for the next customer. Kept short on purpose - unlike
+/// a customer's own phone, a shared kiosk can't sit on one order's live
+/// status for the minutes it takes to prepare food.
+const Duration kReceiptAutoReset = Duration(seconds: 10);
 
 const Duration kPaymentFailureCountdown = Duration(seconds: 5);
 

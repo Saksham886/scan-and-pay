@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 
+import '../config/customer_theme.dart';
 import '../utils/currency.dart';
 
 class PriceText extends StatelessWidget {
@@ -12,6 +13,6 @@ class PriceText extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final text = short ? paiseToCurrencyShort(paise) : paiseToCurrency(paise);
-    return Text(text, style: style);
+    return Text(text, style: style ?? CustomerText.mono(fontWeight: FontWeight.w700));
   }
 }

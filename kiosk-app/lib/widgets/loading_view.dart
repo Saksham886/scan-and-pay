@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
 
+import '../config/customer_theme.dart';
+
 class LoadingView extends StatelessWidget {
   final String? message;
 
@@ -11,10 +13,24 @@ class LoadingView extends StatelessWidget {
       child: Column(
         mainAxisSize: MainAxisSize.min,
         children: [
-          const CircularProgressIndicator(),
+          Container(
+            width: 56,
+            height: 56,
+            decoration: BoxDecoration(
+              shape: BoxShape.circle,
+              border: Border.all(color: CustomerColors.border, width: 4),
+            ),
+            child: const CircularProgressIndicator(
+              strokeWidth: 4,
+              color: CustomerColors.primary,
+            ),
+          ),
           if (message != null) ...[
             const SizedBox(height: 16),
-            Text(message!, style: Theme.of(context).textTheme.bodyLarge),
+            Text(
+              message!,
+              style: CustomerText.mono(fontSize: 14, color: CustomerColors.muted),
+            ),
           ],
         ],
       ),

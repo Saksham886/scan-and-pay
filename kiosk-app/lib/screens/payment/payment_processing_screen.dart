@@ -4,6 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
 import '../../config/constants.dart';
+import '../../config/customer_theme.dart';
 import '../../services/order_service.dart';
 import '../../state/cart_provider.dart';
 import '../../widgets/primary_button.dart';
@@ -145,6 +146,7 @@ class _PaymentProcessingScreenState extends State<PaymentProcessingScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      backgroundColor: CustomerColors.background,
       body: Center(
         child: Padding(
           padding: const EdgeInsets.all(32),
@@ -159,41 +161,69 @@ class _PaymentProcessingScreenState extends State<PaymentProcessingScreen> {
       case _Phase.verifying:
         return Column(
           mainAxisSize: MainAxisSize.min,
-          children: const [
-            CircularProgressIndicator(),
-            SizedBox(height: 20),
-            Text('Verifying Payment...', style: TextStyle(fontSize: 22)),
-            SizedBox(height: 8),
-            Text('Please wait while we confirm your payment'),
+          children: [
+            Container(
+              width: 64,
+              height: 64,
+              alignment: Alignment.center,
+              decoration: BoxDecoration(border: Border.all(color: CustomerColors.primary.withValues(alpha: 0.6), width: 2)),
+              child: const CircularProgressIndicator(strokeWidth: 3, color: CustomerColors.primary),
+            ),
+            const SizedBox(height: 20),
+            Text('VERIFYING PAYMENT...', style: CustomerText.display(fontSize: 18)),
+            const SizedBox(height: 8),
+            Text(
+              'Please wait while we confirm your payment',
+              style: CustomerText.mono(fontSize: 13, color: CustomerColors.muted),
+            ),
           ],
         );
       case _Phase.success:
         return Column(
           mainAxisSize: MainAxisSize.min,
-          children: const [
-            Icon(Icons.check_circle, color: Colors.green, size: 64),
-            SizedBox(height: 20),
-            Text('Payment Successful!', style: TextStyle(fontSize: 22)),
+          children: [
+            Container(
+              width: 64,
+              height: 64,
+              alignment: Alignment.center,
+              decoration: BoxDecoration(border: Border.all(color: CustomerColors.accent.withValues(alpha: 0.6), width: 2)),
+              child: const Icon(Icons.check_circle_outline, size: 32, color: CustomerColors.accent),
+            ),
+            const SizedBox(height: 20),
+            Text('PAYMENT SUCCESSFUL!', style: CustomerText.display(fontSize: 18)),
           ],
         );
       case _Phase.failed:
         return Column(
           mainAxisSize: MainAxisSize.min,
           children: [
-            const Icon(Icons.error, color: Colors.redAccent, size: 64),
+            Container(
+              width: 64,
+              height: 64,
+              alignment: Alignment.center,
+              decoration: BoxDecoration(border: Border.all(color: CustomerColors.danger.withValues(alpha: 0.6), width: 2)),
+              child: const Icon(Icons.cancel_outlined, size: 32, color: CustomerColors.danger),
+            ),
             const SizedBox(height: 20),
-            const Text('Payment Failed', style: TextStyle(fontSize: 22)),
+            Text('PAYMENT FAILED', style: CustomerText.display(fontSize: 18)),
             const SizedBox(height: 8),
-            const Text(
+            Text(
               'If any amount was deducted it will be refunded within 5-7 business days.',
               textAlign: TextAlign.center,
+              style: CustomerText.mono(fontSize: 13, color: CustomerColors.muted),
             ),
             const SizedBox(height: 8),
-            Text('Returning to menu in ${_countdown}s'),
+            Text(
+              'Returning to menu in ${_countdown}s',
+              style: CustomerText.mono(fontSize: 12, color: CustomerColors.muted),
+            ),
             const SizedBox(height: 20),
             PrimaryButton(label: 'Back to Menu Now', onPressed: _backToMenu),
             const SizedBox(height: 12),
-            TextButton(onPressed: _retryPayment, child: const Text('Retry Payment')),
+            TextButton(
+              onPressed: _retryPayment,
+              child: Text('Retry Payment', style: CustomerText.mono(fontSize: 13, color: CustomerColors.primary)),
+            ),
           ],
         );
     }

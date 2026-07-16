@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:webview_flutter/webview_flutter.dart';
 
+import '../../config/customer_theme.dart';
 import 'payment_processing_screen.dart';
 
 /// Matches the Next.js payment-return page path, e.g. `/brew-and-bake/order/payment-return`.
@@ -84,7 +85,13 @@ class _PaymentWebViewScreenState extends State<PaymentWebViewScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(title: const Text('Complete Payment')),
+      backgroundColor: CustomerColors.background,
+      appBar: AppBar(
+        backgroundColor: CustomerColors.headerBackground,
+        foregroundColor: CustomerColors.foreground,
+        title: Text('Complete Payment', style: CustomerText.display(fontSize: 16)),
+        shape: const Border(bottom: BorderSide(color: CustomerColors.border, width: 2)),
+      ),
       body: Stack(
         children: [
           WebViewWidget(controller: _controller),
@@ -93,7 +100,10 @@ class _PaymentWebViewScreenState extends State<PaymentWebViewScreen> {
               top: 0,
               left: 0,
               right: 0,
-              child: LinearProgressIndicator(),
+              child: LinearProgressIndicator(
+                color: CustomerColors.accent,
+                backgroundColor: CustomerColors.surface,
+              ),
             ),
           if (_loadError != null)
             Center(
@@ -102,7 +112,7 @@ class _PaymentWebViewScreenState extends State<PaymentWebViewScreen> {
                 child: Text(
                   _loadError!,
                   textAlign: TextAlign.center,
-                  style: const TextStyle(color: Colors.redAccent),
+                  style: CustomerText.mono(color: CustomerColors.danger),
                 ),
               ),
             ),
