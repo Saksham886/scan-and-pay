@@ -1,5 +1,11 @@
 # QR Ordering Platform
 
+[![CI](https://github.com/tanmaysachann/qr-ordering-platform/actions/workflows/ci.yml/badge.svg)](https://github.com/tanmaysachann/qr-ordering-platform/actions/workflows/ci.yml)
+![Next.js](https://img.shields.io/badge/Next.js-16-black?logo=next.js)
+![TypeScript](https://img.shields.io/badge/TypeScript-5-blue?logo=typescript)
+![Prisma](https://img.shields.io/badge/Prisma-7-2D3748?logo=prisma)
+![License](https://img.shields.io/badge/license-proprietary-lightgrey)
+
 A multi-tenant QR-based food ordering system for cafes. Customers scan a table QR code, browse the menu, and pay via PhonePe. Cafe owners manage orders and menus in real time. A super admin oversees all cafes on the platform.
 
 **Live Demo:** https://scanpay-ordering.vercel.app

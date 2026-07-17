@@ -51,3 +51,7 @@ AGENTS.md
 
 .vercel
 .env*
+
+# working files - not part of the app
+/Menu.xlsx
+/logo.png
