@@ -20,5 +20,11 @@ const Duration kReceiptAutoReset = Duration(seconds: 10);
 
 const Duration kPaymentFailureCountdown = Duration(seconds: 5);
 
+/// How long the kiosk waits with no touch activity before abandoning
+/// whatever's in progress (cart contents, a half-filled checkout form) and
+/// resetting to the menu. Protects the next customer from seeing the
+/// previous customer's name/phone/email left on screen.
+const Duration kIdleResetTimeout = Duration(seconds: 60);
+
 const String kCafeSlugPrefKey = 'kiosk_cafe_slug';
 const String kCafeNamePrefKey = 'kiosk_cafe_name';

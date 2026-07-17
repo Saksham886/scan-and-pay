@@ -1,4 +1,9 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android">
+    <!-- Required in every build variant - the app talks to the backend API
+         over HTTPS for the menu, orders, and payments. This must live here,
+         not only in the debug-only manifest, or release/profile builds get
+         no network access at all. -->
+    <uses-permission android:name="android.permission.INTERNET"/>
     <application
         android:label="kiosk_app"
         android:name="${applicationName}"

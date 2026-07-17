@@ -3,6 +3,7 @@ import 'dart:async';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
+import '../../config/constants.dart';
 import '../../config/customer_theme.dart';
 import '../../models/menu_item.dart';
 import '../../state/cart_provider.dart';
@@ -10,6 +11,7 @@ import '../../state/kiosk_config_provider.dart';
 import '../../state/menu_provider.dart';
 import '../../utils/format.dart';
 import '../../widgets/error_view.dart';
+import '../../widgets/idle_reset_guard.dart';
 import '../../widgets/loading_view.dart';
 import '../cart/cart_screen.dart';
 import '../setup/setup_screen.dart';
@@ -50,130 +52,173 @@ class _MenuScreenState extends State<MenuScreen> {
 
   void _startHold() {
     _holdTimer = Timer(const Duration(seconds: 3), () {
-      Navigator.of(context).push(MaterialPageRoute(builder: (_) => const SetupScreen()));
+      Navigator.of(
+        context,
+      ).push(MaterialPageRoute(builder: (_) => const SetupScreen()));
     });
   }
 
   void _cancelHold() => _holdTimer?.cancel();
 
+  void _clearAbandonedCart() {
+    final cart = context.read<CartProvider>();
+    if (!cart.isEmpty) cart.clear();
+  }
+
   @override
   Widget build(BuildContext context) {
     final menu = context.watch<MenuProvider>();
     final cart = context.watch<CartProvider>();
-    final cafeName = menu.cafe?.name ?? context.watch<KioskConfigProvider>().cafeName ?? 'Menu';
+    final cafeName =
+        menu.cafe?.name ??
+        context.watch<KioskConfigProvider>().cafeName ??
+        'Menu';
 
-    final visibleCategories = menu.categories.where((c) => c.items.isNotEmpty).toList();
+    final visibleCategories =
+        menu.categories.where((c) => c.items.isNotEmpty).toList();
     final isSearching = _searchQuery.trim().isNotEmpty;
 
-    final filteredCategories = isSearching
-        ? <MenuCategoryWithItems>[]
-        : (_activeCategory == 'all'
-            ? visibleCategories
-            : visibleCategories.where((c) => c.id == _activeCategory).toList());
+    final filteredCategories =
+        isSearching
+            ? <MenuCategoryWithItems>[]
+            : (_activeCategory == 'all'
+                ? visibleCategories
+                : visibleCategories
+                    .where((c) => c.id == _activeCategory)
+                    .toList());
 
-    final searchResults = isSearching
-        ? visibleCategories.expand((c) => c.items).where((item) {
-            final q = _searchQuery.trim().toLowerCase();
-            return item.name.toLowerCase().contains(q) ||
-                (item.description?.toLowerCase().contains(q) ?? false);
-          }).toList()
-        : <MenuItemPublic>[];
+    final searchResults =
+        isSearching
+            ? visibleCategories.expand((c) => c.items).where((item) {
+              final q = _searchQuery.trim().toLowerCase();
+              return item.name.toLowerCase().contains(q) ||
+                  (item.description?.toLowerCase().contains(q) ?? false);
+            }).toList()
+            : <MenuItemPublic>[];
 
-    final showMenu = !(menu.isLoading && menu.categories.isEmpty) && menu.error == null;
+    final showMenu =
+        !(menu.isLoading && menu.categories.isEmpty) && menu.error == null;
 
-    return Scaffold(
-      body: Row(
-        crossAxisAlignment: CrossAxisAlignment.stretch,
-        children: [
-          if (showMenu)
-            CategorySidebar(
-              categories: [
-                (id: 'all', name: 'All', count: 0),
-                for (final c in visibleCategories)
-                  (id: c.id, name: toTitleCase(c.name), count: c.items.length),
-              ],
-              selectedCategoryId: _activeCategory,
-              onSelect: (id) => setState(() {
-                _activeCategory = id;
-                if (_searchQuery.isNotEmpty) {
-                  _searchQuery = '';
-                  _searchController.clear();
-                }
-              }),
-            ),
-          Expanded(
-            child: Stack(
-              children: [
-                if (menu.isLoading && menu.categories.isEmpty)
-                  const LoadingView(message: 'Loading menu...')
-                else if (menu.error != null && menu.categories.isEmpty)
-                  ErrorView(message: menu.error!, onRetry: menu.refresh)
-                else
-                  CustomScrollView(
-                    slivers: [
-                      SliverToBoxAdapter(
-                        child: _Hero(cafeName: cafeName, onHold: _startHold, onHoldCancel: _cancelHold),
-                      ),
-                      SliverToBoxAdapter(
-                        child: _SearchBar(
-                          controller: _searchController,
-                          onChanged: (v) => setState(() => _searchQuery = v),
-                        ),
-                      ),
-                      if (isSearching)
-                        SliverPadding(
-                          padding: const EdgeInsets.fromLTRB(16, 16, 16, 24),
-                          sliver: searchResults.isEmpty
-                              ? SliverToBoxAdapter(child: _NoResults(query: _searchQuery))
-                              : SliverList.list(
-                                  children: [
-                                    Padding(
-                                      padding: const EdgeInsets.only(bottom: 12),
-                                      child: Text(
-                                        '${searchResults.length} ${searchResults.length == 1 ? "result" : "results"} for "$_searchQuery"',
-                                        style: CustomerText.mono(fontSize: 12, color: CustomerColors.muted),
-                                      ),
-                                    ),
-                                    _ItemsGrid(items: searchResults),
-                                  ],
-                                ),
-                        )
-                      else
-                        SliverPadding(
-                          padding: const EdgeInsets.fromLTRB(16, 20, 16, 100),
-                          sliver: SliverList.list(
-                            children: [
-                              for (final category in filteredCategories)
-                                if (category.items.isNotEmpty) ...[
-                                  _CategoryHeading(name: toTitleCase(category.name), count: category.items.length),
-                                  const SizedBox(height: 12),
-                                  _ItemsGrid(items: category.items),
-                                  const SizedBox(height: 16),
-                                ],
-                            ],
+    return IdleResetGuard(
+      timeout: kIdleResetTimeout,
+      onIdle: _clearAbandonedCart,
+      child: Scaffold(
+        body: Row(
+          crossAxisAlignment: CrossAxisAlignment.stretch,
+          children: [
+            if (showMenu)
+              CategorySidebar(
+                categories: [
+                  (id: 'all', name: 'All', count: 0),
+                  for (final c in visibleCategories)
+                    (
+                      id: c.id,
+                      name: toTitleCase(c.name),
+                      count: c.items.length,
+                    ),
+                ],
+                selectedCategoryId: _activeCategory,
+                onSelect:
+                    (id) => setState(() {
+                      _activeCategory = id;
+                      if (_searchQuery.isNotEmpty) {
+                        _searchQuery = '';
+                        _searchController.clear();
+                      }
+                    }),
+              ),
+            Expanded(
+              child: Stack(
+                children: [
+                  if (menu.isLoading && menu.categories.isEmpty)
+                    const LoadingView(message: 'Loading menu...')
+                  else if (menu.error != null && menu.categories.isEmpty)
+                    ErrorView(message: menu.error!, onRetry: menu.refresh)
+                  else
+                    CustomScrollView(
+                      slivers: [
+                        SliverToBoxAdapter(
+                          child: _Hero(
+                            cafeName: cafeName,
+                            onHold: _startHold,
+                            onHoldCancel: _cancelHold,
                           ),
                         ),
-                    ],
-                  ),
-                Positioned(
-                  left: 16,
-                  right: 16,
-                  bottom: 16,
-                  child: SafeArea(
-                    top: false,
-                    child: FloatingCartButton(
-                      totalItems: cart.itemCount,
-                      totalPaise: cart.totalPaise,
-                      onTap: () => Navigator.of(context).push(
-                        MaterialPageRoute(builder: (_) => const CartScreen()),
+                        SliverToBoxAdapter(
+                          child: _SearchBar(
+                            controller: _searchController,
+                            onChanged: (v) => setState(() => _searchQuery = v),
+                          ),
+                        ),
+                        if (isSearching)
+                          SliverPadding(
+                            padding: const EdgeInsets.fromLTRB(16, 16, 16, 24),
+                            sliver:
+                                searchResults.isEmpty
+                                    ? SliverToBoxAdapter(
+                                      child: _NoResults(query: _searchQuery),
+                                    )
+                                    : SliverList.list(
+                                      children: [
+                                        Padding(
+                                          padding: const EdgeInsets.only(
+                                            bottom: 12,
+                                          ),
+                                          child: Text(
+                                            '${searchResults.length} ${searchResults.length == 1 ? "result" : "results"} for "$_searchQuery"',
+                                            style: CustomerText.mono(
+                                              fontSize: 12,
+                                              color: CustomerColors.muted,
+                                            ),
+                                          ),
+                                        ),
+                                        _ItemsGrid(items: searchResults),
+                                      ],
+                                    ),
+                          )
+                        else
+                          SliverPadding(
+                            padding: const EdgeInsets.fromLTRB(16, 20, 16, 100),
+                            sliver: SliverList.list(
+                              children: [
+                                for (final category in filteredCategories)
+                                  if (category.items.isNotEmpty) ...[
+                                    _CategoryHeading(
+                                      name: toTitleCase(category.name),
+                                      count: category.items.length,
+                                    ),
+                                    const SizedBox(height: 12),
+                                    _ItemsGrid(items: category.items),
+                                    const SizedBox(height: 16),
+                                  ],
+                              ],
+                            ),
+                          ),
+                      ],
+                    ),
+                  Positioned(
+                    left: 16,
+                    right: 16,
+                    bottom: 16,
+                    child: SafeArea(
+                      top: false,
+                      child: FloatingCartButton(
+                        totalItems: cart.itemCount,
+                        totalPaise: cart.totalPaise,
+                        onTap:
+                            () => Navigator.of(context).push(
+                              MaterialPageRoute(
+                                builder: (_) => const CartScreen(),
+                              ),
+                            ),
                       ),
                     ),
                   ),
-                ),
-              ],
+                ],
+              ),
             ),
-          ),
-        ],
+          ],
+        ),
       ),
     );
   }
@@ -184,7 +229,11 @@ class _Hero extends StatelessWidget {
   final VoidCallback onHold;
   final VoidCallback onHoldCancel;
 
-  const _Hero({required this.cafeName, required this.onHold, required this.onHoldCancel});
+  const _Hero({
+    required this.cafeName,
+    required this.onHold,
+    required this.onHoldCancel,
+  });
 
   @override
   Widget build(BuildContext context) {
@@ -209,7 +258,10 @@ class _Hero extends StatelessWidget {
                   Container(
                     width: 6,
                     height: 6,
-                    decoration: const BoxDecoration(color: CustomerColors.accent, shape: BoxShape.circle),
+                    decoration: const BoxDecoration(
+                      color: CustomerColors.accent,
+                      shape: BoxShape.circle,
+                    ),
                   ),
                   const SizedBox(width: 8),
                   Text(
@@ -232,13 +284,21 @@ class _Hero extends StatelessWidget {
                   cafeName.toUpperCase(),
                   maxLines: 2,
                   overflow: TextOverflow.ellipsis,
-                  style: CustomerText.display(fontSize: 26, fontWeight: FontWeight.w800, letterSpacing: -1),
+                  style: CustomerText.display(
+                    fontSize: 26,
+                    fontWeight: FontWeight.w800,
+                    letterSpacing: -1,
+                  ),
                 ),
               ),
-              if (cafe?.address != null || (cafe?.openingTime != null && cafe?.closingTime != null)) ...[
+              if (cafe?.address != null ||
+                  (cafe?.openingTime != null && cafe?.closingTime != null)) ...[
                 const SizedBox(height: 10),
                 if (cafe?.address != null)
-                  _HeroDetail(icon: Icons.place_outlined, text: cafe.address as String),
+                  _HeroDetail(
+                    icon: Icons.place_outlined,
+                    text: cafe.address as String,
+                  ),
                 if (cafe?.openingTime != null && cafe?.closingTime != null) ...[
                   const SizedBox(height: 4),
                   _HeroDetail(
@@ -296,26 +356,43 @@ class _SearchBar extends StatelessWidget {
       color: CustomerColors.headerBackground,
       padding: const EdgeInsets.fromLTRB(20, 0, 20, 20),
       child: Container(
-        decoration: BoxDecoration(border: Border.all(color: CustomerColors.border, width: 2)),
+        decoration: BoxDecoration(
+          border: Border.all(color: CustomerColors.border, width: 2),
+        ),
         child: TextField(
           controller: controller,
           onChanged: onChanged,
-          style: CustomerText.mono(fontSize: 14, color: CustomerColors.foreground),
+          style: CustomerText.mono(
+            fontSize: 14,
+            color: CustomerColors.foreground,
+          ),
           decoration: InputDecoration(
             filled: true,
             fillColor: CustomerColors.surface,
             hintText: 'Search the menu...',
-            hintStyle: CustomerText.mono(fontSize: 14, color: CustomerColors.border),
-            prefixIcon: const Icon(Icons.search, size: 18, color: CustomerColors.muted),
-            suffixIcon: controller.text.isEmpty
-                ? null
-                : IconButton(
-                    icon: const Icon(Icons.close, size: 16, color: CustomerColors.muted),
-                    onPressed: () {
-                      controller.clear();
-                      onChanged('');
-                    },
-                  ),
+            hintStyle: CustomerText.mono(
+              fontSize: 14,
+              color: CustomerColors.border,
+            ),
+            prefixIcon: const Icon(
+              Icons.search,
+              size: 18,
+              color: CustomerColors.muted,
+            ),
+            suffixIcon:
+                controller.text.isEmpty
+                    ? null
+                    : IconButton(
+                      icon: const Icon(
+                        Icons.close,
+                        size: 16,
+                        color: CustomerColors.muted,
+                      ),
+                      onPressed: () {
+                        controller.clear();
+                        onChanged('');
+                      },
+                    ),
             border: InputBorder.none,
             contentPadding: const EdgeInsets.symmetric(vertical: 14),
           ),
@@ -344,8 +421,13 @@ class _CategoryHeading extends StatelessWidget {
         const SizedBox(width: 10),
         Container(
           padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 2),
-          decoration: BoxDecoration(border: Border.all(color: CustomerColors.border, width: 1)),
-          child: Text('$count', style: CustomerText.mono(fontSize: 12, color: CustomerColors.muted)),
+          decoration: BoxDecoration(
+            border: Border.all(color: CustomerColors.border, width: 1),
+          ),
+          child: Text(
+            '$count',
+            style: CustomerText.mono(fontSize: 12, color: CustomerColors.muted),
+          ),
         ),
       ],
     );
@@ -371,11 +453,13 @@ class _ItemsGrid extends StatelessWidget {
             children: [for (final item in items) MenuItemCard(item: item)],
           );
         }
-        final cardWidth = (constraints.maxWidth - spacing * (columns - 1)) / columns;
+        final cardWidth =
+            (constraints.maxWidth - spacing * (columns - 1)) / columns;
         return Wrap(
           spacing: spacing,
           children: [
-            for (final item in items) SizedBox(width: cardWidth, child: MenuItemCard(item: item)),
+            for (final item in items)
+              SizedBox(width: cardWidth, child: MenuItemCard(item: item)),
           ],
         );
       },
@@ -398,13 +482,22 @@ class _NoResults extends StatelessWidget {
             width: 64,
             height: 64,
             alignment: Alignment.center,
-            decoration: BoxDecoration(border: Border.all(color: CustomerColors.border, width: 2)),
-            child: const Icon(Icons.search_off, size: 24, color: CustomerColors.border),
+            decoration: BoxDecoration(
+              border: Border.all(color: CustomerColors.border, width: 2),
+            ),
+            child: const Icon(
+              Icons.search_off,
+              size: 24,
+              color: CustomerColors.border,
+            ),
           ),
           const SizedBox(height: 16),
           Text('No dishes found', style: CustomerText.display(fontSize: 16)),
           const SizedBox(height: 4),
-          Text('Try a different search', style: CustomerText.mono(fontSize: 13, color: CustomerColors.muted)),
+          Text(
+            'Try a different search',
+            style: CustomerText.mono(fontSize: 13, color: CustomerColors.muted),
+          ),
         ],
       ),
     );

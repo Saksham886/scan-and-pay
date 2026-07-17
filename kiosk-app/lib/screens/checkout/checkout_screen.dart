@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:provider/provider.dart';
 
+import '../../config/constants.dart';
 import '../../config/customer_theme.dart';
 import '../../models/cart_line_item.dart';
 import '../../models/order.dart';
@@ -10,8 +11,10 @@ import '../../state/cart_provider.dart';
 import '../../state/kiosk_config_provider.dart';
 import '../../utils/currency.dart';
 import '../../utils/validation.dart';
+import '../../widgets/idle_reset_guard.dart';
 import '../../widgets/primary_button.dart';
 import '../../widgets/veg_indicator.dart';
+import '../menu/menu_screen.dart';
 import '../order_status/order_status_screen.dart';
 import '../payment/payment_webview_screen.dart';
 
@@ -68,13 +71,17 @@ class _CheckoutScreenState extends State<CheckoutScreen> {
 
     final request = CreateOrderRequest(
       cafeSlug: cafeSlug,
-      items: cart.items
-          .map((i) => {'menuItemId': i.menuItemId, 'quantity': i.quantity})
-          .toList(),
+      items:
+          cart.items
+              .map((i) => {'menuItemId': i.menuItemId, 'quantity': i.quantity})
+              .toList(),
       customerName: _nameController.text.trim(),
       customerPhone: normalizePhone(_phoneController.text),
       customerEmail: _emailController.text.trim().toLowerCase(),
-      notes: _notesController.text.trim().isEmpty ? null : _notesController.text.trim(),
+      notes:
+          _notesController.text.trim().isEmpty
+              ? null
+              : _notesController.text.trim(),
       idempotencyKey: cart.getOrCreateIdempotencyKey(),
     );
 
@@ -99,16 +106,19 @@ class _CheckoutScreenState extends State<CheckoutScreen> {
       if (order.paymentRedirectUrl.isNotEmpty) {
         Navigator.of(context).push(
           MaterialPageRoute(
-            builder: (_) => PaymentWebViewScreen(
-              paymentUrl: order.paymentRedirectUrl,
-              orderId: order.orderId,
-              cafeSlug: cafeSlug,
-            ),
+            builder:
+                (_) => PaymentWebViewScreen(
+                  paymentUrl: order.paymentRedirectUrl,
+                  orderId: order.orderId,
+                  cafeSlug: cafeSlug,
+                ),
           ),
         );
       } else {
         Navigator.of(context).pushAndRemoveUntil(
-          MaterialPageRoute(builder: (_) => OrderStatusScreen(orderId: order.orderId)),
+          MaterialPageRoute(
+            builder: (_) => OrderStatusScreen(orderId: order.orderId),
+          ),
           (route) => route.isFirst,
         );
       }
@@ -121,72 +131,111 @@ class _CheckoutScreenState extends State<CheckoutScreen> {
     }
   }
 
+  void _resetToMenu() {
+    if (!mounted || _loading) return;
+    context.read<CartProvider>().clear();
+    Navigator.of(context).pushAndRemoveUntil(
+      MaterialPageRoute(builder: (_) => const MenuScreen()),
+      (route) => false,
+    );
+  }
+
   @override
   Widget build(BuildContext context) {
     final cart = context.watch<CartProvider>();
     final cafeName = context.watch<KioskConfigProvider>().cafeName ?? '';
 
-    return Scaffold(
-      backgroundColor: CustomerColors.background,
-      body: SafeArea(
-        child: Column(
-          children: [
-            _Header(cafeName: cafeName),
-            Expanded(
-              child: ListView(
-                padding: const EdgeInsets.all(16),
-                children: [
-                  _OrderSummaryCard(items: cart.items, total: cart.totalPaise),
-                  const SizedBox(height: 16),
-                  _CustomerDetailsCard(
-                    nameController: _nameController,
-                    phoneController: _phoneController,
-                    emailController: _emailController,
-                    notesController: _notesController,
-                    nameError: _nameError,
-                    phoneError: _phoneError,
-                    emailError: _emailError,
-                  ),
-                  if (_submitError != null) ...[
-                    const SizedBox(height: 16),
-                    Container(
-                      padding: const EdgeInsets.all(14),
-                      decoration: BoxDecoration(
-                        color: CustomerColors.danger.withValues(alpha: 0.1),
-                        border: Border.all(color: CustomerColors.danger.withValues(alpha: 0.4), width: 2),
-                      ),
-                      child: Row(
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        children: [
-                          Text('!', style: CustomerText.mono(fontWeight: FontWeight.w700, color: CustomerColors.danger)),
-                          const SizedBox(width: 8),
-                          Expanded(
-                            child: Text(
-                              _submitError!,
-                              style: CustomerText.mono(fontSize: 13, color: CustomerColors.danger),
-                            ),
-                          ),
-                        ],
-                      ),
+    return IdleResetGuard(
+      timeout: kIdleResetTimeout,
+      onIdle: _resetToMenu,
+      child: Scaffold(
+        backgroundColor: CustomerColors.background,
+        body: SafeArea(
+          child: Column(
+            children: [
+              _Header(cafeName: cafeName),
+              Expanded(
+                child: ListView(
+                  padding: const EdgeInsets.all(16),
+                  children: [
+                    _OrderSummaryCard(
+                      items: cart.items,
+                      total: cart.totalPaise,
                     ),
-                  ],
-                  const SizedBox(height: 16),
-                  Row(
-                    mainAxisAlignment: MainAxisAlignment.center,
-                    children: [
-                      const Icon(Icons.verified_user_outlined, size: 14, color: CustomerColors.accent),
-                      const SizedBox(width: 6),
-                      Text(
-                        'Secure payment via PhonePe',
-                        style: CustomerText.mono(fontSize: 12, color: CustomerColors.muted),
+                    const SizedBox(height: 16),
+                    _CustomerDetailsCard(
+                      nameController: _nameController,
+                      phoneController: _phoneController,
+                      emailController: _emailController,
+                      notesController: _notesController,
+                      nameError: _nameError,
+                      phoneError: _phoneError,
+                      emailError: _emailError,
+                    ),
+                    if (_submitError != null) ...[
+                      const SizedBox(height: 16),
+                      Container(
+                        padding: const EdgeInsets.all(14),
+                        decoration: BoxDecoration(
+                          color: CustomerColors.danger.withValues(alpha: 0.1),
+                          border: Border.all(
+                            color: CustomerColors.danger.withValues(alpha: 0.4),
+                            width: 2,
+                          ),
+                        ),
+                        child: Row(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            Text(
+                              '!',
+                              style: CustomerText.mono(
+                                fontWeight: FontWeight.w700,
+                                color: CustomerColors.danger,
+                              ),
+                            ),
+                            const SizedBox(width: 8),
+                            Expanded(
+                              child: Text(
+                                _submitError!,
+                                style: CustomerText.mono(
+                                  fontSize: 13,
+                                  color: CustomerColors.danger,
+                                ),
+                              ),
+                            ),
+                          ],
+                        ),
                       ),
                     ],
-                  ),
-                ],
+                    const SizedBox(height: 16),
+                    Row(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      children: [
+                        const Icon(
+                          Icons.verified_user_outlined,
+                          size: 14,
+                          color: CustomerColors.accent,
+                        ),
+                        const SizedBox(width: 6),
+                        Text(
+                          'Secure payment via PhonePe',
+                          style: CustomerText.mono(
+                            fontSize: 12,
+                            color: CustomerColors.muted,
+                          ),
+                        ),
+                      ],
+                    ),
+                  ],
+                ),
               ),
-            ),
-            _PayBar(loading: _loading, total: cart.totalPaise, onPressed: _submit),
-          ],
+              _PayBar(
+                loading: _loading,
+                total: cart.totalPaise,
+                onPressed: _submit,
+              ),
+            ],
+          ),
         ),
       ),
     );
@@ -203,7 +252,9 @@ class _Header extends StatelessWidget {
     return Container(
       decoration: const BoxDecoration(
         color: CustomerColors.headerBackground,
-        border: Border(bottom: BorderSide(color: CustomerColors.border, width: 2)),
+        border: Border(
+          bottom: BorderSide(color: CustomerColors.border, width: 2),
+        ),
       ),
       padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 14),
       child: Row(
@@ -214,8 +265,14 @@ class _Header extends StatelessWidget {
               width: 36,
               height: 36,
               alignment: Alignment.center,
-              decoration: BoxDecoration(border: Border.all(color: CustomerColors.border, width: 2)),
-              child: const Icon(Icons.arrow_back, size: 18, color: CustomerColors.muted),
+              decoration: BoxDecoration(
+                border: Border.all(color: CustomerColors.border, width: 2),
+              ),
+              child: const Icon(
+                Icons.arrow_back,
+                size: 18,
+                color: CustomerColors.muted,
+              ),
             ),
           ),
           const SizedBox(width: 12),
@@ -225,11 +282,21 @@ class _Header extends StatelessWidget {
               children: [
                 Text('CHECKOUT', style: CustomerText.display(fontSize: 18)),
                 if (cafeName.isNotEmpty)
-                  Text(cafeName, style: CustomerText.mono(fontSize: 12, color: CustomerColors.muted)),
+                  Text(
+                    cafeName,
+                    style: CustomerText.mono(
+                      fontSize: 12,
+                      color: CustomerColors.muted,
+                    ),
+                  ),
               ],
             ),
           ),
-          const Icon(Icons.verified_user_outlined, size: 16, color: CustomerColors.accent),
+          const Icon(
+            Icons.verified_user_outlined,
+            size: 16,
+            color: CustomerColors.accent,
+          ),
         ],
       ),
     );
@@ -245,7 +312,10 @@ class _OrderSummaryCard extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Container(
-      decoration: BoxDecoration(color: CustomerColors.surface, border: Border.all(color: CustomerColors.border, width: 2)),
+      decoration: BoxDecoration(
+        color: CustomerColors.surface,
+        border: Border.all(color: CustomerColors.border, width: 2),
+      ),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
@@ -254,15 +324,25 @@ class _OrderSummaryCard extends StatelessWidget {
             padding: const EdgeInsets.symmetric(horizontal: 14, vertical: 12),
             decoration: const BoxDecoration(
               color: CustomerColors.surfaceHover,
-              border: Border(bottom: BorderSide(color: CustomerColors.border, width: 2)),
+              border: Border(
+                bottom: BorderSide(color: CustomerColors.border, width: 2),
+              ),
             ),
             child: Row(
               children: [
-                const Icon(Icons.receipt_long_outlined, size: 15, color: CustomerColors.primary),
+                const Icon(
+                  Icons.receipt_long_outlined,
+                  size: 15,
+                  color: CustomerColors.primary,
+                ),
                 const SizedBox(width: 8),
                 Text(
                   'ORDER SUMMARY',
-                  style: CustomerText.mono(fontSize: 13, fontWeight: FontWeight.w700, letterSpacing: 1),
+                  style: CustomerText.mono(
+                    fontSize: 13,
+                    fontWeight: FontWeight.w700,
+                    letterSpacing: 1,
+                  ),
                 ),
               ],
             ),
@@ -283,14 +363,26 @@ class _OrderSummaryCard extends StatelessWidget {
                             item.name,
                             maxLines: 1,
                             overflow: TextOverflow.ellipsis,
-                            style: CustomerText.mono(fontSize: 13, color: CustomerColors.muted),
+                            style: CustomerText.mono(
+                              fontSize: 13,
+                              color: CustomerColors.muted,
+                            ),
                           ),
                         ),
-                        Text('x${item.quantity}', style: CustomerText.mono(fontSize: 13, color: CustomerColors.muted)),
+                        Text(
+                          'x${item.quantity}',
+                          style: CustomerText.mono(
+                            fontSize: 13,
+                            color: CustomerColors.muted,
+                          ),
+                        ),
                         const SizedBox(width: 10),
                         Text(
                           paiseToCurrencyShort(item.subtotalPaise),
-                          style: CustomerText.mono(fontSize: 13, fontWeight: FontWeight.w700),
+                          style: CustomerText.mono(
+                            fontSize: 13,
+                            fontWeight: FontWeight.w700,
+                          ),
                         ),
                       ],
                     ),
@@ -302,8 +394,17 @@ class _OrderSummaryCard extends StatelessWidget {
                 Row(
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   children: [
-                    Text('TOTAL', style: CustomerText.mono(fontWeight: FontWeight.w700)),
-                    Text(paiseToCurrencyShort(total), style: CustomerText.display(fontSize: 20, color: CustomerColors.accent)),
+                    Text(
+                      'TOTAL',
+                      style: CustomerText.mono(fontWeight: FontWeight.w700),
+                    ),
+                    Text(
+                      paiseToCurrencyShort(total),
+                      style: CustomerText.display(
+                        fontSize: 20,
+                        color: CustomerColors.accent,
+                      ),
+                    ),
                   ],
                 ),
               ],
@@ -346,7 +447,10 @@ class _CustomerDetailsCard extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Container(
-      decoration: BoxDecoration(color: CustomerColors.surface, border: Border.all(color: CustomerColors.border, width: 2)),
+      decoration: BoxDecoration(
+        color: CustomerColors.surface,
+        border: Border.all(color: CustomerColors.border, width: 2),
+      ),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
@@ -355,15 +459,34 @@ class _CustomerDetailsCard extends StatelessWidget {
             padding: const EdgeInsets.symmetric(horizontal: 14, vertical: 12),
             decoration: const BoxDecoration(
               color: CustomerColors.surfaceHover,
-              border: Border(bottom: BorderSide(color: CustomerColors.border, width: 2)),
+              border: Border(
+                bottom: BorderSide(color: CustomerColors.border, width: 2),
+              ),
             ),
             child: Row(
               children: [
-                const Icon(Icons.person_outline, size: 15, color: CustomerColors.primary),
+                const Icon(
+                  Icons.person_outline,
+                  size: 15,
+                  color: CustomerColors.primary,
+                ),
                 const SizedBox(width: 8),
-                Text('YOUR DETAILS', style: CustomerText.mono(fontSize: 13, fontWeight: FontWeight.w700, letterSpacing: 1)),
+                Text(
+                  'YOUR DETAILS',
+                  style: CustomerText.mono(
+                    fontSize: 13,
+                    fontWeight: FontWeight.w700,
+                    letterSpacing: 1,
+                  ),
+                ),
                 const Spacer(),
-                Text('* Required', style: CustomerText.mono(fontSize: 11, color: CustomerColors.muted)),
+                Text(
+                  '* Required',
+                  style: CustomerText.mono(
+                    fontSize: 11,
+                    color: CustomerColors.muted,
+                  ),
+                ),
               ],
             ),
           ),
@@ -394,7 +517,10 @@ class _CustomerDetailsCard extends StatelessWidget {
                     alignment: Alignment.centerLeft,
                     child: Text(
                       "We'll send order updates to this number on WhatsApp.",
-                      style: CustomerText.mono(fontSize: 11, color: CustomerColors.muted),
+                      style: CustomerText.mono(
+                        fontSize: 11,
+                        color: CustomerColors.muted,
+                      ),
                     ),
                   ),
                 ),
@@ -411,7 +537,11 @@ class _CustomerDetailsCard extends StatelessWidget {
                   alignment: Alignment.centerLeft,
                   child: Text(
                     'SPECIAL INSTRUCTIONS',
-                    style: CustomerText.mono(fontSize: 12, fontWeight: FontWeight.w700, letterSpacing: 1),
+                    style: CustomerText.mono(
+                      fontSize: 12,
+                      fontWeight: FontWeight.w700,
+                      letterSpacing: 1,
+                    ),
                   ),
                 ),
                 const SizedBox(height: 6),
@@ -419,25 +549,46 @@ class _CustomerDetailsCard extends StatelessWidget {
                   controller: notesController,
                   maxLength: 500,
                   maxLines: 2,
-                  style: CustomerText.mono(fontSize: 13, color: CustomerColors.foreground),
+                  style: CustomerText.mono(
+                    fontSize: 13,
+                    color: CustomerColors.foreground,
+                  ),
                   decoration: InputDecoration(
                     filled: true,
                     fillColor: CustomerColors.background,
                     hintText: 'Any special requests...',
-                    hintStyle: CustomerText.mono(fontSize: 13, color: CustomerColors.border),
-                    counterStyle: CustomerText.mono(fontSize: 10, color: CustomerColors.border),
-                    contentPadding: const EdgeInsets.symmetric(horizontal: 14, vertical: 10),
+                    hintStyle: CustomerText.mono(
+                      fontSize: 13,
+                      color: CustomerColors.border,
+                    ),
+                    counterStyle: CustomerText.mono(
+                      fontSize: 10,
+                      color: CustomerColors.border,
+                    ),
+                    contentPadding: const EdgeInsets.symmetric(
+                      horizontal: 14,
+                      vertical: 10,
+                    ),
                     border: const OutlineInputBorder(
                       borderRadius: BorderRadius.zero,
-                      borderSide: BorderSide(color: CustomerColors.border, width: 2),
+                      borderSide: BorderSide(
+                        color: CustomerColors.border,
+                        width: 2,
+                      ),
                     ),
                     enabledBorder: const OutlineInputBorder(
                       borderRadius: BorderRadius.zero,
-                      borderSide: BorderSide(color: CustomerColors.border, width: 2),
+                      borderSide: BorderSide(
+                        color: CustomerColors.border,
+                        width: 2,
+                      ),
                     ),
                     focusedBorder: const OutlineInputBorder(
                       borderRadius: BorderRadius.zero,
-                      borderSide: BorderSide(color: CustomerColors.accent, width: 2),
+                      borderSide: BorderSide(
+                        color: CustomerColors.accent,
+                        width: 2,
+                      ),
                     ),
                   ),
                 ),
@@ -476,7 +627,14 @@ class _NeoField extends StatelessWidget {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        Text(label, style: CustomerText.mono(fontSize: 12, fontWeight: FontWeight.w700, letterSpacing: 1)),
+        Text(
+          label,
+          style: CustomerText.mono(
+            fontSize: 12,
+            fontWeight: FontWeight.w700,
+            letterSpacing: 1,
+          ),
+        ),
         const SizedBox(height: 6),
         TextField(
           controller: controller,
@@ -484,16 +642,28 @@ class _NeoField extends StatelessWidget {
           maxLength: maxLength,
           inputFormatters: inputFormatters,
           textCapitalization: textCapitalization,
-          style: CustomerText.mono(fontSize: 14, color: CustomerColors.foreground),
+          style: CustomerText.mono(
+            fontSize: 14,
+            color: CustomerColors.foreground,
+          ),
           decoration: InputDecoration(
             filled: true,
             fillColor: CustomerColors.background,
             hintText: hint,
-            hintStyle: CustomerText.mono(fontSize: 13, color: CustomerColors.border),
+            hintStyle: CustomerText.mono(
+              fontSize: 13,
+              color: CustomerColors.border,
+            ),
             counterText: maxLength != null ? '' : null,
             errorText: error,
-            errorStyle: CustomerText.mono(fontSize: 11, color: CustomerColors.danger),
-            contentPadding: const EdgeInsets.symmetric(horizontal: 14, vertical: 14),
+            errorStyle: CustomerText.mono(
+              fontSize: 11,
+              color: CustomerColors.danger,
+            ),
+            contentPadding: const EdgeInsets.symmetric(
+              horizontal: 14,
+              vertical: 14,
+            ),
             border: const OutlineInputBorder(
               borderRadius: BorderRadius.zero,
               borderSide: BorderSide(color: CustomerColors.border, width: 2),
@@ -522,7 +692,11 @@ class _PayBar extends StatelessWidget {
   final int total;
   final VoidCallback onPressed;
 
-  const _PayBar({required this.loading, required this.total, required this.onPressed});
+  const _PayBar({
+    required this.loading,
+    required this.total,
+    required this.onPressed,
+  });
 
   @override
   Widget build(BuildContext context) {
