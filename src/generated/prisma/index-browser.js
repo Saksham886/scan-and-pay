@@ -133,6 +133,10 @@ exports.Prisma.CafeScalarFieldEnum = {
   phonepeMerchantId: 'phonepeMerchantId',
   phonepeSaltKey: 'phonepeSaltKey',
   phonepeSaltIndex: 'phonepeSaltIndex',
+  paymentProvider: 'paymentProvider',
+  razorpayKeyId: 'razorpayKeyId',
+  razorpayKeySecret: 'razorpayKeySecret',
+  razorpayWebhookSecret: 'razorpayWebhookSecret',
   createdAt: 'createdAt',
   updatedAt: 'updatedAt'
 };
@@ -214,6 +218,9 @@ exports.Prisma.PaymentScalarFieldEnum = {
   phonepeTxnId: 'phonepeTxnId',
   merchantTxnId: 'merchantTxnId',
   phonepeMerchantId: 'phonepeMerchantId',
+  provider: 'provider',
+  razorpayOrderId: 'razorpayOrderId',
+  razorpayPaymentId: 'razorpayPaymentId',
   paymentMethod: 'paymentMethod',
   webhookPayload: 'webhookPayload',
   paidAt: 'paidAt',
@@ -288,6 +295,11 @@ exports.Prisma.JsonNullValueFilter = {
   JsonNull: Prisma.JsonNull,
   AnyNull: Prisma.AnyNull
 };
+exports.PaymentProvider = exports.$Enums.PaymentProvider = {
+  PHONEPE: 'PHONEPE',
+  RAZORPAY: 'RAZORPAY'
+};
+
 exports.UserRole = exports.$Enums.UserRole = {
   SUPER_ADMIN: 'SUPER_ADMIN',
   CAFE_OWNER: 'CAFE_OWNER',

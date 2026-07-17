@@ -1,5 +1,5 @@
 import { prisma } from "@/backend/lib/db";
-import type { UserRole } from "@/generated/prisma";
+import type { UserRole, PaymentProvider } from "@/generated/prisma";
 
 export const adminRepository = {
   async getAllCafes() {
@@ -93,6 +93,51 @@ export const adminRepository = {
         phonepeMerchantId: null,
         phonepeSaltKey: null,
         phonepeSaltIndex: "1",
+      },
+      select: { id: true },
+    });
+  },
+
+  async setCafePaymentProvider(id: string, provider: PaymentProvider) {
+    return prisma.cafe.update({
+      where: { id },
+      data: { paymentProvider: provider },
+      select: { id: true, paymentProvider: true },
+    });
+  },
+
+  async updateCafeRazorpayCredentials(
+    id: string,
+    data: {
+      razorpayKeyId: string;
+      razorpayKeySecret: string;
+      razorpayWebhookSecret?: string;
+    }
+  ) {
+    return prisma.cafe.update({
+      where: { id },
+      data: {
+        razorpayKeyId: data.razorpayKeyId,
+        razorpayKeySecret: data.razorpayKeySecret,
+        ...(data.razorpayWebhookSecret !== undefined && {
+          razorpayWebhookSecret: data.razorpayWebhookSecret,
+        }),
+      },
+      select: {
+        id: true,
+        razorpayKeyId: true,
+        // razorpayKeySecret / razorpayWebhookSecret intentionally excluded from response
+      },
+    });
+  },
+
+  async clearCafeRazorpayCredentials(id: string) {
+    return prisma.cafe.update({
+      where: { id },
+      data: {
+        razorpayKeyId: null,
+        razorpayKeySecret: null,
+        razorpayWebhookSecret: null,
       },
       select: { id: true },
     });

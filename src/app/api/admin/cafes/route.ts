@@ -11,9 +11,13 @@ export async function GET() {
     }
 
     const cafes = await adminRepository.getAllCafes();
-    // Strip salt keys — never expose them to the client
+    // Strip secrets — never expose them to the client
     const safeCafes = cafes.map((c) => {
-      const { phonepeSaltKey: _sk, ...rest } = c as typeof c & { phonepeSaltKey?: string | null };
+      const { phonepeSaltKey: _sk, razorpayKeySecret: _rks, razorpayWebhookSecret: _rws, ...rest } = c as typeof c & {
+        phonepeSaltKey?: string | null;
+        razorpayKeySecret?: string | null;
+        razorpayWebhookSecret?: string | null;
+      };
       return rest;
     });
     return NextResponse.json({ success: true, data: safeCafes });

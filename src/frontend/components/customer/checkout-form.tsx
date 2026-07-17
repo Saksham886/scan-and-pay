@@ -333,7 +333,7 @@ export function CheckoutForm({ cafeSlug, cafeName, onBack }: CheckoutFormProps) 
           style={{ fontFamily: "var(--font-jb-mono), monospace", animationDelay: "120ms" }}
         >
           <ShieldCheck size={14} className="text-[#cdf200]" />
-          <span>Secure payment via PhonePe</span>
+          <span>Secure payment</span>
         </div>
       </form>
 

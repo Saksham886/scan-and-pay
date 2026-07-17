@@ -62,6 +62,8 @@ interface CafeDetail {
   closingTime: string | null;
   phonepeMerchantId: string | null;
   phonepeSaltIndex: string | null;
+  paymentProvider: "PHONEPE" | "RAZORPAY";
+  razorpayKeyId: string | null;
   _count: { orders: number; menuItems: number; users: number };
   users: CafeOwner[];
 }
@@ -142,12 +144,18 @@ export default function AdminCafeDetailPage() {
 
   // Payment settings state
   const [showPaymentModal, setShowPaymentModal] = useState(false);
+  const [paymentModalTab, setPaymentModalTab] = useState<"PHONEPE" | "RAZORPAY">("PHONEPE");
   const [paymentMerchantId, setPaymentMerchantId] = useState("");
   const [paymentSaltKey, setPaymentSaltKey] = useState("");
   const [paymentSaltIndex, setPaymentSaltIndex] = useState("1");
   const [paymentSaving, setPaymentSaving] = useState(false);
   const [paymentError, setPaymentError] = useState("");
   const [showSaltKey, setShowSaltKey] = useState(false);
+  const [razorpayKeyId, setRazorpayKeyId] = useState("");
+  const [razorpayKeySecret, setRazorpayKeySecret] = useState("");
+  const [razorpayWebhookSecret, setRazorpayWebhookSecret] = useState("");
+  const [showRazorpaySecret, setShowRazorpaySecret] = useState(false);
+  const [switchingProvider, setSwitchingProvider] = useState(false);
 
   const fetchCafe = useCallback(async () => {
     try {
@@ -211,17 +219,53 @@ export default function AdminCafeDetailPage() {
     }
   };
 
-  const openPaymentModal = () => {
+  const openPaymentModal = (tab: "PHONEPE" | "RAZORPAY" = cafe?.paymentProvider ?? "PHONEPE") => {
+    setPaymentModalTab(tab);
     setPaymentMerchantId(cafe?.phonepeMerchantId ?? "");
     setPaymentSaltKey("");
     setPaymentSaltIndex(cafe?.phonepeSaltIndex ?? "1");
+    setRazorpayKeyId(cafe?.razorpayKeyId ?? "");
+    setRazorpayKeySecret("");
+    setRazorpayWebhookSecret("");
     setPaymentError("");
     setShowSaltKey(false);
+    setShowRazorpaySecret(false);
     setShowPaymentModal(true);
   };
 
   const handlePaymentSave = async () => {
     setPaymentError("");
+
+    if (paymentModalTab === "RAZORPAY") {
+      if (!razorpayKeyId.trim()) { setPaymentError("Key ID is required"); return; }
+      if (!razorpayKeySecret.trim() && !cafe?.razorpayKeyId) { setPaymentError("Key Secret is required"); return; }
+      setPaymentSaving(true);
+      try {
+        const res = await fetch(`/api/admin/cafes/${id}/payment-settings`, {
+          method: "PATCH",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({
+            provider: "RAZORPAY",
+            razorpayKeyId,
+            razorpayKeySecret,
+            razorpayWebhookSecret,
+          }),
+        });
+        const data = await res.json();
+        if (res.ok) {
+          setShowPaymentModal(false);
+          fetchCafe();
+        } else {
+          setPaymentError(data.error || "Failed to save payment settings");
+        }
+      } catch {
+        setPaymentError("Network error");
+      } finally {
+        setPaymentSaving(false);
+      }
+      return;
+    }
+
     if (!paymentMerchantId.trim()) { setPaymentError("Merchant ID is required"); return; }
     // Only require salt key on first-time setup; for updates, blank = keep existing
     if (!paymentSaltKey.trim() && !cafe?.phonepeMerchantId) { setPaymentError("Salt Key is required"); return; }
@@ -247,6 +291,23 @@ export default function AdminCafeDetailPage() {
       setPaymentError("Network error");
     } finally {
       setPaymentSaving(false);
+    }
+  };
+
+  const handleProviderSwitch = async (provider: "PHONEPE" | "RAZORPAY") => {
+    if (!cafe || cafe.paymentProvider === provider) return;
+    setSwitchingProvider(true);
+    try {
+      const res = await fetch(`/api/admin/cafes/${id}/payment-provider`, {
+        method: "PATCH",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ provider }),
+      });
+      if (res.ok) fetchCafe();
+    } catch {
+      console.error("Failed to switch payment provider");
+    } finally {
+      setSwitchingProvider(false);
     }
   };
 
@@ -493,32 +554,79 @@ export default function AdminCafeDetailPage() {
       )}
 
       {/* Payment Settings */}
-      <div className="bg-surface rounded-2xl border border-border p-4 mb-6">
+      <div className="bg-surface rounded-2xl border border-border p-4 mb-6 space-y-3">
         <div className="flex items-center justify-between">
           <div className="flex items-center gap-3">
             <div className="w-10 h-10 rounded-xl bg-primary/20 flex items-center justify-center">
               <CreditCard size={18} className="text-primary" />
             </div>
             <div>
-              <p className="font-semibold text-sm">PhonePe Payment</p>
-              {cafe.phonepeMerchantId ? (
-                <div className="flex items-center gap-1.5 mt-0.5">
-                  <CheckCircle2 size={12} className="text-green-600" />
-                  <p className="text-xs text-green-700">
-                    Configured · Merchant ID: <span className="font-mono">{cafe.phonepeMerchantId}</span>
-                  </p>
-                </div>
-              ) : (
-                <div className="flex items-center gap-1.5 mt-0.5">
-                  <AlertCircle size={12} className="text-amber-600" />
-                  <p className="text-xs text-amber-700">Not configured / payments will fail</p>
-                </div>
-              )}
+              <p className="font-semibold text-sm">Payment Gateway</p>
+              <p className="text-xs text-muted mt-0.5">
+                Active: <span className="font-mono">{cafe.paymentProvider === "RAZORPAY" ? "Razorpay" : "PhonePe"}</span>
+              </p>
             </div>
           </div>
-          <Button size="sm" variant="secondary" onClick={openPaymentModal}>
+          <div className="flex items-center gap-1 bg-background rounded-xl border border-border p-1">
+            {(["PHONEPE", "RAZORPAY"] as const).map((p) => (
+              <button
+                key={p}
+                disabled={switchingProvider}
+                onClick={() => handleProviderSwitch(p)}
+                className={cn(
+                  "px-3 py-1.5 text-xs font-medium rounded-lg transition-colors disabled:opacity-50",
+                  cafe.paymentProvider === p ? "bg-primary text-white" : "text-muted hover:text-foreground"
+                )}
+              >
+                {p === "PHONEPE" ? "PhonePe" : "Razorpay"}
+              </button>
+            ))}
+          </div>
+        </div>
+
+        <div className="flex items-center justify-between rounded-xl border border-border/60 p-3">
+          <div>
+            <p className="text-xs font-semibold">PhonePe</p>
+            {cafe.phonepeMerchantId ? (
+              <div className="flex items-center gap-1.5 mt-0.5">
+                <CheckCircle2 size={12} className="text-green-600" />
+                <p className="text-xs text-green-700">
+                  Merchant ID: <span className="font-mono">{cafe.phonepeMerchantId}</span>
+                </p>
+              </div>
+            ) : (
+              <div className="flex items-center gap-1.5 mt-0.5">
+                <AlertCircle size={12} className="text-amber-600" />
+                <p className="text-xs text-amber-700">Not configured</p>
+              </div>
+            )}
+          </div>
+          <Button size="sm" variant="secondary" onClick={() => openPaymentModal("PHONEPE")}>
             <Pencil size={14} className="mr-1" />
             {cafe.phonepeMerchantId ? "Update" : "Configure"}
+          </Button>
+        </div>
+
+        <div className="flex items-center justify-between rounded-xl border border-border/60 p-3">
+          <div>
+            <p className="text-xs font-semibold">Razorpay</p>
+            {cafe.razorpayKeyId ? (
+              <div className="flex items-center gap-1.5 mt-0.5">
+                <CheckCircle2 size={12} className="text-green-600" />
+                <p className="text-xs text-green-700">
+                  Key ID: <span className="font-mono">{cafe.razorpayKeyId}</span>
+                </p>
+              </div>
+            ) : (
+              <div className="flex items-center gap-1.5 mt-0.5">
+                <AlertCircle size={12} className="text-amber-600" />
+                <p className="text-xs text-amber-700">Not configured</p>
+              </div>
+            )}
+          </div>
+          <Button size="sm" variant="secondary" onClick={() => openPaymentModal("RAZORPAY")}>
+            <Pencil size={14} className="mr-1" />
+            {cafe.razorpayKeyId ? "Update" : "Configure"}
           </Button>
         </div>
       </div>
@@ -862,50 +970,115 @@ export default function AdminCafeDetailPage() {
       </Modal>
 
       {/* Payment Settings Modal */}
-      <Modal isOpen={showPaymentModal} onClose={() => setShowPaymentModal(false)} title="PhonePe Payment Settings">
+      <Modal isOpen={showPaymentModal} onClose={() => setShowPaymentModal(false)} title="Payment Gateway Settings">
         <div className="space-y-4">
-          <div className="bg-info/20 border border-info/25 rounded-xl p-3 text-xs text-info">
-            Enter the PhonePe Business credentials for <strong>{cafe.name}</strong>. Payments from customers will be collected directly into this cafe owner&apos;s PhonePe-linked bank account.
-          </div>
-          <Input
-            id="payment-merchant-id"
-            label="Merchant ID"
-            value={paymentMerchantId}
-            onChange={(e) => setPaymentMerchantId(e.target.value)}
-            placeholder="e.g. MERCHANTUAT"
-            required
-          />
-          <div className="space-y-1">
-            <label className="block text-xs font-medium text-foreground">
-              Salt Key <span className="text-danger">*</span>
-            </label>
-            <div className="relative">
-              <input
-                type={showSaltKey ? "text" : "password"}
-                value={paymentSaltKey}
-                onChange={(e) => setPaymentSaltKey(e.target.value)}
-                placeholder={cafe.phonepeMerchantId ? "Enter new salt key to update" : "Paste salt key from PhonePe dashboard"}
-                className="w-full px-3 py-2 pr-10 text-sm border border-border rounded-xl bg-background focus:outline-none focus:ring-2 focus:ring-primary/30 focus:border-primary font-mono"
-              />
+          <div className="flex items-center gap-1 bg-background rounded-xl border border-border p-1">
+            {(["PHONEPE", "RAZORPAY"] as const).map((p) => (
               <button
-                type="button"
-                onClick={() => setShowSaltKey((v) => !v)}
-                className="absolute right-3 top-1/2 -translate-y-1/2 text-muted hover:text-foreground"
+                key={p}
+                onClick={() => setPaymentModalTab(p)}
+                className={cn(
+                  "flex-1 px-3 py-1.5 text-xs font-medium rounded-lg transition-colors",
+                  paymentModalTab === p ? "bg-primary text-white" : "text-muted hover:text-foreground"
+                )}
               >
-                {showSaltKey ? <EyeOff size={14} /> : <Eye size={14} />}
+                {p === "PHONEPE" ? "PhonePe" : "Razorpay"}
               </button>
-            </div>
-            {cafe.phonepeMerchantId && (
-              <p className="text-xs text-muted">Leave blank to keep the existing salt key.</p>
-            )}
+            ))}
           </div>
-          <Input
-            id="payment-salt-index"
-            label="Salt Index"
-            value={paymentSaltIndex}
-            onChange={(e) => setPaymentSaltIndex(e.target.value)}
-            placeholder="1"
-          />
+
+          {paymentModalTab === "PHONEPE" ? (
+            <>
+              <div className="bg-info/20 border border-info/25 rounded-xl p-3 text-xs text-info">
+                Enter the PhonePe Business credentials for <strong>{cafe.name}</strong>. Payments from customers will be collected directly into this cafe owner&apos;s PhonePe-linked bank account.
+              </div>
+              <Input
+                id="payment-merchant-id"
+                label="Merchant ID"
+                value={paymentMerchantId}
+                onChange={(e) => setPaymentMerchantId(e.target.value)}
+                placeholder="e.g. MERCHANTUAT"
+                required
+              />
+              <div className="space-y-1">
+                <label className="block text-xs font-medium text-foreground">
+                  Salt Key <span className="text-danger">*</span>
+                </label>
+                <div className="relative">
+                  <input
+                    type={showSaltKey ? "text" : "password"}
+                    value={paymentSaltKey}
+                    onChange={(e) => setPaymentSaltKey(e.target.value)}
+                    placeholder={cafe.phonepeMerchantId ? "Enter new salt key to update" : "Paste salt key from PhonePe dashboard"}
+                    className="w-full px-3 py-2 pr-10 text-sm border border-border rounded-xl bg-background focus:outline-none focus:ring-2 focus:ring-primary/30 focus:border-primary font-mono"
+                  />
+                  <button
+                    type="button"
+                    onClick={() => setShowSaltKey((v) => !v)}
+                    className="absolute right-3 top-1/2 -translate-y-1/2 text-muted hover:text-foreground"
+                  >
+                    {showSaltKey ? <EyeOff size={14} /> : <Eye size={14} />}
+                  </button>
+                </div>
+                {cafe.phonepeMerchantId && (
+                  <p className="text-xs text-muted">Leave blank to keep the existing salt key.</p>
+                )}
+              </div>
+              <Input
+                id="payment-salt-index"
+                label="Salt Index"
+                value={paymentSaltIndex}
+                onChange={(e) => setPaymentSaltIndex(e.target.value)}
+                placeholder="1"
+              />
+            </>
+          ) : (
+            <>
+              <div className="bg-info/20 border border-info/25 rounded-xl p-3 text-xs text-info">
+                Enter the Razorpay API credentials for <strong>{cafe.name}</strong>, from Settings &gt; API Keys in the Razorpay dashboard. Register the webhook URL there too and paste its secret below.
+              </div>
+              <Input
+                id="razorpay-key-id"
+                label="Key ID"
+                value={razorpayKeyId}
+                onChange={(e) => setRazorpayKeyId(e.target.value)}
+                placeholder="rzp_test_xxxxxxxxxxxx"
+                required
+              />
+              <div className="space-y-1">
+                <label className="block text-xs font-medium text-foreground">
+                  Key Secret <span className="text-danger">*</span>
+                </label>
+                <div className="relative">
+                  <input
+                    type={showRazorpaySecret ? "text" : "password"}
+                    value={razorpayKeySecret}
+                    onChange={(e) => setRazorpayKeySecret(e.target.value)}
+                    placeholder={cafe.razorpayKeyId ? "Enter new key secret to update" : "Paste key secret from Razorpay dashboard"}
+                    className="w-full px-3 py-2 pr-10 text-sm border border-border rounded-xl bg-background focus:outline-none focus:ring-2 focus:ring-primary/30 focus:border-primary font-mono"
+                  />
+                  <button
+                    type="button"
+                    onClick={() => setShowRazorpaySecret((v) => !v)}
+                    className="absolute right-3 top-1/2 -translate-y-1/2 text-muted hover:text-foreground"
+                  >
+                    {showRazorpaySecret ? <EyeOff size={14} /> : <Eye size={14} />}
+                  </button>
+                </div>
+                {cafe.razorpayKeyId && (
+                  <p className="text-xs text-muted">Leave blank to keep the existing key secret.</p>
+                )}
+              </div>
+              <Input
+                id="razorpay-webhook-secret"
+                label="Webhook Secret (optional)"
+                value={razorpayWebhookSecret}
+                onChange={(e) => setRazorpayWebhookSecret(e.target.value)}
+                placeholder="Leave blank to keep existing / use global default"
+              />
+            </>
+          )}
+
           {paymentError && (
             <div className="bg-danger/10 text-danger text-sm p-3 rounded-xl border border-danger/25">{paymentError}</div>
           )}

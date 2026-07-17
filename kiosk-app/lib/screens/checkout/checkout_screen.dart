@@ -221,7 +221,7 @@ class _CheckoutScreenState extends State<CheckoutScreen> {
                         ),
                         const SizedBox(width: 6),
                         Text(
-                          'Secure payment via PhonePe',
+                          'Secure payment',
                           style: CustomerText.mono(
                             fontSize: 12,
                             color: CustomerColors.muted,

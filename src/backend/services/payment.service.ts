@@ -1,6 +1,10 @@
 import { paymentRepository } from "@/backend/repositories/payment.repository";
 import { orderRepository } from "@/backend/repositories/order.repository";
 import { verifyWebhookSignature, checkPaymentStatus } from "@/backend/lib/phonepe";
+import {
+  verifyWebhookSignature as verifyRazorpayWebhookSignature,
+  fetchPaymentLink,
+} from "@/backend/lib/razorpay";
 import { sseManager } from "@/backend/lib/sse";
 import { notifyOrderPlaced } from "@/backend/lib/whatsapp";
 import type { Prisma } from "@/generated/prisma";
@@ -136,6 +140,82 @@ export const paymentService = {
     return { success: true, message: isSuccess ? "Payment confirmed" : "Payment failed" };
   },
 
+  async handleRazorpayWebhook(
+    body: string,
+    signatureHeader: string
+  ): Promise<{ success: boolean; message: string }> {
+    let decoded: Record<string, unknown>;
+    let merchantTxnId: string;
+    try {
+      decoded = JSON.parse(body) as Record<string, unknown>;
+      const payload = decoded.payload as Record<string, unknown> | undefined;
+      const paymentLink = payload?.payment_link as Record<string, unknown> | undefined;
+      const linkEntity = paymentLink?.entity as Record<string, unknown> | undefined;
+      merchantTxnId = linkEntity?.reference_id as string;
+      if (!merchantTxnId) {
+        return { success: false, message: "Missing reference_id" };
+      }
+    } catch {
+      return { success: false, message: "Invalid webhook payload" };
+    }
+
+    const payment = await paymentRepository.findByMerchantTxnId(merchantTxnId);
+    if (!payment) {
+      return { success: false, message: "Payment not found" };
+    }
+
+    const cafe = payment.order.cafe;
+    const secret = process.env.RAZORPAY_WEBHOOK_SECRET || cafe?.razorpayWebhookSecret || "";
+
+    if (!verifyRazorpayWebhookSignature(body, signatureHeader, secret)) {
+      return { success: false, message: "Invalid signature" };
+    }
+
+    // Idempotent: already processed
+    if (payment.status === "SUCCESS" || payment.status === "REFUNDED") {
+      return { success: true, message: "Already processed" };
+    }
+
+    const event = decoded.event as string | undefined;
+    const failureEvents = ["payment.failed", "payment_link.cancelled", "payment_link.expired"];
+    if (event !== "payment_link.paid" && !failureEvents.includes(event || "")) {
+      return { success: true, message: "Event ignored" };
+    }
+
+    const isSuccess = event === "payment_link.paid";
+    const payload = decoded.payload as Record<string, unknown> | undefined;
+    const paymentEntity = (payload?.payment as Record<string, unknown> | undefined)?.entity as
+      | Record<string, unknown>
+      | undefined;
+
+    const won = await paymentRepository.claimPaymentResult(merchantTxnId, {
+      status: isSuccess ? "SUCCESS" : "FAILED",
+      razorpayPaymentId: paymentEntity?.id as string | undefined,
+      paymentMethod: paymentEntity?.method as string | undefined,
+      webhookPayload: decoded as Prisma.InputJsonValue,
+      paidAt: isSuccess ? new Date() : undefined,
+    });
+    if (!won) {
+      return { success: true, message: "Already processed" };
+    }
+
+    const newOrderStatus = isSuccess ? "PAID" : "FAILED";
+    const updatedOrder = await orderRepository.updateOrderStatus(
+      payment.orderId,
+      newOrderStatus as "PAID" | "FAILED"
+    );
+
+    if (isSuccess && updatedOrder) {
+      const fullOrder = await orderRepository.getOrderById(payment.orderId);
+      if (fullOrder) {
+        broadcastNewOrder(fullOrder);
+        after(() => sendOrderPlacedWhatsApp(fullOrder));
+      }
+    }
+
+    return { success: true, message: isSuccess ? "Payment confirmed" : "Payment failed" };
+  },
+
   async reconcilePayment(merchantTxnId: string): Promise<"success" | "failed" | "pending" | "already_done"> {
     const payment = await paymentRepository.findByMerchantTxnId(merchantTxnId);
     if (!payment) return "failed";
@@ -143,6 +223,45 @@ export const paymentService = {
     if (payment.status === "FAILED") return "failed";
 
     const cafe = payment.order.cafe;
+
+    if (payment.provider === "RAZORPAY") {
+      if (!payment.razorpayOrderId) return "pending";
+
+      const razorpayKeyId = process.env.RAZORPAY_KEY_ID || cafe?.razorpayKeyId;
+      const razorpayKeySecret = process.env.RAZORPAY_KEY_SECRET || cafe?.razorpayKeySecret;
+      const razorpayCredentials =
+        razorpayKeyId && razorpayKeySecret
+          ? { keyId: razorpayKeyId, keySecret: razorpayKeySecret }
+          : undefined;
+
+      const linkResult = await fetchPaymentLink(payment.razorpayOrderId, razorpayCredentials);
+      if (!linkResult.success) return "pending";
+      if (linkResult.status === "created" || linkResult.status === "partially_paid") return "pending";
+
+      const isSuccess = linkResult.status === "paid";
+      const linkPayments = linkResult.data?.payments as Array<Record<string, unknown>> | undefined;
+      const lastPayment = linkPayments?.[linkPayments.length - 1];
+
+      const won = await paymentRepository.claimPaymentResult(merchantTxnId, {
+        status: isSuccess ? "SUCCESS" : "FAILED",
+        razorpayPaymentId: lastPayment?.payment_id as string | undefined,
+        paidAt: isSuccess ? new Date() : undefined,
+      });
+      if (!won) return "already_done";
+
+      await orderRepository.updateOrderStatus(payment.orderId, isSuccess ? "PAID" : "FAILED");
+
+      if (isSuccess) {
+        const fullOrder = await orderRepository.getOrderById(payment.orderId);
+        if (fullOrder) {
+          broadcastNewOrder(fullOrder);
+          after(() => sendOrderPlacedWhatsApp(fullOrder));
+        }
+      }
+
+      return isSuccess ? "success" : "failed";
+    }
+
     const merchantId = process.env.PHONEPE_MERCHANT_ID || cafe?.phonepeMerchantId;
     const saltKey = process.env.PHONEPE_SALT_KEY || cafe?.phonepeSaltKey;
     const saltIndex = process.env.PHONEPE_SALT_INDEX || cafe?.phonepeSaltIndex || "1";

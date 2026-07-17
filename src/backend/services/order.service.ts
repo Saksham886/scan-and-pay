@@ -4,6 +4,7 @@ import { paymentRepository } from "@/backend/repositories/payment.repository";
 import { adminRepository } from "@/backend/repositories/admin.repository";
 import { generateOrderNumber } from "@/backend/lib/utils/order-number";
 import { initiatePayment } from "@/backend/lib/phonepe";
+import { createPaymentLink } from "@/backend/lib/razorpay";
 import { sseManager } from "@/backend/lib/sse";
 import { notifyOrderReady } from "@/backend/lib/whatsapp";
 import type { CreateOrderRequest, CreateOrderResponse, OrderSummary } from "@/shared/types";
@@ -110,16 +111,29 @@ export const orderService = {
       throw new Error("Order total must be greater than zero");
     }
 
+    const provider = cafe.paymentProvider;
     const isTestMode = process.env.PHONEPE_TEST_MODE === "true";
     const merchantId = process.env.PHONEPE_MERCHANT_ID || cafe.phonepeMerchantId;
     const saltKey = process.env.PHONEPE_SALT_KEY || cafe.phonepeSaltKey;
     const saltIndex = process.env.PHONEPE_SALT_INDEX || cafe.phonepeSaltIndex || "1";
 
-    if (!isTestMode && (!merchantId || !saltKey)) {
+    if (provider === "PHONEPE" && !isTestMode && (!merchantId || !saltKey)) {
       throw new Error("Payment is not configured for this cafe. Please contact support.");
     }
 
     const cafeCredentials = merchantId && saltKey ? { merchantId, saltKey, saltIndex } : undefined;
+
+    const razorpayKeyId = process.env.RAZORPAY_KEY_ID || cafe.razorpayKeyId;
+    const razorpayKeySecret = process.env.RAZORPAY_KEY_SECRET || cafe.razorpayKeySecret;
+
+    if (provider === "RAZORPAY" && (!razorpayKeyId || !razorpayKeySecret)) {
+      throw new Error("Payment is not configured for this cafe. Please contact support.");
+    }
+
+    const razorpayCredentials =
+      razorpayKeyId && razorpayKeySecret
+        ? { keyId: razorpayKeyId, keySecret: razorpayKeySecret }
+        : undefined;
 
     // Generate order number
     const orderNumber = await generateOrderNumber(cafe.id, cafe.slug);
@@ -154,7 +168,7 @@ export const orderService = {
       throw err;
     }
 
-    // Create payment and initiate PhonePe
+    // Create payment and initiate it with the cafe's configured gateway
     const merchantTxnId = `ORD-${order.id.slice(0, 8)}-${uuid().slice(0, 8)}`;
 
     await paymentRepository.createPayment({
@@ -162,21 +176,41 @@ export const orderService = {
       amountPaise: totalPaise,
       merchantTxnId,
       phonepeMerchantId: merchantId ?? undefined,
+      provider,
     });
 
-    const paymentResult = await initiatePayment({
-      merchantTransactionId: merchantTxnId,
-      amount: totalPaise,
-      redirectUrl: `${APP_URL}/${cafe.slug}/order/payment-return?txn=${merchantTxnId}&orderId=${order.id}`,
-      callbackUrl: `${APP_URL}/api/webhooks/phonepe`,
-      customerPhone: request.customerPhone,
-      credentials: cafeCredentials,
-    });
+    const returnUrl = `${APP_URL}/${cafe.slug}/order/payment-return?txn=${merchantTxnId}&orderId=${order.id}`;
+
+    const paymentResult =
+      provider === "RAZORPAY"
+        ? await createPaymentLink({
+            merchantTransactionId: merchantTxnId,
+            amount: totalPaise,
+            callbackUrl: returnUrl,
+            customerName: request.customerName,
+            customerPhone: request.customerPhone,
+            customerEmail: request.customerEmail,
+            credentials: razorpayCredentials,
+          })
+        : await initiatePayment({
+            merchantTransactionId: merchantTxnId,
+            amount: totalPaise,
+            redirectUrl: returnUrl,
+            callbackUrl: `${APP_URL}/api/webhooks/phonepe`,
+            customerPhone: request.customerPhone,
+            credentials: cafeCredentials,
+          });
 
     if (!paymentResult.success || !paymentResult.redirectUrl) {
       // Update order to failed if payment initiation fails
       await orderRepository.updateOrderStatus(order.id, "FAILED");
       throw new Error(paymentResult.error || "Failed to initiate payment");
+    }
+
+    const razorpayOrderId =
+      provider === "RAZORPAY" ? (paymentResult as { razorpayOrderId?: string }).razorpayOrderId : undefined;
+    if (razorpayOrderId) {
+      await paymentRepository.attachRazorpayOrderId(merchantTxnId, razorpayOrderId);
     }
 
     // Update order status to PAYMENT_PENDING

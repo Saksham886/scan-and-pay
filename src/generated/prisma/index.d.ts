@@ -110,6 +110,14 @@ export const PaymentStatus: {
 
 export type PaymentStatus = (typeof PaymentStatus)[keyof typeof PaymentStatus]
 
+
+export const PaymentProvider: {
+  PHONEPE: 'PHONEPE',
+  RAZORPAY: 'RAZORPAY'
+};
+
+export type PaymentProvider = (typeof PaymentProvider)[keyof typeof PaymentProvider]
+
 }
 
 export type UserRole = $Enums.UserRole
@@ -123,6 +131,10 @@ export const OrderStatus: typeof $Enums.OrderStatus
 export type PaymentStatus = $Enums.PaymentStatus
 
 export const PaymentStatus: typeof $Enums.PaymentStatus
+
+export type PaymentProvider = $Enums.PaymentProvider
+
+export const PaymentProvider: typeof $Enums.PaymentProvider
 
 /**
  * ##  Prisma Client ʲˢ
@@ -2197,6 +2209,10 @@ export namespace Prisma {
     phonepeMerchantId: string | null
     phonepeSaltKey: string | null
     phonepeSaltIndex: string | null
+    paymentProvider: $Enums.PaymentProvider | null
+    razorpayKeyId: string | null
+    razorpayKeySecret: string | null
+    razorpayWebhookSecret: string | null
     createdAt: Date | null
     updatedAt: Date | null
   }
@@ -2214,6 +2230,10 @@ export namespace Prisma {
     phonepeMerchantId: string | null
     phonepeSaltKey: string | null
     phonepeSaltIndex: string | null
+    paymentProvider: $Enums.PaymentProvider | null
+    razorpayKeyId: string | null
+    razorpayKeySecret: string | null
+    razorpayWebhookSecret: string | null
     createdAt: Date | null
     updatedAt: Date | null
   }
@@ -2231,6 +2251,10 @@ export namespace Prisma {
     phonepeMerchantId: number
     phonepeSaltKey: number
     phonepeSaltIndex: number
+    paymentProvider: number
+    razorpayKeyId: number
+    razorpayKeySecret: number
+    razorpayWebhookSecret: number
     createdAt: number
     updatedAt: number
     _all: number
@@ -2250,6 +2274,10 @@ export namespace Prisma {
     phonepeMerchantId?: true
     phonepeSaltKey?: true
     phonepeSaltIndex?: true
+    paymentProvider?: true
+    razorpayKeyId?: true
+    razorpayKeySecret?: true
+    razorpayWebhookSecret?: true
     createdAt?: true
     updatedAt?: true
   }
@@ -2267,6 +2295,10 @@ export namespace Prisma {
     phonepeMerchantId?: true
     phonepeSaltKey?: true
     phonepeSaltIndex?: true
+    paymentProvider?: true
+    razorpayKeyId?: true
+    razorpayKeySecret?: true
+    razorpayWebhookSecret?: true
     createdAt?: true
     updatedAt?: true
   }
@@ -2284,6 +2316,10 @@ export namespace Prisma {
     phonepeMerchantId?: true
     phonepeSaltKey?: true
     phonepeSaltIndex?: true
+    paymentProvider?: true
+    razorpayKeyId?: true
+    razorpayKeySecret?: true
+    razorpayWebhookSecret?: true
     createdAt?: true
     updatedAt?: true
     _all?: true
@@ -2374,6 +2410,10 @@ export namespace Prisma {
     phonepeMerchantId: string | null
     phonepeSaltKey: string | null
     phonepeSaltIndex: string | null
+    paymentProvider: $Enums.PaymentProvider
+    razorpayKeyId: string | null
+    razorpayKeySecret: string | null
+    razorpayWebhookSecret: string | null
     createdAt: Date
     updatedAt: Date
     _count: CafeCountAggregateOutputType | null
@@ -2408,6 +2448,10 @@ export namespace Prisma {
     phonepeMerchantId?: boolean
     phonepeSaltKey?: boolean
     phonepeSaltIndex?: boolean
+    paymentProvider?: boolean
+    razorpayKeyId?: boolean
+    razorpayKeySecret?: boolean
+    razorpayWebhookSecret?: boolean
     createdAt?: boolean
     updatedAt?: boolean
     users?: boolean | Cafe$usersArgs<ExtArgs>
@@ -2434,6 +2478,10 @@ export namespace Prisma {
     phonepeMerchantId?: boolean
     phonepeSaltKey?: boolean
     phonepeSaltIndex?: boolean
+    paymentProvider?: boolean
+    razorpayKeyId?: boolean
+    razorpayKeySecret?: boolean
+    razorpayWebhookSecret?: boolean
     createdAt?: boolean
     updatedAt?: boolean
   }, ExtArgs["result"]["cafe"]>
@@ -2451,6 +2499,10 @@ export namespace Prisma {
     phonepeMerchantId?: boolean
     phonepeSaltKey?: boolean
     phonepeSaltIndex?: boolean
+    paymentProvider?: boolean
+    razorpayKeyId?: boolean
+    razorpayKeySecret?: boolean
+    razorpayWebhookSecret?: boolean
     createdAt?: boolean
     updatedAt?: boolean
   }, ExtArgs["result"]["cafe"]>
@@ -2468,11 +2520,15 @@ export namespace Prisma {
     phonepeMerchantId?: boolean
     phonepeSaltKey?: boolean
     phonepeSaltIndex?: boolean
+    paymentProvider?: boolean
+    razorpayKeyId?: boolean
+    razorpayKeySecret?: boolean
+    razorpayWebhookSecret?: boolean
     createdAt?: boolean
     updatedAt?: boolean
   }
 
-  export type CafeOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id" | "name" | "slug" | "address" | "phone" | "imageUrl" | "isActive" | "openingTime" | "closingTime" | "phonepeMerchantId" | "phonepeSaltKey" | "phonepeSaltIndex" | "createdAt" | "updatedAt", ExtArgs["result"]["cafe"]>
+  export type CafeOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id" | "name" | "slug" | "address" | "phone" | "imageUrl" | "isActive" | "openingTime" | "closingTime" | "phonepeMerchantId" | "phonepeSaltKey" | "phonepeSaltIndex" | "paymentProvider" | "razorpayKeyId" | "razorpayKeySecret" | "razorpayWebhookSecret" | "createdAt" | "updatedAt", ExtArgs["result"]["cafe"]>
   export type CafeInclude<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     users?: boolean | Cafe$usersArgs<ExtArgs>
     categories?: boolean | Cafe$categoriesArgs<ExtArgs>
@@ -2512,6 +2568,10 @@ export namespace Prisma {
       phonepeMerchantId: string | null
       phonepeSaltKey: string | null
       phonepeSaltIndex: string | null
+      paymentProvider: $Enums.PaymentProvider
+      razorpayKeyId: string | null
+      razorpayKeySecret: string | null
+      razorpayWebhookSecret: string | null
       createdAt: Date
       updatedAt: Date
     }, ExtArgs["result"]["cafe"]>
@@ -2957,6 +3017,10 @@ export namespace Prisma {
     readonly phonepeMerchantId: FieldRef<"Cafe", 'String'>
     readonly phonepeSaltKey: FieldRef<"Cafe", 'String'>
     readonly phonepeSaltIndex: FieldRef<"Cafe", 'String'>
+    readonly paymentProvider: FieldRef<"Cafe", 'PaymentProvider'>
+    readonly razorpayKeyId: FieldRef<"Cafe", 'String'>
+    readonly razorpayKeySecret: FieldRef<"Cafe", 'String'>
+    readonly razorpayWebhookSecret: FieldRef<"Cafe", 'String'>
     readonly createdAt: FieldRef<"Cafe", 'DateTime'>
     readonly updatedAt: FieldRef<"Cafe", 'DateTime'>
   }
@@ -10694,6 +10758,9 @@ export namespace Prisma {
     phonepeTxnId: string | null
     merchantTxnId: string | null
     phonepeMerchantId: string | null
+    provider: $Enums.PaymentProvider | null
+    razorpayOrderId: string | null
+    razorpayPaymentId: string | null
     paymentMethod: string | null
     paidAt: Date | null
     createdAt: Date | null
@@ -10708,6 +10775,9 @@ export namespace Prisma {
     phonepeTxnId: string | null
     merchantTxnId: string | null
     phonepeMerchantId: string | null
+    provider: $Enums.PaymentProvider | null
+    razorpayOrderId: string | null
+    razorpayPaymentId: string | null
     paymentMethod: string | null
     paidAt: Date | null
     createdAt: Date | null
@@ -10722,6 +10792,9 @@ export namespace Prisma {
     phonepeTxnId: number
     merchantTxnId: number
     phonepeMerchantId: number
+    provider: number
+    razorpayOrderId: number
+    razorpayPaymentId: number
     paymentMethod: number
     webhookPayload: number
     paidAt: number
@@ -10747,6 +10820,9 @@ export namespace Prisma {
     phonepeTxnId?: true
     merchantTxnId?: true
     phonepeMerchantId?: true
+    provider?: true
+    razorpayOrderId?: true
+    razorpayPaymentId?: true
     paymentMethod?: true
     paidAt?: true
     createdAt?: true
@@ -10761,6 +10837,9 @@ export namespace Prisma {
     phonepeTxnId?: true
     merchantTxnId?: true
     phonepeMerchantId?: true
+    provider?: true
+    razorpayOrderId?: true
+    razorpayPaymentId?: true
     paymentMethod?: true
     paidAt?: true
     createdAt?: true
@@ -10775,6 +10854,9 @@ export namespace Prisma {
     phonepeTxnId?: true
     merchantTxnId?: true
     phonepeMerchantId?: true
+    provider?: true
+    razorpayOrderId?: true
+    razorpayPaymentId?: true
     paymentMethod?: true
     webhookPayload?: true
     paidAt?: true
@@ -10877,6 +10959,9 @@ export namespace Prisma {
     phonepeTxnId: string | null
     merchantTxnId: string
     phonepeMerchantId: string | null
+    provider: $Enums.PaymentProvider
+    razorpayOrderId: string | null
+    razorpayPaymentId: string | null
     paymentMethod: string | null
     webhookPayload: JsonValue | null
     paidAt: Date | null
@@ -10911,6 +10996,9 @@ export namespace Prisma {
     phonepeTxnId?: boolean
     merchantTxnId?: boolean
     phonepeMerchantId?: boolean
+    provider?: boolean
+    razorpayOrderId?: boolean
+    razorpayPaymentId?: boolean
     paymentMethod?: boolean
     webhookPayload?: boolean
     paidAt?: boolean
@@ -10927,6 +11015,9 @@ export namespace Prisma {
     phonepeTxnId?: boolean
     merchantTxnId?: boolean
     phonepeMerchantId?: boolean
+    provider?: boolean
+    razorpayOrderId?: boolean
+    razorpayPaymentId?: boolean
     paymentMethod?: boolean
     webhookPayload?: boolean
     paidAt?: boolean
@@ -10943,6 +11034,9 @@ export namespace Prisma {
     phonepeTxnId?: boolean
     merchantTxnId?: boolean
     phonepeMerchantId?: boolean
+    provider?: boolean
+    razorpayOrderId?: boolean
+    razorpayPaymentId?: boolean
     paymentMethod?: boolean
     webhookPayload?: boolean
     paidAt?: boolean
@@ -10959,6 +11053,9 @@ export namespace Prisma {
     phonepeTxnId?: boolean
     merchantTxnId?: boolean
     phonepeMerchantId?: boolean
+    provider?: boolean
+    razorpayOrderId?: boolean
+    razorpayPaymentId?: boolean
     paymentMethod?: boolean
     webhookPayload?: boolean
     paidAt?: boolean
@@ -10966,7 +11063,7 @@ export namespace Prisma {
     updatedAt?: boolean
   }
 
-  export type PaymentOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id" | "orderId" | "amountPaise" | "status" | "phonepeTxnId" | "merchantTxnId" | "phonepeMerchantId" | "paymentMethod" | "webhookPayload" | "paidAt" | "createdAt" | "updatedAt", ExtArgs["result"]["payment"]>
+  export type PaymentOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id" | "orderId" | "amountPaise" | "status" | "phonepeTxnId" | "merchantTxnId" | "phonepeMerchantId" | "provider" | "razorpayOrderId" | "razorpayPaymentId" | "paymentMethod" | "webhookPayload" | "paidAt" | "createdAt" | "updatedAt", ExtArgs["result"]["payment"]>
   export type PaymentInclude<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     order?: boolean | OrderDefaultArgs<ExtArgs>
   }
@@ -10990,6 +11087,9 @@ export namespace Prisma {
       phonepeTxnId: string | null
       merchantTxnId: string
       phonepeMerchantId: string | null
+      provider: $Enums.PaymentProvider
+      razorpayOrderId: string | null
+      razorpayPaymentId: string | null
       paymentMethod: string | null
       webhookPayload: Prisma.JsonValue | null
       paidAt: Date | null
@@ -11426,6 +11526,9 @@ export namespace Prisma {
     readonly phonepeTxnId: FieldRef<"Payment", 'String'>
     readonly merchantTxnId: FieldRef<"Payment", 'String'>
     readonly phonepeMerchantId: FieldRef<"Payment", 'String'>
+    readonly provider: FieldRef<"Payment", 'PaymentProvider'>
+    readonly razorpayOrderId: FieldRef<"Payment", 'String'>
+    readonly razorpayPaymentId: FieldRef<"Payment", 'String'>
     readonly paymentMethod: FieldRef<"Payment", 'String'>
     readonly webhookPayload: FieldRef<"Payment", 'Json'>
     readonly paidAt: FieldRef<"Payment", 'DateTime'>
@@ -16368,6 +16471,10 @@ export namespace Prisma {
     phonepeMerchantId: 'phonepeMerchantId',
     phonepeSaltKey: 'phonepeSaltKey',
     phonepeSaltIndex: 'phonepeSaltIndex',
+    paymentProvider: 'paymentProvider',
+    razorpayKeyId: 'razorpayKeyId',
+    razorpayKeySecret: 'razorpayKeySecret',
+    razorpayWebhookSecret: 'razorpayWebhookSecret',
     createdAt: 'createdAt',
     updatedAt: 'updatedAt'
   };
@@ -16470,6 +16577,9 @@ export namespace Prisma {
     phonepeTxnId: 'phonepeTxnId',
     merchantTxnId: 'merchantTxnId',
     phonepeMerchantId: 'phonepeMerchantId',
+    provider: 'provider',
+    razorpayOrderId: 'razorpayOrderId',
+    razorpayPaymentId: 'razorpayPaymentId',
     paymentMethod: 'paymentMethod',
     webhookPayload: 'webhookPayload',
     paidAt: 'paidAt',
@@ -16602,6 +16712,20 @@ export namespace Prisma {
 
 
   /**
+   * Reference to a field of type 'PaymentProvider'
+   */
+  export type EnumPaymentProviderFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'PaymentProvider'>
+    
+
+
+  /**
+   * Reference to a field of type 'PaymentProvider[]'
+   */
+  export type ListEnumPaymentProviderFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'PaymentProvider[]'>
+    
+
+
+  /**
    * Reference to a field of type 'DateTime'
    */
   export type DateTimeFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'DateTime'>
@@ -16718,6 +16842,10 @@ export namespace Prisma {
     phonepeMerchantId?: StringNullableFilter<"Cafe"> | string | null
     phonepeSaltKey?: StringNullableFilter<"Cafe"> | string | null
     phonepeSaltIndex?: StringNullableFilter<"Cafe"> | string | null
+    paymentProvider?: EnumPaymentProviderFilter<"Cafe"> | $Enums.PaymentProvider
+    razorpayKeyId?: StringNullableFilter<"Cafe"> | string | null
+    razorpayKeySecret?: StringNullableFilter<"Cafe"> | string | null
+    razorpayWebhookSecret?: StringNullableFilter<"Cafe"> | string | null
     createdAt?: DateTimeFilter<"Cafe"> | Date | string
     updatedAt?: DateTimeFilter<"Cafe"> | Date | string
     users?: UserListRelationFilter
@@ -16743,6 +16871,10 @@ export namespace Prisma {
     phonepeMerchantId?: SortOrderInput | SortOrder
     phonepeSaltKey?: SortOrderInput | SortOrder
     phonepeSaltIndex?: SortOrderInput | SortOrder
+    paymentProvider?: SortOrder
+    razorpayKeyId?: SortOrderInput | SortOrder
+    razorpayKeySecret?: SortOrderInput | SortOrder
+    razorpayWebhookSecret?: SortOrderInput | SortOrder
     createdAt?: SortOrder
     updatedAt?: SortOrder
     users?: UserOrderByRelationAggregateInput
@@ -16771,6 +16903,10 @@ export namespace Prisma {
     phonepeMerchantId?: StringNullableFilter<"Cafe"> | string | null
     phonepeSaltKey?: StringNullableFilter<"Cafe"> | string | null
     phonepeSaltIndex?: StringNullableFilter<"Cafe"> | string | null
+    paymentProvider?: EnumPaymentProviderFilter<"Cafe"> | $Enums.PaymentProvider
+    razorpayKeyId?: StringNullableFilter<"Cafe"> | string | null
+    razorpayKeySecret?: StringNullableFilter<"Cafe"> | string | null
+    razorpayWebhookSecret?: StringNullableFilter<"Cafe"> | string | null
     createdAt?: DateTimeFilter<"Cafe"> | Date | string
     updatedAt?: DateTimeFilter<"Cafe"> | Date | string
     users?: UserListRelationFilter
@@ -16796,6 +16932,10 @@ export namespace Prisma {
     phonepeMerchantId?: SortOrderInput | SortOrder
     phonepeSaltKey?: SortOrderInput | SortOrder
     phonepeSaltIndex?: SortOrderInput | SortOrder
+    paymentProvider?: SortOrder
+    razorpayKeyId?: SortOrderInput | SortOrder
+    razorpayKeySecret?: SortOrderInput | SortOrder
+    razorpayWebhookSecret?: SortOrderInput | SortOrder
     createdAt?: SortOrder
     updatedAt?: SortOrder
     _count?: CafeCountOrderByAggregateInput
@@ -16819,6 +16959,10 @@ export namespace Prisma {
     phonepeMerchantId?: StringNullableWithAggregatesFilter<"Cafe"> | string | null
     phonepeSaltKey?: StringNullableWithAggregatesFilter<"Cafe"> | string | null
     phonepeSaltIndex?: StringNullableWithAggregatesFilter<"Cafe"> | string | null
+    paymentProvider?: EnumPaymentProviderWithAggregatesFilter<"Cafe"> | $Enums.PaymentProvider
+    razorpayKeyId?: StringNullableWithAggregatesFilter<"Cafe"> | string | null
+    razorpayKeySecret?: StringNullableWithAggregatesFilter<"Cafe"> | string | null
+    razorpayWebhookSecret?: StringNullableWithAggregatesFilter<"Cafe"> | string | null
     createdAt?: DateTimeWithAggregatesFilter<"Cafe"> | Date | string
     updatedAt?: DateTimeWithAggregatesFilter<"Cafe"> | Date | string
   }
@@ -17304,6 +17448,9 @@ export namespace Prisma {
     phonepeTxnId?: StringNullableFilter<"Payment"> | string | null
     merchantTxnId?: StringFilter<"Payment"> | string
     phonepeMerchantId?: StringNullableFilter<"Payment"> | string | null
+    provider?: EnumPaymentProviderFilter<"Payment"> | $Enums.PaymentProvider
+    razorpayOrderId?: StringNullableFilter<"Payment"> | string | null
+    razorpayPaymentId?: StringNullableFilter<"Payment"> | string | null
     paymentMethod?: StringNullableFilter<"Payment"> | string | null
     webhookPayload?: JsonNullableFilter<"Payment">
     paidAt?: DateTimeNullableFilter<"Payment"> | Date | string | null
@@ -17320,6 +17467,9 @@ export namespace Prisma {
     phonepeTxnId?: SortOrderInput | SortOrder
     merchantTxnId?: SortOrder
     phonepeMerchantId?: SortOrderInput | SortOrder
+    provider?: SortOrder
+    razorpayOrderId?: SortOrderInput | SortOrder
+    razorpayPaymentId?: SortOrderInput | SortOrder
     paymentMethod?: SortOrderInput | SortOrder
     webhookPayload?: SortOrderInput | SortOrder
     paidAt?: SortOrderInput | SortOrder
@@ -17332,6 +17482,8 @@ export namespace Prisma {
     id?: string
     phonepeTxnId?: string
     merchantTxnId?: string
+    razorpayOrderId?: string
+    razorpayPaymentId?: string
     AND?: PaymentWhereInput | PaymentWhereInput[]
     OR?: PaymentWhereInput[]
     NOT?: PaymentWhereInput | PaymentWhereInput[]
@@ -17339,13 +17491,14 @@ export namespace Prisma {
     amountPaise?: IntFilter<"Payment"> | number
     status?: EnumPaymentStatusFilter<"Payment"> | $Enums.PaymentStatus
     phonepeMerchantId?: StringNullableFilter<"Payment"> | string | null
+    provider?: EnumPaymentProviderFilter<"Payment"> | $Enums.PaymentProvider
     paymentMethod?: StringNullableFilter<"Payment"> | string | null
     webhookPayload?: JsonNullableFilter<"Payment">
     paidAt?: DateTimeNullableFilter<"Payment"> | Date | string | null
     createdAt?: DateTimeFilter<"Payment"> | Date | string
     updatedAt?: DateTimeFilter<"Payment"> | Date | string
     order?: XOR<OrderScalarRelationFilter, OrderWhereInput>
-  }, "id" | "phonepeTxnId" | "merchantTxnId">
+  }, "id" | "phonepeTxnId" | "merchantTxnId" | "razorpayOrderId" | "razorpayPaymentId">
 
   export type PaymentOrderByWithAggregationInput = {
     id?: SortOrder
@@ -17355,6 +17508,9 @@ export namespace Prisma {
     phonepeTxnId?: SortOrderInput | SortOrder
     merchantTxnId?: SortOrder
     phonepeMerchantId?: SortOrderInput | SortOrder
+    provider?: SortOrder
+    razorpayOrderId?: SortOrderInput | SortOrder
+    razorpayPaymentId?: SortOrderInput | SortOrder
     paymentMethod?: SortOrderInput | SortOrder
     webhookPayload?: SortOrderInput | SortOrder
     paidAt?: SortOrderInput | SortOrder
@@ -17378,6 +17534,9 @@ export namespace Prisma {
     phonepeTxnId?: StringNullableWithAggregatesFilter<"Payment"> | string | null
     merchantTxnId?: StringWithAggregatesFilter<"Payment"> | string
     phonepeMerchantId?: StringNullableWithAggregatesFilter<"Payment"> | string | null
+    provider?: EnumPaymentProviderWithAggregatesFilter<"Payment"> | $Enums.PaymentProvider
+    razorpayOrderId?: StringNullableWithAggregatesFilter<"Payment"> | string | null
+    razorpayPaymentId?: StringNullableWithAggregatesFilter<"Payment"> | string | null
     paymentMethod?: StringNullableWithAggregatesFilter<"Payment"> | string | null
     webhookPayload?: JsonNullableWithAggregatesFilter<"Payment">
     paidAt?: DateTimeNullableWithAggregatesFilter<"Payment"> | Date | string | null
@@ -17675,6 +17834,10 @@ export namespace Prisma {
     phonepeMerchantId?: string | null
     phonepeSaltKey?: string | null
     phonepeSaltIndex?: string | null
+    paymentProvider?: $Enums.PaymentProvider
+    razorpayKeyId?: string | null
+    razorpayKeySecret?: string | null
+    razorpayWebhookSecret?: string | null
     createdAt?: Date | string
     updatedAt?: Date | string
     users?: UserCreateNestedManyWithoutCafeInput
@@ -17700,6 +17863,10 @@ export namespace Prisma {
     phonepeMerchantId?: string | null
     phonepeSaltKey?: string | null
     phonepeSaltIndex?: string | null
+    paymentProvider?: $Enums.PaymentProvider
+    razorpayKeyId?: string | null
+    razorpayKeySecret?: string | null
+    razorpayWebhookSecret?: string | null
     createdAt?: Date | string
     updatedAt?: Date | string
     users?: UserUncheckedCreateNestedManyWithoutCafeInput
@@ -17725,6 +17892,10 @@ export namespace Prisma {
     phonepeMerchantId?: NullableStringFieldUpdateOperationsInput | string | null
     phonepeSaltKey?: NullableStringFieldUpdateOperationsInput | string | null
     phonepeSaltIndex?: NullableStringFieldUpdateOperationsInput | string | null
+    paymentProvider?: EnumPaymentProviderFieldUpdateOperationsInput | $Enums.PaymentProvider
+    razorpayKeyId?: NullableStringFieldUpdateOperationsInput | string | null
+    razorpayKeySecret?: NullableStringFieldUpdateOperationsInput | string | null
+    razorpayWebhookSecret?: NullableStringFieldUpdateOperationsInput | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     users?: UserUpdateManyWithoutCafeNestedInput
@@ -17750,6 +17921,10 @@ export namespace Prisma {
     phonepeMerchantId?: NullableStringFieldUpdateOperationsInput | string | null
     phonepeSaltKey?: NullableStringFieldUpdateOperationsInput | string | null
     phonepeSaltIndex?: NullableStringFieldUpdateOperationsInput | string | null
+    paymentProvider?: EnumPaymentProviderFieldUpdateOperationsInput | $Enums.PaymentProvider
+    razorpayKeyId?: NullableStringFieldUpdateOperationsInput | string | null
+    razorpayKeySecret?: NullableStringFieldUpdateOperationsInput | string | null
+    razorpayWebhookSecret?: NullableStringFieldUpdateOperationsInput | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     users?: UserUncheckedUpdateManyWithoutCafeNestedInput
@@ -17775,6 +17950,10 @@ export namespace Prisma {
     phonepeMerchantId?: string | null
     phonepeSaltKey?: string | null
     phonepeSaltIndex?: string | null
+    paymentProvider?: $Enums.PaymentProvider
+    razorpayKeyId?: string | null
+    razorpayKeySecret?: string | null
+    razorpayWebhookSecret?: string | null
     createdAt?: Date | string
     updatedAt?: Date | string
   }
@@ -17792,6 +17971,10 @@ export namespace Prisma {
     phonepeMerchantId?: NullableStringFieldUpdateOperationsInput | string | null
     phonepeSaltKey?: NullableStringFieldUpdateOperationsInput | string | null
     phonepeSaltIndex?: NullableStringFieldUpdateOperationsInput | string | null
+    paymentProvider?: EnumPaymentProviderFieldUpdateOperationsInput | $Enums.PaymentProvider
+    razorpayKeyId?: NullableStringFieldUpdateOperationsInput | string | null
+    razorpayKeySecret?: NullableStringFieldUpdateOperationsInput | string | null
+    razorpayWebhookSecret?: NullableStringFieldUpdateOperationsInput | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
   }
@@ -17809,6 +17992,10 @@ export namespace Prisma {
     phonepeMerchantId?: NullableStringFieldUpdateOperationsInput | string | null
     phonepeSaltKey?: NullableStringFieldUpdateOperationsInput | string | null
     phonepeSaltIndex?: NullableStringFieldUpdateOperationsInput | string | null
+    paymentProvider?: EnumPaymentProviderFieldUpdateOperationsInput | $Enums.PaymentProvider
+    razorpayKeyId?: NullableStringFieldUpdateOperationsInput | string | null
+    razorpayKeySecret?: NullableStringFieldUpdateOperationsInput | string | null
+    razorpayWebhookSecret?: NullableStringFieldUpdateOperationsInput | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
   }
@@ -18314,6 +18501,9 @@ export namespace Prisma {
     phonepeTxnId?: string | null
     merchantTxnId: string
     phonepeMerchantId?: string | null
+    provider?: $Enums.PaymentProvider
+    razorpayOrderId?: string | null
+    razorpayPaymentId?: string | null
     paymentMethod?: string | null
     webhookPayload?: NullableJsonNullValueInput | InputJsonValue
     paidAt?: Date | string | null
@@ -18330,6 +18520,9 @@ export namespace Prisma {
     phonepeTxnId?: string | null
     merchantTxnId: string
     phonepeMerchantId?: string | null
+    provider?: $Enums.PaymentProvider
+    razorpayOrderId?: string | null
+    razorpayPaymentId?: string | null
     paymentMethod?: string | null
     webhookPayload?: NullableJsonNullValueInput | InputJsonValue
     paidAt?: Date | string | null
@@ -18344,6 +18537,9 @@ export namespace Prisma {
     phonepeTxnId?: NullableStringFieldUpdateOperationsInput | string | null
     merchantTxnId?: StringFieldUpdateOperationsInput | string
     phonepeMerchantId?: NullableStringFieldUpdateOperationsInput | string | null
+    provider?: EnumPaymentProviderFieldUpdateOperationsInput | $Enums.PaymentProvider
+    razorpayOrderId?: NullableStringFieldUpdateOperationsInput | string | null
+    razorpayPaymentId?: NullableStringFieldUpdateOperationsInput | string | null
     paymentMethod?: NullableStringFieldUpdateOperationsInput | string | null
     webhookPayload?: NullableJsonNullValueInput | InputJsonValue
     paidAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
@@ -18360,6 +18556,9 @@ export namespace Prisma {
     phonepeTxnId?: NullableStringFieldUpdateOperationsInput | string | null
     merchantTxnId?: StringFieldUpdateOperationsInput | string
     phonepeMerchantId?: NullableStringFieldUpdateOperationsInput | string | null
+    provider?: EnumPaymentProviderFieldUpdateOperationsInput | $Enums.PaymentProvider
+    razorpayOrderId?: NullableStringFieldUpdateOperationsInput | string | null
+    razorpayPaymentId?: NullableStringFieldUpdateOperationsInput | string | null
     paymentMethod?: NullableStringFieldUpdateOperationsInput | string | null
     webhookPayload?: NullableJsonNullValueInput | InputJsonValue
     paidAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
@@ -18375,6 +18574,9 @@ export namespace Prisma {
     phonepeTxnId?: string | null
     merchantTxnId: string
     phonepeMerchantId?: string | null
+    provider?: $Enums.PaymentProvider
+    razorpayOrderId?: string | null
+    razorpayPaymentId?: string | null
     paymentMethod?: string | null
     webhookPayload?: NullableJsonNullValueInput | InputJsonValue
     paidAt?: Date | string | null
@@ -18389,6 +18591,9 @@ export namespace Prisma {
     phonepeTxnId?: NullableStringFieldUpdateOperationsInput | string | null
     merchantTxnId?: StringFieldUpdateOperationsInput | string
     phonepeMerchantId?: NullableStringFieldUpdateOperationsInput | string | null
+    provider?: EnumPaymentProviderFieldUpdateOperationsInput | $Enums.PaymentProvider
+    razorpayOrderId?: NullableStringFieldUpdateOperationsInput | string | null
+    razorpayPaymentId?: NullableStringFieldUpdateOperationsInput | string | null
     paymentMethod?: NullableStringFieldUpdateOperationsInput | string | null
     webhookPayload?: NullableJsonNullValueInput | InputJsonValue
     paidAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
@@ -18404,6 +18609,9 @@ export namespace Prisma {
     phonepeTxnId?: NullableStringFieldUpdateOperationsInput | string | null
     merchantTxnId?: StringFieldUpdateOperationsInput | string
     phonepeMerchantId?: NullableStringFieldUpdateOperationsInput | string | null
+    provider?: EnumPaymentProviderFieldUpdateOperationsInput | $Enums.PaymentProvider
+    razorpayOrderId?: NullableStringFieldUpdateOperationsInput | string | null
+    razorpayPaymentId?: NullableStringFieldUpdateOperationsInput | string | null
     paymentMethod?: NullableStringFieldUpdateOperationsInput | string | null
     webhookPayload?: NullableJsonNullValueInput | InputJsonValue
     paidAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
@@ -18740,6 +18948,13 @@ export namespace Prisma {
     not?: NestedBoolFilter<$PrismaModel> | boolean
   }
 
+  export type EnumPaymentProviderFilter<$PrismaModel = never> = {
+    equals?: $Enums.PaymentProvider | EnumPaymentProviderFieldRefInput<$PrismaModel>
+    in?: $Enums.PaymentProvider[] | ListEnumPaymentProviderFieldRefInput<$PrismaModel>
+    notIn?: $Enums.PaymentProvider[] | ListEnumPaymentProviderFieldRefInput<$PrismaModel>
+    not?: NestedEnumPaymentProviderFilter<$PrismaModel> | $Enums.PaymentProvider
+  }
+
   export type DateTimeFilter<$PrismaModel = never> = {
     equals?: Date | string | DateTimeFieldRefInput<$PrismaModel>
     in?: Date[] | string[] | ListDateTimeFieldRefInput<$PrismaModel>
@@ -18849,6 +19064,10 @@ export namespace Prisma {
     phonepeMerchantId?: SortOrder
     phonepeSaltKey?: SortOrder
     phonepeSaltIndex?: SortOrder
+    paymentProvider?: SortOrder
+    razorpayKeyId?: SortOrder
+    razorpayKeySecret?: SortOrder
+    razorpayWebhookSecret?: SortOrder
     createdAt?: SortOrder
     updatedAt?: SortOrder
   }
@@ -18866,6 +19085,10 @@ export namespace Prisma {
     phonepeMerchantId?: SortOrder
     phonepeSaltKey?: SortOrder
     phonepeSaltIndex?: SortOrder
+    paymentProvider?: SortOrder
+    razorpayKeyId?: SortOrder
+    razorpayKeySecret?: SortOrder
+    razorpayWebhookSecret?: SortOrder
     createdAt?: SortOrder
     updatedAt?: SortOrder
   }
@@ -18883,6 +19106,10 @@ export namespace Prisma {
     phonepeMerchantId?: SortOrder
     phonepeSaltKey?: SortOrder
     phonepeSaltIndex?: SortOrder
+    paymentProvider?: SortOrder
+    razorpayKeyId?: SortOrder
+    razorpayKeySecret?: SortOrder
+    razorpayWebhookSecret?: SortOrder
     createdAt?: SortOrder
     updatedAt?: SortOrder
   }
@@ -18929,6 +19156,16 @@ export namespace Prisma {
     _count?: NestedIntFilter<$PrismaModel>
     _min?: NestedBoolFilter<$PrismaModel>
     _max?: NestedBoolFilter<$PrismaModel>
+  }
+
+  export type EnumPaymentProviderWithAggregatesFilter<$PrismaModel = never> = {
+    equals?: $Enums.PaymentProvider | EnumPaymentProviderFieldRefInput<$PrismaModel>
+    in?: $Enums.PaymentProvider[] | ListEnumPaymentProviderFieldRefInput<$PrismaModel>
+    notIn?: $Enums.PaymentProvider[] | ListEnumPaymentProviderFieldRefInput<$PrismaModel>
+    not?: NestedEnumPaymentProviderWithAggregatesFilter<$PrismaModel> | $Enums.PaymentProvider
+    _count?: NestedIntFilter<$PrismaModel>
+    _min?: NestedEnumPaymentProviderFilter<$PrismaModel>
+    _max?: NestedEnumPaymentProviderFilter<$PrismaModel>
   }
 
   export type DateTimeWithAggregatesFilter<$PrismaModel = never> = {
@@ -19402,6 +19639,9 @@ export namespace Prisma {
     phonepeTxnId?: SortOrder
     merchantTxnId?: SortOrder
     phonepeMerchantId?: SortOrder
+    provider?: SortOrder
+    razorpayOrderId?: SortOrder
+    razorpayPaymentId?: SortOrder
     paymentMethod?: SortOrder
     webhookPayload?: SortOrder
     paidAt?: SortOrder
@@ -19421,6 +19661,9 @@ export namespace Prisma {
     phonepeTxnId?: SortOrder
     merchantTxnId?: SortOrder
     phonepeMerchantId?: SortOrder
+    provider?: SortOrder
+    razorpayOrderId?: SortOrder
+    razorpayPaymentId?: SortOrder
     paymentMethod?: SortOrder
     paidAt?: SortOrder
     createdAt?: SortOrder
@@ -19435,6 +19678,9 @@ export namespace Prisma {
     phonepeTxnId?: SortOrder
     merchantTxnId?: SortOrder
     phonepeMerchantId?: SortOrder
+    provider?: SortOrder
+    razorpayOrderId?: SortOrder
+    razorpayPaymentId?: SortOrder
     paymentMethod?: SortOrder
     paidAt?: SortOrder
     createdAt?: SortOrder
@@ -19760,6 +20006,10 @@ export namespace Prisma {
 
   export type BoolFieldUpdateOperationsInput = {
     set?: boolean
+  }
+
+  export type EnumPaymentProviderFieldUpdateOperationsInput = {
+    set?: $Enums.PaymentProvider
   }
 
   export type DateTimeFieldUpdateOperationsInput = {
@@ -20515,6 +20765,13 @@ export namespace Prisma {
     not?: NestedBoolFilter<$PrismaModel> | boolean
   }
 
+  export type NestedEnumPaymentProviderFilter<$PrismaModel = never> = {
+    equals?: $Enums.PaymentProvider | EnumPaymentProviderFieldRefInput<$PrismaModel>
+    in?: $Enums.PaymentProvider[] | ListEnumPaymentProviderFieldRefInput<$PrismaModel>
+    notIn?: $Enums.PaymentProvider[] | ListEnumPaymentProviderFieldRefInput<$PrismaModel>
+    not?: NestedEnumPaymentProviderFilter<$PrismaModel> | $Enums.PaymentProvider
+  }
+
   export type NestedDateTimeFilter<$PrismaModel = never> = {
     equals?: Date | string | DateTimeFieldRefInput<$PrismaModel>
     in?: Date[] | string[] | ListDateTimeFieldRefInput<$PrismaModel>
@@ -20588,6 +20845,16 @@ export namespace Prisma {
     _count?: NestedIntFilter<$PrismaModel>
     _min?: NestedBoolFilter<$PrismaModel>
     _max?: NestedBoolFilter<$PrismaModel>
+  }
+
+  export type NestedEnumPaymentProviderWithAggregatesFilter<$PrismaModel = never> = {
+    equals?: $Enums.PaymentProvider | EnumPaymentProviderFieldRefInput<$PrismaModel>
+    in?: $Enums.PaymentProvider[] | ListEnumPaymentProviderFieldRefInput<$PrismaModel>
+    notIn?: $Enums.PaymentProvider[] | ListEnumPaymentProviderFieldRefInput<$PrismaModel>
+    not?: NestedEnumPaymentProviderWithAggregatesFilter<$PrismaModel> | $Enums.PaymentProvider
+    _count?: NestedIntFilter<$PrismaModel>
+    _min?: NestedEnumPaymentProviderFilter<$PrismaModel>
+    _max?: NestedEnumPaymentProviderFilter<$PrismaModel>
   }
 
   export type NestedDateTimeWithAggregatesFilter<$PrismaModel = never> = {
@@ -21268,6 +21535,10 @@ export namespace Prisma {
     phonepeMerchantId?: string | null
     phonepeSaltKey?: string | null
     phonepeSaltIndex?: string | null
+    paymentProvider?: $Enums.PaymentProvider
+    razorpayKeyId?: string | null
+    razorpayKeySecret?: string | null
+    razorpayWebhookSecret?: string | null
     createdAt?: Date | string
     updatedAt?: Date | string
     categories?: MenuCategoryCreateNestedManyWithoutCafeInput
@@ -21292,6 +21563,10 @@ export namespace Prisma {
     phonepeMerchantId?: string | null
     phonepeSaltKey?: string | null
     phonepeSaltIndex?: string | null
+    paymentProvider?: $Enums.PaymentProvider
+    razorpayKeyId?: string | null
+    razorpayKeySecret?: string | null
+    razorpayWebhookSecret?: string | null
     createdAt?: Date | string
     updatedAt?: Date | string
     categories?: MenuCategoryUncheckedCreateNestedManyWithoutCafeInput
@@ -21362,6 +21637,10 @@ export namespace Prisma {
     phonepeMerchantId?: NullableStringFieldUpdateOperationsInput | string | null
     phonepeSaltKey?: NullableStringFieldUpdateOperationsInput | string | null
     phonepeSaltIndex?: NullableStringFieldUpdateOperationsInput | string | null
+    paymentProvider?: EnumPaymentProviderFieldUpdateOperationsInput | $Enums.PaymentProvider
+    razorpayKeyId?: NullableStringFieldUpdateOperationsInput | string | null
+    razorpayKeySecret?: NullableStringFieldUpdateOperationsInput | string | null
+    razorpayWebhookSecret?: NullableStringFieldUpdateOperationsInput | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     categories?: MenuCategoryUpdateManyWithoutCafeNestedInput
@@ -21386,6 +21665,10 @@ export namespace Prisma {
     phonepeMerchantId?: NullableStringFieldUpdateOperationsInput | string | null
     phonepeSaltKey?: NullableStringFieldUpdateOperationsInput | string | null
     phonepeSaltIndex?: NullableStringFieldUpdateOperationsInput | string | null
+    paymentProvider?: EnumPaymentProviderFieldUpdateOperationsInput | $Enums.PaymentProvider
+    razorpayKeyId?: NullableStringFieldUpdateOperationsInput | string | null
+    razorpayKeySecret?: NullableStringFieldUpdateOperationsInput | string | null
+    razorpayWebhookSecret?: NullableStringFieldUpdateOperationsInput | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     categories?: MenuCategoryUncheckedUpdateManyWithoutCafeNestedInput
@@ -21440,6 +21723,10 @@ export namespace Prisma {
     phonepeMerchantId?: string | null
     phonepeSaltKey?: string | null
     phonepeSaltIndex?: string | null
+    paymentProvider?: $Enums.PaymentProvider
+    razorpayKeyId?: string | null
+    razorpayKeySecret?: string | null
+    razorpayWebhookSecret?: string | null
     createdAt?: Date | string
     updatedAt?: Date | string
     users?: UserCreateNestedManyWithoutCafeInput
@@ -21464,6 +21751,10 @@ export namespace Prisma {
     phonepeMerchantId?: string | null
     phonepeSaltKey?: string | null
     phonepeSaltIndex?: string | null
+    paymentProvider?: $Enums.PaymentProvider
+    razorpayKeyId?: string | null
+    razorpayKeySecret?: string | null
+    razorpayWebhookSecret?: string | null
     createdAt?: Date | string
     updatedAt?: Date | string
     users?: UserUncheckedCreateNestedManyWithoutCafeInput
@@ -21544,6 +21835,10 @@ export namespace Prisma {
     phonepeMerchantId?: NullableStringFieldUpdateOperationsInput | string | null
     phonepeSaltKey?: NullableStringFieldUpdateOperationsInput | string | null
     phonepeSaltIndex?: NullableStringFieldUpdateOperationsInput | string | null
+    paymentProvider?: EnumPaymentProviderFieldUpdateOperationsInput | $Enums.PaymentProvider
+    razorpayKeyId?: NullableStringFieldUpdateOperationsInput | string | null
+    razorpayKeySecret?: NullableStringFieldUpdateOperationsInput | string | null
+    razorpayWebhookSecret?: NullableStringFieldUpdateOperationsInput | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     users?: UserUpdateManyWithoutCafeNestedInput
@@ -21568,6 +21863,10 @@ export namespace Prisma {
     phonepeMerchantId?: NullableStringFieldUpdateOperationsInput | string | null
     phonepeSaltKey?: NullableStringFieldUpdateOperationsInput | string | null
     phonepeSaltIndex?: NullableStringFieldUpdateOperationsInput | string | null
+    paymentProvider?: EnumPaymentProviderFieldUpdateOperationsInput | $Enums.PaymentProvider
+    razorpayKeyId?: NullableStringFieldUpdateOperationsInput | string | null
+    razorpayKeySecret?: NullableStringFieldUpdateOperationsInput | string | null
+    razorpayWebhookSecret?: NullableStringFieldUpdateOperationsInput | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     users?: UserUncheckedUpdateManyWithoutCafeNestedInput
@@ -21608,6 +21907,10 @@ export namespace Prisma {
     phonepeMerchantId?: string | null
     phonepeSaltKey?: string | null
     phonepeSaltIndex?: string | null
+    paymentProvider?: $Enums.PaymentProvider
+    razorpayKeyId?: string | null
+    razorpayKeySecret?: string | null
+    razorpayWebhookSecret?: string | null
     createdAt?: Date | string
     updatedAt?: Date | string
     users?: UserCreateNestedManyWithoutCafeInput
@@ -21632,6 +21935,10 @@ export namespace Prisma {
     phonepeMerchantId?: string | null
     phonepeSaltKey?: string | null
     phonepeSaltIndex?: string | null
+    paymentProvider?: $Enums.PaymentProvider
+    razorpayKeyId?: string | null
+    razorpayKeySecret?: string | null
+    razorpayWebhookSecret?: string | null
     createdAt?: Date | string
     updatedAt?: Date | string
     users?: UserUncheckedCreateNestedManyWithoutCafeInput
@@ -21723,6 +22030,10 @@ export namespace Prisma {
     phonepeMerchantId?: NullableStringFieldUpdateOperationsInput | string | null
     phonepeSaltKey?: NullableStringFieldUpdateOperationsInput | string | null
     phonepeSaltIndex?: NullableStringFieldUpdateOperationsInput | string | null
+    paymentProvider?: EnumPaymentProviderFieldUpdateOperationsInput | $Enums.PaymentProvider
+    razorpayKeyId?: NullableStringFieldUpdateOperationsInput | string | null
+    razorpayKeySecret?: NullableStringFieldUpdateOperationsInput | string | null
+    razorpayWebhookSecret?: NullableStringFieldUpdateOperationsInput | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     users?: UserUpdateManyWithoutCafeNestedInput
@@ -21747,6 +22058,10 @@ export namespace Prisma {
     phonepeMerchantId?: NullableStringFieldUpdateOperationsInput | string | null
     phonepeSaltKey?: NullableStringFieldUpdateOperationsInput | string | null
     phonepeSaltIndex?: NullableStringFieldUpdateOperationsInput | string | null
+    paymentProvider?: EnumPaymentProviderFieldUpdateOperationsInput | $Enums.PaymentProvider
+    razorpayKeyId?: NullableStringFieldUpdateOperationsInput | string | null
+    razorpayKeySecret?: NullableStringFieldUpdateOperationsInput | string | null
+    razorpayWebhookSecret?: NullableStringFieldUpdateOperationsInput | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     users?: UserUncheckedUpdateManyWithoutCafeNestedInput
@@ -21829,6 +22144,10 @@ export namespace Prisma {
     phonepeMerchantId?: string | null
     phonepeSaltKey?: string | null
     phonepeSaltIndex?: string | null
+    paymentProvider?: $Enums.PaymentProvider
+    razorpayKeyId?: string | null
+    razorpayKeySecret?: string | null
+    razorpayWebhookSecret?: string | null
     createdAt?: Date | string
     updatedAt?: Date | string
     users?: UserCreateNestedManyWithoutCafeInput
@@ -21853,6 +22172,10 @@ export namespace Prisma {
     phonepeMerchantId?: string | null
     phonepeSaltKey?: string | null
     phonepeSaltIndex?: string | null
+    paymentProvider?: $Enums.PaymentProvider
+    razorpayKeyId?: string | null
+    razorpayKeySecret?: string | null
+    razorpayWebhookSecret?: string | null
     createdAt?: Date | string
     updatedAt?: Date | string
     users?: UserUncheckedCreateNestedManyWithoutCafeInput
@@ -21925,6 +22248,9 @@ export namespace Prisma {
     phonepeTxnId?: string | null
     merchantTxnId: string
     phonepeMerchantId?: string | null
+    provider?: $Enums.PaymentProvider
+    razorpayOrderId?: string | null
+    razorpayPaymentId?: string | null
     paymentMethod?: string | null
     webhookPayload?: NullableJsonNullValueInput | InputJsonValue
     paidAt?: Date | string | null
@@ -21939,6 +22265,9 @@ export namespace Prisma {
     phonepeTxnId?: string | null
     merchantTxnId: string
     phonepeMerchantId?: string | null
+    provider?: $Enums.PaymentProvider
+    razorpayOrderId?: string | null
+    razorpayPaymentId?: string | null
     paymentMethod?: string | null
     webhookPayload?: NullableJsonNullValueInput | InputJsonValue
     paidAt?: Date | string | null
@@ -21980,6 +22309,10 @@ export namespace Prisma {
     phonepeMerchantId?: NullableStringFieldUpdateOperationsInput | string | null
     phonepeSaltKey?: NullableStringFieldUpdateOperationsInput | string | null
     phonepeSaltIndex?: NullableStringFieldUpdateOperationsInput | string | null
+    paymentProvider?: EnumPaymentProviderFieldUpdateOperationsInput | $Enums.PaymentProvider
+    razorpayKeyId?: NullableStringFieldUpdateOperationsInput | string | null
+    razorpayKeySecret?: NullableStringFieldUpdateOperationsInput | string | null
+    razorpayWebhookSecret?: NullableStringFieldUpdateOperationsInput | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     users?: UserUpdateManyWithoutCafeNestedInput
@@ -22004,6 +22337,10 @@ export namespace Prisma {
     phonepeMerchantId?: NullableStringFieldUpdateOperationsInput | string | null
     phonepeSaltKey?: NullableStringFieldUpdateOperationsInput | string | null
     phonepeSaltIndex?: NullableStringFieldUpdateOperationsInput | string | null
+    paymentProvider?: EnumPaymentProviderFieldUpdateOperationsInput | $Enums.PaymentProvider
+    razorpayKeyId?: NullableStringFieldUpdateOperationsInput | string | null
+    razorpayKeySecret?: NullableStringFieldUpdateOperationsInput | string | null
+    razorpayWebhookSecret?: NullableStringFieldUpdateOperationsInput | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     users?: UserUncheckedUpdateManyWithoutCafeNestedInput
@@ -22085,6 +22422,9 @@ export namespace Prisma {
     phonepeTxnId?: StringNullableFilter<"Payment"> | string | null
     merchantTxnId?: StringFilter<"Payment"> | string
     phonepeMerchantId?: StringNullableFilter<"Payment"> | string | null
+    provider?: EnumPaymentProviderFilter<"Payment"> | $Enums.PaymentProvider
+    razorpayOrderId?: StringNullableFilter<"Payment"> | string | null
+    razorpayPaymentId?: StringNullableFilter<"Payment"> | string | null
     paymentMethod?: StringNullableFilter<"Payment"> | string | null
     webhookPayload?: JsonNullableFilter<"Payment">
     paidAt?: DateTimeNullableFilter<"Payment"> | Date | string | null
@@ -22269,6 +22609,10 @@ export namespace Prisma {
     phonepeMerchantId?: string | null
     phonepeSaltKey?: string | null
     phonepeSaltIndex?: string | null
+    paymentProvider?: $Enums.PaymentProvider
+    razorpayKeyId?: string | null
+    razorpayKeySecret?: string | null
+    razorpayWebhookSecret?: string | null
     createdAt?: Date | string
     updatedAt?: Date | string
     users?: UserCreateNestedManyWithoutCafeInput
@@ -22293,6 +22637,10 @@ export namespace Prisma {
     phonepeMerchantId?: string | null
     phonepeSaltKey?: string | null
     phonepeSaltIndex?: string | null
+    paymentProvider?: $Enums.PaymentProvider
+    razorpayKeyId?: string | null
+    razorpayKeySecret?: string | null
+    razorpayWebhookSecret?: string | null
     createdAt?: Date | string
     updatedAt?: Date | string
     users?: UserUncheckedCreateNestedManyWithoutCafeInput
@@ -22333,6 +22681,10 @@ export namespace Prisma {
     phonepeMerchantId?: NullableStringFieldUpdateOperationsInput | string | null
     phonepeSaltKey?: NullableStringFieldUpdateOperationsInput | string | null
     phonepeSaltIndex?: NullableStringFieldUpdateOperationsInput | string | null
+    paymentProvider?: EnumPaymentProviderFieldUpdateOperationsInput | $Enums.PaymentProvider
+    razorpayKeyId?: NullableStringFieldUpdateOperationsInput | string | null
+    razorpayKeySecret?: NullableStringFieldUpdateOperationsInput | string | null
+    razorpayWebhookSecret?: NullableStringFieldUpdateOperationsInput | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     users?: UserUpdateManyWithoutCafeNestedInput
@@ -22357,6 +22709,10 @@ export namespace Prisma {
     phonepeMerchantId?: NullableStringFieldUpdateOperationsInput | string | null
     phonepeSaltKey?: NullableStringFieldUpdateOperationsInput | string | null
     phonepeSaltIndex?: NullableStringFieldUpdateOperationsInput | string | null
+    paymentProvider?: EnumPaymentProviderFieldUpdateOperationsInput | $Enums.PaymentProvider
+    razorpayKeyId?: NullableStringFieldUpdateOperationsInput | string | null
+    razorpayKeySecret?: NullableStringFieldUpdateOperationsInput | string | null
+    razorpayWebhookSecret?: NullableStringFieldUpdateOperationsInput | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     users?: UserUncheckedUpdateManyWithoutCafeNestedInput
@@ -22469,6 +22825,10 @@ export namespace Prisma {
     phonepeMerchantId?: string | null
     phonepeSaltKey?: string | null
     phonepeSaltIndex?: string | null
+    paymentProvider?: $Enums.PaymentProvider
+    razorpayKeyId?: string | null
+    razorpayKeySecret?: string | null
+    razorpayWebhookSecret?: string | null
     createdAt?: Date | string
     updatedAt?: Date | string
     users?: UserCreateNestedManyWithoutCafeInput
@@ -22493,6 +22853,10 @@ export namespace Prisma {
     phonepeMerchantId?: string | null
     phonepeSaltKey?: string | null
     phonepeSaltIndex?: string | null
+    paymentProvider?: $Enums.PaymentProvider
+    razorpayKeyId?: string | null
+    razorpayKeySecret?: string | null
+    razorpayWebhookSecret?: string | null
     createdAt?: Date | string
     updatedAt?: Date | string
     users?: UserUncheckedCreateNestedManyWithoutCafeInput
@@ -22579,6 +22943,10 @@ export namespace Prisma {
     phonepeMerchantId?: NullableStringFieldUpdateOperationsInput | string | null
     phonepeSaltKey?: NullableStringFieldUpdateOperationsInput | string | null
     phonepeSaltIndex?: NullableStringFieldUpdateOperationsInput | string | null
+    paymentProvider?: EnumPaymentProviderFieldUpdateOperationsInput | $Enums.PaymentProvider
+    razorpayKeyId?: NullableStringFieldUpdateOperationsInput | string | null
+    razorpayKeySecret?: NullableStringFieldUpdateOperationsInput | string | null
+    razorpayWebhookSecret?: NullableStringFieldUpdateOperationsInput | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     users?: UserUpdateManyWithoutCafeNestedInput
@@ -22603,6 +22971,10 @@ export namespace Prisma {
     phonepeMerchantId?: NullableStringFieldUpdateOperationsInput | string | null
     phonepeSaltKey?: NullableStringFieldUpdateOperationsInput | string | null
     phonepeSaltIndex?: NullableStringFieldUpdateOperationsInput | string | null
+    paymentProvider?: EnumPaymentProviderFieldUpdateOperationsInput | $Enums.PaymentProvider
+    razorpayKeyId?: NullableStringFieldUpdateOperationsInput | string | null
+    razorpayKeySecret?: NullableStringFieldUpdateOperationsInput | string | null
+    razorpayWebhookSecret?: NullableStringFieldUpdateOperationsInput | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     users?: UserUncheckedUpdateManyWithoutCafeNestedInput
@@ -22643,6 +23015,10 @@ export namespace Prisma {
     phonepeMerchantId?: string | null
     phonepeSaltKey?: string | null
     phonepeSaltIndex?: string | null
+    paymentProvider?: $Enums.PaymentProvider
+    razorpayKeyId?: string | null
+    razorpayKeySecret?: string | null
+    razorpayWebhookSecret?: string | null
     createdAt?: Date | string
     updatedAt?: Date | string
     users?: UserCreateNestedManyWithoutCafeInput
@@ -22667,6 +23043,10 @@ export namespace Prisma {
     phonepeMerchantId?: string | null
     phonepeSaltKey?: string | null
     phonepeSaltIndex?: string | null
+    paymentProvider?: $Enums.PaymentProvider
+    razorpayKeyId?: string | null
+    razorpayKeySecret?: string | null
+    razorpayWebhookSecret?: string | null
     createdAt?: Date | string
     updatedAt?: Date | string
     users?: UserUncheckedCreateNestedManyWithoutCafeInput
@@ -22707,6 +23087,10 @@ export namespace Prisma {
     phonepeMerchantId?: NullableStringFieldUpdateOperationsInput | string | null
     phonepeSaltKey?: NullableStringFieldUpdateOperationsInput | string | null
     phonepeSaltIndex?: NullableStringFieldUpdateOperationsInput | string | null
+    paymentProvider?: EnumPaymentProviderFieldUpdateOperationsInput | $Enums.PaymentProvider
+    razorpayKeyId?: NullableStringFieldUpdateOperationsInput | string | null
+    razorpayKeySecret?: NullableStringFieldUpdateOperationsInput | string | null
+    razorpayWebhookSecret?: NullableStringFieldUpdateOperationsInput | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     users?: UserUpdateManyWithoutCafeNestedInput
@@ -22731,6 +23115,10 @@ export namespace Prisma {
     phonepeMerchantId?: NullableStringFieldUpdateOperationsInput | string | null
     phonepeSaltKey?: NullableStringFieldUpdateOperationsInput | string | null
     phonepeSaltIndex?: NullableStringFieldUpdateOperationsInput | string | null
+    paymentProvider?: EnumPaymentProviderFieldUpdateOperationsInput | $Enums.PaymentProvider
+    razorpayKeyId?: NullableStringFieldUpdateOperationsInput | string | null
+    razorpayKeySecret?: NullableStringFieldUpdateOperationsInput | string | null
+    razorpayWebhookSecret?: NullableStringFieldUpdateOperationsInput | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     users?: UserUncheckedUpdateManyWithoutCafeNestedInput
@@ -22755,6 +23143,10 @@ export namespace Prisma {
     phonepeMerchantId?: string | null
     phonepeSaltKey?: string | null
     phonepeSaltIndex?: string | null
+    paymentProvider?: $Enums.PaymentProvider
+    razorpayKeyId?: string | null
+    razorpayKeySecret?: string | null
+    razorpayWebhookSecret?: string | null
     createdAt?: Date | string
     updatedAt?: Date | string
     users?: UserCreateNestedManyWithoutCafeInput
@@ -22779,6 +23171,10 @@ export namespace Prisma {
     phonepeMerchantId?: string | null
     phonepeSaltKey?: string | null
     phonepeSaltIndex?: string | null
+    paymentProvider?: $Enums.PaymentProvider
+    razorpayKeyId?: string | null
+    razorpayKeySecret?: string | null
+    razorpayWebhookSecret?: string | null
     createdAt?: Date | string
     updatedAt?: Date | string
     users?: UserUncheckedCreateNestedManyWithoutCafeInput
@@ -22819,6 +23215,10 @@ export namespace Prisma {
     phonepeMerchantId?: NullableStringFieldUpdateOperationsInput | string | null
     phonepeSaltKey?: NullableStringFieldUpdateOperationsInput | string | null
     phonepeSaltIndex?: NullableStringFieldUpdateOperationsInput | string | null
+    paymentProvider?: EnumPaymentProviderFieldUpdateOperationsInput | $Enums.PaymentProvider
+    razorpayKeyId?: NullableStringFieldUpdateOperationsInput | string | null
+    razorpayKeySecret?: NullableStringFieldUpdateOperationsInput | string | null
+    razorpayWebhookSecret?: NullableStringFieldUpdateOperationsInput | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     users?: UserUpdateManyWithoutCafeNestedInput
@@ -22843,6 +23243,10 @@ export namespace Prisma {
     phonepeMerchantId?: NullableStringFieldUpdateOperationsInput | string | null
     phonepeSaltKey?: NullableStringFieldUpdateOperationsInput | string | null
     phonepeSaltIndex?: NullableStringFieldUpdateOperationsInput | string | null
+    paymentProvider?: EnumPaymentProviderFieldUpdateOperationsInput | $Enums.PaymentProvider
+    razorpayKeyId?: NullableStringFieldUpdateOperationsInput | string | null
+    razorpayKeySecret?: NullableStringFieldUpdateOperationsInput | string | null
+    razorpayWebhookSecret?: NullableStringFieldUpdateOperationsInput | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     users?: UserUncheckedUpdateManyWithoutCafeNestedInput
@@ -23408,6 +23812,9 @@ export namespace Prisma {
     phonepeTxnId?: string | null
     merchantTxnId: string
     phonepeMerchantId?: string | null
+    provider?: $Enums.PaymentProvider
+    razorpayOrderId?: string | null
+    razorpayPaymentId?: string | null
     paymentMethod?: string | null
     webhookPayload?: NullableJsonNullValueInput | InputJsonValue
     paidAt?: Date | string | null
@@ -23449,6 +23856,9 @@ export namespace Prisma {
     phonepeTxnId?: NullableStringFieldUpdateOperationsInput | string | null
     merchantTxnId?: StringFieldUpdateOperationsInput | string
     phonepeMerchantId?: NullableStringFieldUpdateOperationsInput | string | null
+    provider?: EnumPaymentProviderFieldUpdateOperationsInput | $Enums.PaymentProvider
+    razorpayOrderId?: NullableStringFieldUpdateOperationsInput | string | null
+    razorpayPaymentId?: NullableStringFieldUpdateOperationsInput | string | null
     paymentMethod?: NullableStringFieldUpdateOperationsInput | string | null
     webhookPayload?: NullableJsonNullValueInput | InputJsonValue
     paidAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
@@ -23463,6 +23873,9 @@ export namespace Prisma {
     phonepeTxnId?: NullableStringFieldUpdateOperationsInput | string | null
     merchantTxnId?: StringFieldUpdateOperationsInput | string
     phonepeMerchantId?: NullableStringFieldUpdateOperationsInput | string | null
+    provider?: EnumPaymentProviderFieldUpdateOperationsInput | $Enums.PaymentProvider
+    razorpayOrderId?: NullableStringFieldUpdateOperationsInput | string | null
+    razorpayPaymentId?: NullableStringFieldUpdateOperationsInput | string | null
     paymentMethod?: NullableStringFieldUpdateOperationsInput | string | null
     webhookPayload?: NullableJsonNullValueInput | InputJsonValue
     paidAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
@@ -23477,6 +23890,9 @@ export namespace Prisma {
     phonepeTxnId?: NullableStringFieldUpdateOperationsInput | string | null
     merchantTxnId?: StringFieldUpdateOperationsInput | string
     phonepeMerchantId?: NullableStringFieldUpdateOperationsInput | string | null
+    provider?: EnumPaymentProviderFieldUpdateOperationsInput | $Enums.PaymentProvider
+    razorpayOrderId?: NullableStringFieldUpdateOperationsInput | string | null
+    razorpayPaymentId?: NullableStringFieldUpdateOperationsInput | string | null
     paymentMethod?: NullableStringFieldUpdateOperationsInput | string | null
     webhookPayload?: NullableJsonNullValueInput | InputJsonValue
     paidAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null

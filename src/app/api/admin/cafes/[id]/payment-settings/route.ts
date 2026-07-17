@@ -14,7 +14,40 @@ export async function PATCH(
 
     const { id } = await params;
     const body = await request.json();
-    const { phonepeMerchantId, phonepeSaltKey, phonepeSaltIndex } = body;
+    const { provider, phonepeMerchantId, phonepeSaltKey, phonepeSaltIndex } = body;
+
+    if (provider === "RAZORPAY") {
+      const { razorpayKeyId, razorpayKeySecret, razorpayWebhookSecret } = body;
+
+      if (!razorpayKeyId?.trim()) {
+        return NextResponse.json(
+          { success: false, error: "Razorpay Key ID is required" },
+          { status: 400 }
+        );
+      }
+
+      const cafe = await adminRepository.getCafeById(id);
+      if (!cafe) {
+        return NextResponse.json({ success: false, error: "Cafe not found" }, { status: 404 });
+      }
+
+      const keySecret = razorpayKeySecret?.trim();
+      const existingCafe = cafe as typeof cafe & { razorpayKeySecret?: string | null };
+      if (!keySecret && !existingCafe.razorpayKeySecret) {
+        return NextResponse.json(
+          { success: false, error: "Razorpay Key Secret is required" },
+          { status: 400 }
+        );
+      }
+
+      const updated = await adminRepository.updateCafeRazorpayCredentials(id, {
+        razorpayKeyId: razorpayKeyId.trim(),
+        razorpayKeySecret: keySecret || existingCafe.razorpayKeySecret!,
+        razorpayWebhookSecret: razorpayWebhookSecret?.trim(),
+      });
+
+      return NextResponse.json({ success: true, data: updated });
+    }
 
     if (!phonepeMerchantId?.trim()) {
       return NextResponse.json(
@@ -55,7 +88,7 @@ export async function PATCH(
 }
 
 export async function DELETE(
-  _request: Request,
+  request: Request,
   { params }: { params: Promise<{ id: string }> }
 ) {
   try {
@@ -65,13 +98,19 @@ export async function DELETE(
     }
 
     const { id } = await params;
+    const { searchParams } = new URL(request.url);
+    const provider = searchParams.get("provider");
 
     const cafe = await adminRepository.getCafeById(id);
     if (!cafe) {
       return NextResponse.json({ success: false, error: "Cafe not found" }, { status: 404 });
     }
 
-    await adminRepository.clearCafePaymentCredentials(id);
+    if (provider === "razorpay") {
+      await adminRepository.clearCafeRazorpayCredentials(id);
+    } else {
+      await adminRepository.clearCafePaymentCredentials(id);
+    }
 
     return NextResponse.json({ success: true });
   } catch (error) {

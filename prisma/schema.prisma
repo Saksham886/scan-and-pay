@@ -33,6 +33,11 @@ enum PaymentStatus {
   REFUNDED
 }
 
+enum PaymentProvider {
+  PHONEPE
+  RAZORPAY
+}
+
 // ─── MODELS ─────────────────────────────────────────────
 
 model Cafe {
@@ -48,6 +53,10 @@ model Cafe {
   phonepeMerchantId  String?  @map("phonepe_merchant_id")
   phonepeSaltKey     String?  @map("phonepe_salt_key")
   phonepeSaltIndex   String?  @default("1") @map("phonepe_salt_index")
+  paymentProvider       PaymentProvider @default(PHONEPE) @map("payment_provider")
+  razorpayKeyId         String?         @map("razorpay_key_id")
+  razorpayKeySecret     String?         @map("razorpay_key_secret")
+  razorpayWebhookSecret String?         @map("razorpay_webhook_secret")
   createdAt          DateTime @default(now()) @map("created_at")
   updatedAt          DateTime @updatedAt @map("updated_at")
 
@@ -180,6 +189,9 @@ model Payment {
   phonepeTxnId      String?       @unique @map("phonepe_txn_id")
   merchantTxnId     String        @unique @map("merchant_txn_id")
   phonepeMerchantId String?       @map("phonepe_merchant_id")
+  provider          PaymentProvider @default(PHONEPE)
+  razorpayOrderId   String?       @unique @map("razorpay_order_id")
+  razorpayPaymentId String?       @unique @map("razorpay_payment_id")
   paymentMethod     String?       @map("payment_method")
   webhookPayload    Json?         @map("webhook_payload")
   paidAt            DateTime?     @map("paid_at")

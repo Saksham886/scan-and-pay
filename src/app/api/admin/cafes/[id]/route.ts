@@ -19,8 +19,17 @@ export async function GET(
       return NextResponse.json({ success: false, error: "Cafe not found" }, { status: 404 });
     }
 
-    // Strip the salt key — never expose it to the client
-    const { phonepeSaltKey: _saltKey, ...safeData } = cafe as typeof cafe & { phonepeSaltKey?: string };
+    // Strip secrets — never expose them to the client
+    const {
+      phonepeSaltKey: _saltKey,
+      razorpayKeySecret: _razorpaySecret,
+      razorpayWebhookSecret: _razorpayWebhookSecret,
+      ...safeData
+    } = cafe as typeof cafe & {
+      phonepeSaltKey?: string;
+      razorpayKeySecret?: string;
+      razorpayWebhookSecret?: string;
+    };
     return NextResponse.json({ success: true, data: safeData });
   } catch (error) {
     console.error("Admin cafe detail error:", error);

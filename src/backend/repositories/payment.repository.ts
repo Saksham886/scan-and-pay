@@ -1,5 +1,5 @@
 import { prisma } from "@/backend/lib/db";
-import type { PaymentStatus, Prisma } from "@/generated/prisma";
+import type { PaymentStatus, PaymentProvider, Prisma } from "@/generated/prisma";
 
 export const paymentRepository = {
   async createPayment(data: {
@@ -7,6 +7,8 @@ export const paymentRepository = {
     amountPaise: number;
     merchantTxnId: string;
     phonepeMerchantId?: string;
+    provider?: PaymentProvider;
+    razorpayOrderId?: string;
   }) {
     return prisma.payment.create({ data });
   },
@@ -23,11 +25,22 @@ export const paymentRepository = {
                 phonepeSaltKey: true,
                 phonepeSaltIndex: true,
                 phonepeMerchantId: true,
+                paymentProvider: true,
+                razorpayKeyId: true,
+                razorpayKeySecret: true,
+                razorpayWebhookSecret: true,
               },
             },
           },
         },
       },
+    });
+  },
+
+  async attachRazorpayOrderId(merchantTxnId: string, razorpayOrderId: string) {
+    return prisma.payment.update({
+      where: { merchantTxnId },
+      data: { razorpayOrderId },
     });
   },
 
@@ -58,6 +71,7 @@ export const paymentRepository = {
     data: {
       status: PaymentStatus;
       phonepeTxnId?: string;
+      razorpayPaymentId?: string;
       paymentMethod?: string;
       webhookPayload?: Prisma.InputJsonValue;
       paidAt?: Date;
