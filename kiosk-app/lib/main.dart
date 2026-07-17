@@ -7,6 +7,7 @@ import 'screens/setup/setup_screen.dart';
 import 'state/cart_provider.dart';
 import 'state/kiosk_config_provider.dart';
 import 'state/menu_provider.dart';
+import 'widgets/idle_reset_guard.dart';
 import 'widgets/loading_view.dart';
 
 void main() {
@@ -28,6 +29,7 @@ class KioskApp extends StatelessWidget {
         title: 'Kiosk Ordering',
         debugShowCheckedModeBanner: false,
         theme: kioskTheme,
+        navigatorObservers: [kioskRouteObserver],
         home: const _RootRouter(),
       ),
     );
