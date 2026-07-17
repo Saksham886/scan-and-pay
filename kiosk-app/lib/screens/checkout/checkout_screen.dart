@@ -77,7 +77,10 @@ class _CheckoutScreenState extends State<CheckoutScreen> {
               .toList(),
       customerName: _nameController.text.trim(),
       customerPhone: normalizePhone(_phoneController.text),
-      customerEmail: _emailController.text.trim().toLowerCase(),
+      customerEmail:
+          _emailController.text.trim().isEmpty
+              ? null
+              : _emailController.text.trim().toLowerCase(),
       notes:
           _notesController.text.trim().isEmpty
               ? null
@@ -526,7 +529,7 @@ class _CustomerDetailsCard extends StatelessWidget {
                 ),
                 const SizedBox(height: 10),
                 _NeoField(
-                  label: 'Email *',
+                  label: 'Email (optional)',
                   controller: emailController,
                   hint: 'you@example.com',
                   error: emailError,

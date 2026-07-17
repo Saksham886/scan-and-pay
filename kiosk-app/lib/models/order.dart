@@ -51,7 +51,7 @@ class CreateOrderRequest {
   final List<Map<String, dynamic>> items;
   final String customerName;
   final String customerPhone;
-  final String customerEmail;
+  final String? customerEmail;
   final String? notes;
   final String idempotencyKey;
 
@@ -60,7 +60,7 @@ class CreateOrderRequest {
     required this.items,
     required this.customerName,
     required this.customerPhone,
-    required this.customerEmail,
+    this.customerEmail,
     this.notes,
     required this.idempotencyKey,
   });
@@ -71,7 +71,8 @@ class CreateOrderRequest {
       'items': items,
       'customerName': customerName,
       'customerPhone': customerPhone,
-      'customerEmail': customerEmail,
+      if (customerEmail != null && customerEmail!.isNotEmpty)
+        'customerEmail': customerEmail,
       if (notes != null && notes!.isNotEmpty) 'notes': notes,
       'idempotencyKey': idempotencyKey,
     };

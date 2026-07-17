@@ -74,14 +74,17 @@ export async function POST(request: Request) {
     if (!phoneCheck.valid) {
       return NextResponse.json({ success: false, error: phoneCheck.error }, { status: 400 });
     }
-    const emailCheck = validateEmail(body.customerEmail ?? "");
-    if (!emailCheck.valid) {
-      return NextResponse.json({ success: false, error: emailCheck.error }, { status: 400 });
+    const rawEmail = typeof body.customerEmail === "string" ? body.customerEmail.trim() : "";
+    if (rawEmail) {
+      const emailCheck = validateEmail(rawEmail);
+      if (!emailCheck.valid) {
+        return NextResponse.json({ success: false, error: emailCheck.error }, { status: 400 });
+      }
     }
 
     body.customerName = body.customerName!.trim();
     body.customerPhone = normalizePhone(body.customerPhone!);
-    body.customerEmail = body.customerEmail!.trim().toLowerCase();
+    body.customerEmail = rawEmail ? rawEmail.toLowerCase() : undefined;
 
     for (const item of body.items) {
       if (

@@ -76,7 +76,7 @@ ValidationResult validatePhone(String raw) {
 ValidationResult validateEmail(String raw) {
   final email = raw.trim().toLowerCase();
   if (email.isEmpty) {
-    return const ValidationResult(valid: false, error: 'Email is required');
+    return ValidationResult.ok;
   }
   if (email.length > 254) {
     return const ValidationResult(valid: false, error: 'Email is too long');
