@@ -10,6 +10,10 @@ A multi-tenant QR-based food ordering system for cafes. Customers scan a table Q
 
 **Live Demo:** https://scanpay-ordering.vercel.app
 
+| Customer Menu | Owner Dashboard | Admin Panel |
+|:---:|:---:|:---:|
+| ![Customer menu](docs/screenshots/customer-menu.png) | ![Owner dashboard](docs/screenshots/owner-dashboard.png) | ![Admin panel](docs/screenshots/admin-panel.png) |
+
 ---
 
 ## Roles
