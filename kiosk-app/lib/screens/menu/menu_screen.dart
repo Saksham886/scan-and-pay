@@ -240,12 +240,7 @@ class _Hero extends StatelessWidget {
     final cafe = context.select<MenuProvider, dynamic>((m) => m.cafe);
 
     return Container(
-      decoration: const BoxDecoration(
-        color: CustomerColors.headerBackground,
-        border: Border(
-          bottom: BorderSide(color: CustomerColors.primary, width: 2),
-        ),
-      ),
+      decoration: const BoxDecoration(color: CustomerColors.headerBackground),
       child: SafeArea(
         bottom: false,
         child: Padding(
