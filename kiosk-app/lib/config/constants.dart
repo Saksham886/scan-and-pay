@@ -18,6 +18,10 @@ const Duration kTransientErrorExtraDelay = Duration(seconds: 3);
 /// status for the minutes it takes to prepare food.
 const Duration kReceiptAutoReset = Duration(seconds: 10);
 
+/// How long the feedback screen shows its "thanks" state before resetting
+/// to the menu, once the customer has submitted a star rating.
+const Duration kFeedbackAutoReset = Duration(seconds: 10);
+
 const Duration kPaymentFailureCountdown = Duration(seconds: 5);
 
 /// How long the kiosk waits with no touch activity before abandoning

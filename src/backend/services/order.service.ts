@@ -213,6 +213,15 @@ export const orderService = {
     };
   },
 
+  async submitFeedback(orderId: string, rating: number) {
+    const order = await orderRepository.getOrderById(orderId);
+    if (!order) throw new Error("Order not found");
+    if (!order.status || !["PAID", "PREPARING", "READY", "COMPLETED"].includes(order.status)) {
+      throw new Error("Order has not been paid yet");
+    }
+    await orderRepository.setRating(orderId, rating);
+  },
+
   async updateOrderStatus(orderId: string, status: string, cafeId?: string) {
     const order = await orderRepository.getOrderById(orderId);
     if (!order) throw new Error("Order not found");

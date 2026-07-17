@@ -39,4 +39,15 @@ class OrderService {
       (data) => OrderSummary.fromJson(data as Map<String, dynamic>),
     );
   }
+
+  Future<ApiResult<void>> submitFeedback({
+    required String orderId,
+    required int rating,
+  }) {
+    return _client.postJson(
+      '/api/orders/$orderId/feedback',
+      {'rating': rating},
+      (_) {},
+    );
+  }
 }

@@ -184,6 +184,7 @@ exports.Prisma.OrderScalarFieldEnum = {
   customerEmail: 'customerEmail',
   tableId: 'tableId',
   notes: 'notes',
+  rating: 'rating',
   idempotencyKey: 'idempotencyKey',
   createdAt: 'createdAt',
   updatedAt: 'updatedAt'

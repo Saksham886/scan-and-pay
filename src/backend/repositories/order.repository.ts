@@ -109,6 +109,13 @@ export const orderRepository = {
     return { orders, total };
   },
 
+  async setRating(orderId: string, rating: number) {
+    return prisma.order.update({
+      where: { id: orderId },
+      data: { rating },
+    });
+  },
+
   async getStaleOrders(minutesOld: number) {
     const cutoff = new Date(Date.now() - minutesOld * 60 * 1000);
     return prisma.order.findMany({

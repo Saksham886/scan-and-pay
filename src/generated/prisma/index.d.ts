@@ -7167,10 +7167,12 @@ export namespace Prisma {
 
   export type OrderAvgAggregateOutputType = {
     totalPaise: number | null
+    rating: number | null
   }
 
   export type OrderSumAggregateOutputType = {
     totalPaise: number | null
+    rating: number | null
   }
 
   export type OrderMinAggregateOutputType = {
@@ -7184,6 +7186,7 @@ export namespace Prisma {
     customerEmail: string | null
     tableId: string | null
     notes: string | null
+    rating: number | null
     idempotencyKey: string | null
     createdAt: Date | null
     updatedAt: Date | null
@@ -7200,6 +7203,7 @@ export namespace Prisma {
     customerEmail: string | null
     tableId: string | null
     notes: string | null
+    rating: number | null
     idempotencyKey: string | null
     createdAt: Date | null
     updatedAt: Date | null
@@ -7216,6 +7220,7 @@ export namespace Prisma {
     customerEmail: number
     tableId: number
     notes: number
+    rating: number
     idempotencyKey: number
     createdAt: number
     updatedAt: number
@@ -7225,10 +7230,12 @@ export namespace Prisma {
 
   export type OrderAvgAggregateInputType = {
     totalPaise?: true
+    rating?: true
   }
 
   export type OrderSumAggregateInputType = {
     totalPaise?: true
+    rating?: true
   }
 
   export type OrderMinAggregateInputType = {
@@ -7242,6 +7249,7 @@ export namespace Prisma {
     customerEmail?: true
     tableId?: true
     notes?: true
+    rating?: true
     idempotencyKey?: true
     createdAt?: true
     updatedAt?: true
@@ -7258,6 +7266,7 @@ export namespace Prisma {
     customerEmail?: true
     tableId?: true
     notes?: true
+    rating?: true
     idempotencyKey?: true
     createdAt?: true
     updatedAt?: true
@@ -7274,6 +7283,7 @@ export namespace Prisma {
     customerEmail?: true
     tableId?: true
     notes?: true
+    rating?: true
     idempotencyKey?: true
     createdAt?: true
     updatedAt?: true
@@ -7377,6 +7387,7 @@ export namespace Prisma {
     customerEmail: string | null
     tableId: string | null
     notes: string | null
+    rating: number | null
     idempotencyKey: string
     createdAt: Date
     updatedAt: Date
@@ -7412,6 +7423,7 @@ export namespace Prisma {
     customerEmail?: boolean
     tableId?: boolean
     notes?: boolean
+    rating?: boolean
     idempotencyKey?: boolean
     createdAt?: boolean
     updatedAt?: boolean
@@ -7433,6 +7445,7 @@ export namespace Prisma {
     customerEmail?: boolean
     tableId?: boolean
     notes?: boolean
+    rating?: boolean
     idempotencyKey?: boolean
     createdAt?: boolean
     updatedAt?: boolean
@@ -7451,6 +7464,7 @@ export namespace Prisma {
     customerEmail?: boolean
     tableId?: boolean
     notes?: boolean
+    rating?: boolean
     idempotencyKey?: boolean
     createdAt?: boolean
     updatedAt?: boolean
@@ -7469,12 +7483,13 @@ export namespace Prisma {
     customerEmail?: boolean
     tableId?: boolean
     notes?: boolean
+    rating?: boolean
     idempotencyKey?: boolean
     createdAt?: boolean
     updatedAt?: boolean
   }
 
-  export type OrderOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id" | "cafeId" | "orderNumber" | "status" | "totalPaise" | "customerName" | "customerPhone" | "customerEmail" | "tableId" | "notes" | "idempotencyKey" | "createdAt" | "updatedAt", ExtArgs["result"]["order"]>
+  export type OrderOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id" | "cafeId" | "orderNumber" | "status" | "totalPaise" | "customerName" | "customerPhone" | "customerEmail" | "tableId" | "notes" | "rating" | "idempotencyKey" | "createdAt" | "updatedAt", ExtArgs["result"]["order"]>
   export type OrderInclude<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     cafe?: boolean | CafeDefaultArgs<ExtArgs>
     table?: boolean | Order$tableArgs<ExtArgs>
@@ -7510,6 +7525,7 @@ export namespace Prisma {
       customerEmail: string | null
       tableId: string | null
       notes: string | null
+      rating: number | null
       idempotencyKey: string
       createdAt: Date
       updatedAt: Date
@@ -7950,6 +7966,7 @@ export namespace Prisma {
     readonly customerEmail: FieldRef<"Order", 'String'>
     readonly tableId: FieldRef<"Order", 'String'>
     readonly notes: FieldRef<"Order", 'String'>
+    readonly rating: FieldRef<"Order", 'Int'>
     readonly idempotencyKey: FieldRef<"Order", 'String'>
     readonly createdAt: FieldRef<"Order", 'DateTime'>
     readonly updatedAt: FieldRef<"Order", 'DateTime'>
@@ -16414,6 +16431,7 @@ export namespace Prisma {
     customerEmail: 'customerEmail',
     tableId: 'tableId',
     notes: 'notes',
+    rating: 'rating',
     idempotencyKey: 'idempotencyKey',
     createdAt: 'createdAt',
     updatedAt: 'updatedAt'
@@ -17060,6 +17078,7 @@ export namespace Prisma {
     customerEmail?: StringNullableFilter<"Order"> | string | null
     tableId?: StringNullableFilter<"Order"> | string | null
     notes?: StringNullableFilter<"Order"> | string | null
+    rating?: IntNullableFilter<"Order"> | number | null
     idempotencyKey?: StringFilter<"Order"> | string
     createdAt?: DateTimeFilter<"Order"> | Date | string
     updatedAt?: DateTimeFilter<"Order"> | Date | string
@@ -17080,6 +17099,7 @@ export namespace Prisma {
     customerEmail?: SortOrderInput | SortOrder
     tableId?: SortOrderInput | SortOrder
     notes?: SortOrderInput | SortOrder
+    rating?: SortOrderInput | SortOrder
     idempotencyKey?: SortOrder
     createdAt?: SortOrder
     updatedAt?: SortOrder
@@ -17104,6 +17124,7 @@ export namespace Prisma {
     customerEmail?: StringNullableFilter<"Order"> | string | null
     tableId?: StringNullableFilter<"Order"> | string | null
     notes?: StringNullableFilter<"Order"> | string | null
+    rating?: IntNullableFilter<"Order"> | number | null
     createdAt?: DateTimeFilter<"Order"> | Date | string
     updatedAt?: DateTimeFilter<"Order"> | Date | string
     cafe?: XOR<CafeScalarRelationFilter, CafeWhereInput>
@@ -17123,6 +17144,7 @@ export namespace Prisma {
     customerEmail?: SortOrderInput | SortOrder
     tableId?: SortOrderInput | SortOrder
     notes?: SortOrderInput | SortOrder
+    rating?: SortOrderInput | SortOrder
     idempotencyKey?: SortOrder
     createdAt?: SortOrder
     updatedAt?: SortOrder
@@ -17147,6 +17169,7 @@ export namespace Prisma {
     customerEmail?: StringNullableWithAggregatesFilter<"Order"> | string | null
     tableId?: StringNullableWithAggregatesFilter<"Order"> | string | null
     notes?: StringNullableWithAggregatesFilter<"Order"> | string | null
+    rating?: IntNullableWithAggregatesFilter<"Order"> | number | null
     idempotencyKey?: StringWithAggregatesFilter<"Order"> | string
     createdAt?: DateTimeWithAggregatesFilter<"Order"> | Date | string
     updatedAt?: DateTimeWithAggregatesFilter<"Order"> | Date | string
@@ -18059,6 +18082,7 @@ export namespace Prisma {
     customerPhone?: string | null
     customerEmail?: string | null
     notes?: string | null
+    rating?: number | null
     idempotencyKey: string
     createdAt?: Date | string
     updatedAt?: Date | string
@@ -18079,6 +18103,7 @@ export namespace Prisma {
     customerEmail?: string | null
     tableId?: string | null
     notes?: string | null
+    rating?: number | null
     idempotencyKey: string
     createdAt?: Date | string
     updatedAt?: Date | string
@@ -18095,6 +18120,7 @@ export namespace Prisma {
     customerPhone?: NullableStringFieldUpdateOperationsInput | string | null
     customerEmail?: NullableStringFieldUpdateOperationsInput | string | null
     notes?: NullableStringFieldUpdateOperationsInput | string | null
+    rating?: NullableIntFieldUpdateOperationsInput | number | null
     idempotencyKey?: StringFieldUpdateOperationsInput | string
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
@@ -18115,6 +18141,7 @@ export namespace Prisma {
     customerEmail?: NullableStringFieldUpdateOperationsInput | string | null
     tableId?: NullableStringFieldUpdateOperationsInput | string | null
     notes?: NullableStringFieldUpdateOperationsInput | string | null
+    rating?: NullableIntFieldUpdateOperationsInput | number | null
     idempotencyKey?: StringFieldUpdateOperationsInput | string
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
@@ -18133,6 +18160,7 @@ export namespace Prisma {
     customerEmail?: string | null
     tableId?: string | null
     notes?: string | null
+    rating?: number | null
     idempotencyKey: string
     createdAt?: Date | string
     updatedAt?: Date | string
@@ -18147,6 +18175,7 @@ export namespace Prisma {
     customerPhone?: NullableStringFieldUpdateOperationsInput | string | null
     customerEmail?: NullableStringFieldUpdateOperationsInput | string | null
     notes?: NullableStringFieldUpdateOperationsInput | string | null
+    rating?: NullableIntFieldUpdateOperationsInput | number | null
     idempotencyKey?: StringFieldUpdateOperationsInput | string
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
@@ -18163,6 +18192,7 @@ export namespace Prisma {
     customerEmail?: NullableStringFieldUpdateOperationsInput | string | null
     tableId?: NullableStringFieldUpdateOperationsInput | string | null
     notes?: NullableStringFieldUpdateOperationsInput | string | null
+    rating?: NullableIntFieldUpdateOperationsInput | number | null
     idempotencyKey?: StringFieldUpdateOperationsInput | string
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
@@ -19122,6 +19152,17 @@ export namespace Prisma {
     not?: NestedEnumOrderStatusFilter<$PrismaModel> | $Enums.OrderStatus
   }
 
+  export type IntNullableFilter<$PrismaModel = never> = {
+    equals?: number | IntFieldRefInput<$PrismaModel> | null
+    in?: number[] | ListIntFieldRefInput<$PrismaModel> | null
+    notIn?: number[] | ListIntFieldRefInput<$PrismaModel> | null
+    lt?: number | IntFieldRefInput<$PrismaModel>
+    lte?: number | IntFieldRefInput<$PrismaModel>
+    gt?: number | IntFieldRefInput<$PrismaModel>
+    gte?: number | IntFieldRefInput<$PrismaModel>
+    not?: NestedIntNullableFilter<$PrismaModel> | number | null
+  }
+
   export type CafeScalarRelationFilter = {
     is?: CafeWhereInput
     isNot?: CafeWhereInput
@@ -19153,6 +19194,7 @@ export namespace Prisma {
     customerEmail?: SortOrder
     tableId?: SortOrder
     notes?: SortOrder
+    rating?: SortOrder
     idempotencyKey?: SortOrder
     createdAt?: SortOrder
     updatedAt?: SortOrder
@@ -19160,6 +19202,7 @@ export namespace Prisma {
 
   export type OrderAvgOrderByAggregateInput = {
     totalPaise?: SortOrder
+    rating?: SortOrder
   }
 
   export type OrderMaxOrderByAggregateInput = {
@@ -19173,6 +19216,7 @@ export namespace Prisma {
     customerEmail?: SortOrder
     tableId?: SortOrder
     notes?: SortOrder
+    rating?: SortOrder
     idempotencyKey?: SortOrder
     createdAt?: SortOrder
     updatedAt?: SortOrder
@@ -19189,6 +19233,7 @@ export namespace Prisma {
     customerEmail?: SortOrder
     tableId?: SortOrder
     notes?: SortOrder
+    rating?: SortOrder
     idempotencyKey?: SortOrder
     createdAt?: SortOrder
     updatedAt?: SortOrder
@@ -19196,6 +19241,7 @@ export namespace Prisma {
 
   export type OrderSumOrderByAggregateInput = {
     totalPaise?: SortOrder
+    rating?: SortOrder
   }
 
   export type EnumOrderStatusWithAggregatesFilter<$PrismaModel = never> = {
@@ -19206,6 +19252,22 @@ export namespace Prisma {
     _count?: NestedIntFilter<$PrismaModel>
     _min?: NestedEnumOrderStatusFilter<$PrismaModel>
     _max?: NestedEnumOrderStatusFilter<$PrismaModel>
+  }
+
+  export type IntNullableWithAggregatesFilter<$PrismaModel = never> = {
+    equals?: number | IntFieldRefInput<$PrismaModel> | null
+    in?: number[] | ListIntFieldRefInput<$PrismaModel> | null
+    notIn?: number[] | ListIntFieldRefInput<$PrismaModel> | null
+    lt?: number | IntFieldRefInput<$PrismaModel>
+    lte?: number | IntFieldRefInput<$PrismaModel>
+    gt?: number | IntFieldRefInput<$PrismaModel>
+    gte?: number | IntFieldRefInput<$PrismaModel>
+    not?: NestedIntNullableWithAggregatesFilter<$PrismaModel> | number | null
+    _count?: NestedIntNullableFilter<$PrismaModel>
+    _avg?: NestedFloatNullableFilter<$PrismaModel>
+    _sum?: NestedIntNullableFilter<$PrismaModel>
+    _min?: NestedIntNullableFilter<$PrismaModel>
+    _max?: NestedIntNullableFilter<$PrismaModel>
   }
 
   export type OrderScalarRelationFilter = {
@@ -20174,6 +20236,14 @@ export namespace Prisma {
     set?: $Enums.OrderStatus
   }
 
+  export type NullableIntFieldUpdateOperationsInput = {
+    set?: number | null
+    increment?: number
+    decrement?: number
+    multiply?: number
+    divide?: number
+  }
+
   export type CafeUpdateOneRequiredWithoutOrdersNestedInput = {
     create?: XOR<CafeCreateWithoutOrdersInput, CafeUncheckedCreateWithoutOrdersInput>
     connectOrCreate?: CafeCreateOrConnectWithoutOrdersInput
@@ -20595,6 +20665,33 @@ export namespace Prisma {
     _max?: NestedEnumOrderStatusFilter<$PrismaModel>
   }
 
+  export type NestedIntNullableWithAggregatesFilter<$PrismaModel = never> = {
+    equals?: number | IntFieldRefInput<$PrismaModel> | null
+    in?: number[] | ListIntFieldRefInput<$PrismaModel> | null
+    notIn?: number[] | ListIntFieldRefInput<$PrismaModel> | null
+    lt?: number | IntFieldRefInput<$PrismaModel>
+    lte?: number | IntFieldRefInput<$PrismaModel>
+    gt?: number | IntFieldRefInput<$PrismaModel>
+    gte?: number | IntFieldRefInput<$PrismaModel>
+    not?: NestedIntNullableWithAggregatesFilter<$PrismaModel> | number | null
+    _count?: NestedIntNullableFilter<$PrismaModel>
+    _avg?: NestedFloatNullableFilter<$PrismaModel>
+    _sum?: NestedIntNullableFilter<$PrismaModel>
+    _min?: NestedIntNullableFilter<$PrismaModel>
+    _max?: NestedIntNullableFilter<$PrismaModel>
+  }
+
+  export type NestedFloatNullableFilter<$PrismaModel = never> = {
+    equals?: number | FloatFieldRefInput<$PrismaModel> | null
+    in?: number[] | ListFloatFieldRefInput<$PrismaModel> | null
+    notIn?: number[] | ListFloatFieldRefInput<$PrismaModel> | null
+    lt?: number | FloatFieldRefInput<$PrismaModel>
+    lte?: number | FloatFieldRefInput<$PrismaModel>
+    gt?: number | FloatFieldRefInput<$PrismaModel>
+    gte?: number | FloatFieldRefInput<$PrismaModel>
+    not?: NestedFloatNullableFilter<$PrismaModel> | number | null
+  }
+
   export type NestedEnumPaymentStatusFilter<$PrismaModel = never> = {
     equals?: $Enums.PaymentStatus | EnumPaymentStatusFieldRefInput<$PrismaModel>
     in?: $Enums.PaymentStatus[] | ListEnumPaymentStatusFieldRefInput<$PrismaModel>
@@ -20771,6 +20868,7 @@ export namespace Prisma {
     customerPhone?: string | null
     customerEmail?: string | null
     notes?: string | null
+    rating?: number | null
     idempotencyKey: string
     createdAt?: Date | string
     updatedAt?: Date | string
@@ -20789,6 +20887,7 @@ export namespace Prisma {
     customerEmail?: string | null
     tableId?: string | null
     notes?: string | null
+    rating?: number | null
     idempotencyKey: string
     createdAt?: Date | string
     updatedAt?: Date | string
@@ -21037,6 +21136,7 @@ export namespace Prisma {
     customerEmail?: StringNullableFilter<"Order"> | string | null
     tableId?: StringNullableFilter<"Order"> | string | null
     notes?: StringNullableFilter<"Order"> | string | null
+    rating?: IntNullableFilter<"Order"> | number | null
     idempotencyKey?: StringFilter<"Order"> | string
     createdAt?: DateTimeFilter<"Order"> | Date | string
     updatedAt?: DateTimeFilter<"Order"> | Date | string
@@ -22001,6 +22101,7 @@ export namespace Prisma {
     customerPhone?: string | null
     customerEmail?: string | null
     notes?: string | null
+    rating?: number | null
     idempotencyKey: string
     createdAt?: Date | string
     updatedAt?: Date | string
@@ -22020,6 +22121,7 @@ export namespace Prisma {
     customerEmail?: string | null
     tableId?: string | null
     notes?: string | null
+    rating?: number | null
     idempotencyKey: string
     createdAt?: Date | string
     updatedAt?: Date | string
@@ -22086,6 +22188,7 @@ export namespace Prisma {
     customerPhone?: NullableStringFieldUpdateOperationsInput | string | null
     customerEmail?: NullableStringFieldUpdateOperationsInput | string | null
     notes?: NullableStringFieldUpdateOperationsInput | string | null
+    rating?: NullableIntFieldUpdateOperationsInput | number | null
     idempotencyKey?: StringFieldUpdateOperationsInput | string
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
@@ -22105,6 +22208,7 @@ export namespace Prisma {
     customerEmail?: NullableStringFieldUpdateOperationsInput | string | null
     tableId?: NullableStringFieldUpdateOperationsInput | string | null
     notes?: NullableStringFieldUpdateOperationsInput | string | null
+    rating?: NullableIntFieldUpdateOperationsInput | number | null
     idempotencyKey?: StringFieldUpdateOperationsInput | string
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
@@ -22273,6 +22377,7 @@ export namespace Prisma {
     customerPhone?: string | null
     customerEmail?: string | null
     notes?: string | null
+    rating?: number | null
     idempotencyKey: string
     createdAt?: Date | string
     updatedAt?: Date | string
@@ -22292,6 +22397,7 @@ export namespace Prisma {
     customerEmail?: string | null
     tableId?: string | null
     notes?: string | null
+    rating?: number | null
     idempotencyKey: string
     createdAt?: Date | string
     updatedAt?: Date | string
@@ -22323,6 +22429,7 @@ export namespace Prisma {
     customerPhone?: NullableStringFieldUpdateOperationsInput | string | null
     customerEmail?: NullableStringFieldUpdateOperationsInput | string | null
     notes?: NullableStringFieldUpdateOperationsInput | string | null
+    rating?: NullableIntFieldUpdateOperationsInput | number | null
     idempotencyKey?: StringFieldUpdateOperationsInput | string
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
@@ -22342,6 +22449,7 @@ export namespace Prisma {
     customerEmail?: NullableStringFieldUpdateOperationsInput | string | null
     tableId?: NullableStringFieldUpdateOperationsInput | string | null
     notes?: NullableStringFieldUpdateOperationsInput | string | null
+    rating?: NullableIntFieldUpdateOperationsInput | number | null
     idempotencyKey?: StringFieldUpdateOperationsInput | string
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
@@ -22410,6 +22518,7 @@ export namespace Prisma {
     customerPhone?: string | null
     customerEmail?: string | null
     notes?: string | null
+    rating?: number | null
     idempotencyKey: string
     createdAt?: Date | string
     updatedAt?: Date | string
@@ -22428,6 +22537,7 @@ export namespace Prisma {
     customerPhone?: string | null
     customerEmail?: string | null
     notes?: string | null
+    rating?: number | null
     idempotencyKey: string
     createdAt?: Date | string
     updatedAt?: Date | string
@@ -22851,6 +22961,7 @@ export namespace Prisma {
     customerEmail?: string | null
     tableId?: string | null
     notes?: string | null
+    rating?: number | null
     idempotencyKey: string
     createdAt?: Date | string
     updatedAt?: Date | string
@@ -23003,6 +23114,7 @@ export namespace Prisma {
     customerPhone?: NullableStringFieldUpdateOperationsInput | string | null
     customerEmail?: NullableStringFieldUpdateOperationsInput | string | null
     notes?: NullableStringFieldUpdateOperationsInput | string | null
+    rating?: NullableIntFieldUpdateOperationsInput | number | null
     idempotencyKey?: StringFieldUpdateOperationsInput | string
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
@@ -23021,6 +23133,7 @@ export namespace Prisma {
     customerEmail?: NullableStringFieldUpdateOperationsInput | string | null
     tableId?: NullableStringFieldUpdateOperationsInput | string | null
     notes?: NullableStringFieldUpdateOperationsInput | string | null
+    rating?: NullableIntFieldUpdateOperationsInput | number | null
     idempotencyKey?: StringFieldUpdateOperationsInput | string
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
@@ -23038,6 +23151,7 @@ export namespace Prisma {
     customerEmail?: NullableStringFieldUpdateOperationsInput | string | null
     tableId?: NullableStringFieldUpdateOperationsInput | string | null
     notes?: NullableStringFieldUpdateOperationsInput | string | null
+    rating?: NullableIntFieldUpdateOperationsInput | number | null
     idempotencyKey?: StringFieldUpdateOperationsInput | string
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
@@ -23380,6 +23494,7 @@ export namespace Prisma {
     customerPhone?: string | null
     customerEmail?: string | null
     notes?: string | null
+    rating?: number | null
     idempotencyKey: string
     createdAt?: Date | string
     updatedAt?: Date | string
@@ -23394,6 +23509,7 @@ export namespace Prisma {
     customerPhone?: NullableStringFieldUpdateOperationsInput | string | null
     customerEmail?: NullableStringFieldUpdateOperationsInput | string | null
     notes?: NullableStringFieldUpdateOperationsInput | string | null
+    rating?: NullableIntFieldUpdateOperationsInput | number | null
     idempotencyKey?: StringFieldUpdateOperationsInput | string
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
@@ -23412,6 +23528,7 @@ export namespace Prisma {
     customerPhone?: NullableStringFieldUpdateOperationsInput | string | null
     customerEmail?: NullableStringFieldUpdateOperationsInput | string | null
     notes?: NullableStringFieldUpdateOperationsInput | string | null
+    rating?: NullableIntFieldUpdateOperationsInput | number | null
     idempotencyKey?: StringFieldUpdateOperationsInput | string
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
@@ -23429,6 +23546,7 @@ export namespace Prisma {
     customerPhone?: NullableStringFieldUpdateOperationsInput | string | null
     customerEmail?: NullableStringFieldUpdateOperationsInput | string | null
     notes?: NullableStringFieldUpdateOperationsInput | string | null
+    rating?: NullableIntFieldUpdateOperationsInput | number | null
     idempotencyKey?: StringFieldUpdateOperationsInput | string
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string

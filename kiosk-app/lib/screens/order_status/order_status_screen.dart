@@ -9,7 +9,7 @@ import '../../services/order_service.dart';
 import '../../utils/currency.dart';
 import '../../widgets/loading_view.dart';
 import '../../widgets/primary_button.dart';
-import '../menu/menu_screen.dart';
+import '../feedback/feedback_screen.dart';
 
 /// A kiosk receipt screen, not a live order tracker: on a shared kiosk the
 /// device has to free up for the next customer immediately after payment,
@@ -70,7 +70,7 @@ class _OrderStatusScreenState extends State<OrderStatusScreen> {
     _resetTimer?.cancel();
     _countdownTimer?.cancel();
     _countdown = kReceiptAutoReset.inSeconds;
-    _resetTimer = Timer(kReceiptAutoReset, _backToMenu);
+    _resetTimer = Timer(kReceiptAutoReset, _goToFeedback);
     _countdownTimer = Timer.periodic(const Duration(seconds: 1), (timer) {
       if (!mounted || _countdown <= 1) {
         timer.cancel();
@@ -80,10 +80,10 @@ class _OrderStatusScreenState extends State<OrderStatusScreen> {
     });
   }
 
-  void _backToMenu() {
+  void _goToFeedback() {
     if (!mounted) return;
     Navigator.of(context).pushAndRemoveUntil(
-      MaterialPageRoute(builder: (_) => const MenuScreen()),
+      MaterialPageRoute(builder: (_) => FeedbackScreen(orderId: widget.orderId)),
       (route) => false,
     );
   }
@@ -106,7 +106,7 @@ class _OrderStatusScreenState extends State<OrderStatusScreen> {
                     ),
                   )
                 : const LoadingView(message: 'Loading order...'))
-            : _Receipt(order: _order!, countdown: _countdown, onNewOrder: _backToMenu),
+            : _Receipt(order: _order!, countdown: _countdown, onContinue: _goToFeedback),
       ),
     );
   }
@@ -115,9 +115,9 @@ class _OrderStatusScreenState extends State<OrderStatusScreen> {
 class _Receipt extends StatelessWidget {
   final OrderSummary order;
   final int countdown;
-  final VoidCallback onNewOrder;
+  final VoidCallback onContinue;
 
-  const _Receipt({required this.order, required this.countdown, required this.onNewOrder});
+  const _Receipt({required this.order, required this.countdown, required this.onContinue});
 
   @override
   Widget build(BuildContext context) {
@@ -233,10 +233,10 @@ class _Receipt extends StatelessWidget {
           ),
         ),
         const SizedBox(height: 28),
-        PrimaryButton(label: 'New Order', onPressed: onNewOrder),
+        PrimaryButton(label: 'Continue', onPressed: onContinue),
         const SizedBox(height: 12),
         Text(
-          'Returning to menu in ${countdown}s',
+          'Continuing in ${countdown}s',
           textAlign: TextAlign.center,
           style: CustomerText.mono(fontSize: 12, color: CustomerColors.muted),
         ),
