@@ -9,8 +9,8 @@ import 'package:flutter/material.dart';
 /// covered screen's [Listener], so without this the guard would wrongly
 /// treat "busy filling in card details on the screen above" as "idle" and
 /// reset the whole kiosk mid-payment.
-final RouteObserver<ModalRoute<void>> kioskRouteObserver =
-    RouteObserver<ModalRoute<void>>();
+final RouteObserver<ModalRoute<dynamic>> kioskRouteObserver =
+    RouteObserver<ModalRoute<dynamic>>();
 
 /// Resets a shared kiosk back to a safe state after a period of no touch
 /// activity. Without this, a customer who fills in their name/phone/email
