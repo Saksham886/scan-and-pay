@@ -46,7 +46,12 @@ class _PaymentWebViewScreenState extends State<PaymentWebViewScreen> {
             if (mounted) setState(() => _loading = false);
           },
           onWebResourceError: (error) {
-            if (mounted) {
+            // Only the main frame failing means the payment page itself
+            // didn't load. Sub-resource failures (a blocked tracking
+            // pixel, font, or analytics script on PhonePe's page) are
+            // routine and shouldn't surface as a fatal error over the
+            // card form - isForMainFrame is false/null for those.
+            if (mounted && error.isForMainFrame == true) {
               setState(() {
                 _loading = false;
                 _loadError = 'Could not load payment page: ${error.description}';
