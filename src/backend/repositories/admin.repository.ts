@@ -11,6 +11,7 @@ export const adminRepository = {
             orders: { where: { status: { in: ["PAID", "PREPARING", "READY", "COMPLETED"] } } },
             menuItems: true,
             users: true,
+            staff: { where: { isActive: true } },
           },
         },
       },
@@ -26,6 +27,7 @@ export const adminRepository = {
             orders: { where: { status: { in: ["PAID", "PREPARING", "READY", "COMPLETED"] } } },
             menuItems: true,
             users: true,
+            staff: { where: { isActive: true } },
           },
         },
         users: {

@@ -38,7 +38,7 @@ interface CafeWithStats {
   address: string | null;
   phone: string | null;
   isActive: boolean;
-  _count: { orders: number; menuItems: number; users: number };
+  _count: { orders: number; menuItems: number; users: number; staff: number };
 }
 
 export default function AdminCafesPage() {
@@ -319,7 +319,7 @@ export default function AdminCafesPage() {
                 <div className="flex gap-3 text-xs">
                   <span className="text-muted"><strong className="text-foreground font-semibold">{cafe._count.orders}</strong> orders</span>
                   <span className="text-muted"><strong className="text-foreground font-semibold">{cafe._count.menuItems}</strong> items</span>
-                  <span className="text-muted"><strong className="text-foreground font-semibold">{cafe._count.users}</strong> staff</span>
+                  <span className="text-muted"><strong className="text-foreground font-semibold">{cafe._count.staff}</strong> staff</span>
                 </div>
                 <div className="flex items-center gap-0.5">
                   <button

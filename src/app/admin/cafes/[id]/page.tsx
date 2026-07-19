@@ -11,15 +11,12 @@ import { cn } from "@/shared/utils/cn";
 import { Input } from "@/frontend/components/ui/input";
 import {
   ArrowLeft,
-  DollarSign,
-  ShoppingBag,
   Trash2,
   MapPin,
   Phone,
   Clock,
   ExternalLink,
   TrendingUp,
-  CalendarDays,
   KeyRound,
   User,
   QrCode,
@@ -33,9 +30,12 @@ import {
   AlertCircle,
   Eye,
   EyeOff,
+  Receipt,
+  Shield,
+  Wallet,
 } from "lucide-react";
 import { CafeQRModal } from "@/frontend/components/admin/cafe-qr-modal";
-import type { OrderStatus } from "@/generated/prisma";
+import type { UserRole } from "@/generated/prisma";
 
 interface CafeOwner {
   id: string;
@@ -48,6 +48,25 @@ interface StaffMember {
   name: string;
   age: number;
   mobileNumber: string;
+}
+
+interface CafeUser {
+  id: string;
+  email: string;
+  name: string;
+  role: UserRole;
+  isActive: boolean;
+  createdAt: string;
+}
+
+interface ExpenseItem {
+  id: string;
+  title: string;
+  description: string | null;
+  amountPaise: number;
+  category: string;
+  date: string;
+  createdAt: string;
 }
 
 interface CafeDetail {
@@ -64,54 +83,16 @@ interface CafeDetail {
   phonepeSaltIndex: string | null;
   paymentProvider: "PHONEPE" | "RAZORPAY";
   razorpayKeyId: string | null;
-  _count: { orders: number; menuItems: number; users: number };
+  _count: { orders: number; menuItems: number; users: number; staff: number };
   users: CafeOwner[];
 }
-
-interface CafeAnalytics {
-  orders: number;
-  revenue: number;
-  range: string;
-  from: string;
-  to: string;
-  recentOrders: {
-    id: string;
-    orderNumber: string;
-    status: OrderStatus;
-    totalPaise: number;
-    customerName: string | null;
-    createdAt: string;
-  }[];
-}
-
-type TimeRange = "today" | "week" | "month" | "year" | "all";
-
-const timeRanges: { value: TimeRange; label: string }[] = [
-  { value: "today", label: "Today" },
-  { value: "week", label: "This Week" },
-  { value: "month", label: "This Month" },
-  { value: "year", label: "This Year" },
-  { value: "all", label: "All Time" },
-];
-
-const statusColors: Record<string, string> = {
-  PAID: "text-info bg-info/20",
-  PREPARING: "text-warning bg-warning/10",
-  READY: "text-primary bg-primary/10",
-  COMPLETED: "text-success bg-success/20",
-  CANCELLED: "text-danger bg-danger/10",
-  FAILED: "text-danger bg-danger/10",
-};
 
 export default function AdminCafeDetailPage() {
   const { id } = useParams<{ id: string }>();
   const router = useRouter();
 
   const [cafe, setCafe] = useState<CafeDetail | null>(null);
-  const [analytics, setAnalytics] = useState<CafeAnalytics | null>(null);
-  const [range, setRange] = useState<TimeRange>("all");
   const [loading, setLoading] = useState(true);
-  const [analyticsLoading, setAnalyticsLoading] = useState(false);
   const [showDeleteModal, setShowDeleteModal] = useState(false);
   const [deleting, setDeleting] = useState(false);
   const [deleteConfirmText, setDeleteConfirmText] = useState("");
@@ -157,6 +138,16 @@ export default function AdminCafeDetailPage() {
   const [showRazorpaySecret, setShowRazorpaySecret] = useState(false);
   const [switchingProvider, setSwitchingProvider] = useState(false);
 
+  // Cafe users state
+  const [cafeUsers, setCafeUsers] = useState<CafeUser[]>([]);
+  const [cafeUsersLoading, setCafeUsersLoading] = useState(true);
+
+  // Expenses state
+  const [expenses, setExpenses] = useState<ExpenseItem[]>([]);
+  const [expensesTotal, setExpensesTotal] = useState(0);
+  const [expensesLoading, setExpensesLoading] = useState(true);
+  const [expenseRange, setExpenseRange] = useState<string>("month");
+
   const fetchCafe = useCallback(async () => {
     try {
       const res = await fetch(`/api/admin/cafes/${id}`);
@@ -176,6 +167,34 @@ export default function AdminCafeDetailPage() {
       if (data.success) setStaff(data.data);
     } catch {
       console.error("Failed to fetch staff");
+    }
+  }, [id]);
+
+  const fetchCafeUsers = useCallback(async () => {
+    try {
+      const res = await fetch(`/api/admin/cafes/${id}/users`);
+      const data = await res.json();
+      if (data.success) setCafeUsers(data.data);
+    } catch {
+      console.error("Failed to fetch cafe users");
+    } finally {
+      setCafeUsersLoading(false);
+    }
+  }, [id]);
+
+  const fetchExpenses = useCallback(async (r: string) => {
+    setExpensesLoading(true);
+    try {
+      const res = await fetch(`/api/admin/cafes/${id}/expenses?range=${r}`);
+      const data = await res.json();
+      if (data.success) {
+        setExpenses(data.data.expenses);
+        setExpensesTotal(data.data.totalPaise);
+      }
+    } catch {
+      console.error("Failed to fetch expenses");
+    } finally {
+      setExpensesLoading(false);
     }
   }, [id]);
 
@@ -311,28 +330,15 @@ export default function AdminCafeDetailPage() {
     }
   };
 
-  const fetchAnalytics = useCallback(async (r: TimeRange) => {
-    setAnalyticsLoading(true);
-    try {
-      const res = await fetch(`/api/admin/cafes/${id}/analytics?range=${r}`);
-      const data = await res.json();
-      if (data.success) setAnalytics(data.data);
-    } catch {
-      console.error("Failed to fetch analytics");
-    } finally {
-      setAnalyticsLoading(false);
-    }
-  }, [id]);
-
   useEffect(() => {
     fetchCafe();
-    fetchAnalytics(range);
     fetchStaff();
-  }, [fetchCafe, fetchAnalytics, fetchStaff, range]);
+    fetchCafeUsers();
+  }, [fetchCafe, fetchStaff, fetchCafeUsers]);
 
-  const handleRangeChange = (newRange: TimeRange) => {
-    setRange(newRange);
-  };
+  useEffect(() => {
+    fetchExpenses(expenseRange);
+  }, [fetchExpenses, expenseRange]);
 
   const handleDelete = async () => {
     setDeleting(true);
@@ -492,6 +498,10 @@ export default function AdminCafeDetailPage() {
               <UtensilsCrossed size={14} className="mr-1" />
               Manage Menu
             </Button>
+            <Button size="sm" variant="secondary" onClick={() => router.push(`/admin/cafes/${id}/revenue`)}>
+              <TrendingUp size={14} className="mr-1" />
+              Revenue
+            </Button>
             <Button size="sm" variant="secondary" onClick={openEditModal}>
               <Pencil size={14} className="mr-1" />
               Edit
@@ -524,7 +534,7 @@ export default function AdminCafeDetailPage() {
         </Card>
         <Card>
           <CardContent className="text-center">
-            <p className="text-2xl font-bold">{cafe._count.users}</p>
+            <p className="text-2xl font-bold">{cafe._count.staff}</p>
             <p className="text-xs text-muted">Staff</p>
           </CardContent>
         </Card>
@@ -631,137 +641,6 @@ export default function AdminCafeDetailPage() {
         </div>
       </div>
 
-      {/* Time Range Tabs */}
-      <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-3 mb-4">
-        <h2 className="text-lg font-semibold flex items-center gap-2">
-          <TrendingUp size={18} className="text-primary" />
-          Revenue & Orders
-        </h2>
-        <div className="flex items-center gap-1 bg-surface rounded-xl border border-border p-1 overflow-x-auto">
-          {timeRanges.map((tr) => (
-            <button
-              key={tr.value}
-              onClick={() => handleRangeChange(tr.value)}
-              className={cn(
-                "flex-shrink-0 px-3 py-1.5 rounded-lg text-xs font-medium transition-colors duration-100",
-                range === tr.value
-                  ? "bg-primary text-white shadow-sm"
-                  : "text-muted hover:text-foreground"
-              )}
-            >
-              {tr.label}
-            </button>
-          ))}
-        </div>
-      </div>
-
-      {/* Revenue Cards */}
-      <div className="grid grid-cols-2 gap-4 mb-6">
-        <Card>
-          <CardContent className="flex items-center gap-3">
-            <div className="w-10 h-10 rounded-xl flex items-center justify-center bg-success/20 text-success">
-              <DollarSign size={20} />
-            </div>
-            <div>
-              <p className="text-xs text-muted">
-                {timeRanges.find((t) => t.value === range)?.label} Revenue
-              </p>
-              <p className="text-xl font-bold">
-                {analyticsLoading ? "..." : paiseToCurrencyShort(analytics?.revenue || 0)}
-              </p>
-            </div>
-          </CardContent>
-        </Card>
-        <Card>
-          <CardContent className="flex items-center gap-3">
-            <div className="w-10 h-10 rounded-xl flex items-center justify-center bg-info/20 text-info">
-              <ShoppingBag size={20} />
-            </div>
-            <div>
-              <p className="text-xs text-muted">
-                {timeRanges.find((t) => t.value === range)?.label} Orders
-              </p>
-              <p className="text-xl font-bold">
-                {analyticsLoading ? "..." : (analytics?.orders || 0).toLocaleString()}
-              </p>
-            </div>
-          </CardContent>
-        </Card>
-      </div>
-
-      {/* Recent Orders Table */}
-      <div className="flex items-center gap-2 mb-3">
-        <CalendarDays size={16} className="text-muted" />
-        <h3 className="font-semibold text-sm">Recent Orders</h3>
-      </div>
-
-      <div className="bg-surface rounded-2xl border border-border overflow-hidden">
-        {analyticsLoading ? (
-          <div className="px-5 py-8 text-center text-muted text-sm">Loading...</div>
-        ) : !analytics?.recentOrders.length ? (
-          <div className="px-5 py-8 text-center text-muted text-sm">
-            No orders in this time period
-          </div>
-        ) : (
-          <>
-            {/* Mobile cards */}
-            <div className="sm:hidden divide-y divide-border">
-              {analytics.recentOrders.map((order) => (
-                <div key={order.id} className="px-4 py-3.5">
-                  <div className="flex items-center justify-between mb-1">
-                    <span className="font-medium text-sm">{order.orderNumber}</span>
-                    <span className="font-medium text-sm">{paiseToCurrencyShort(order.totalPaise)}</span>
-                  </div>
-                  <div className="flex items-center justify-between">
-                    <span className="text-xs text-muted">{order.customerName || "Guest"}</span>
-                    <div className="flex items-center gap-2">
-                      <span className={cn("inline-flex items-center px-2 py-0.5 rounded-full text-[10px] font-medium", statusColors[order.status] || "text-muted bg-surface")}>
-                        {order.status}
-                      </span>
-                      <span className="text-xs text-muted">
-                        {new Date(order.createdAt).toLocaleDateString("en-IN", { day: "numeric", month: "short", hour: "2-digit", minute: "2-digit" })}
-                      </span>
-                    </div>
-                  </div>
-                </div>
-              ))}
-            </div>
-
-            {/* Desktop table */}
-            <div className="hidden sm:block">
-              <div className="grid grid-cols-5 gap-4 px-5 py-3 bg-background border-b border-border text-xs font-medium text-muted">
-                <span>Order #</span>
-                <span>Customer</span>
-                <span>Status</span>
-                <span className="text-right">Amount</span>
-                <span className="text-right">Date</span>
-              </div>
-              {analytics.recentOrders.map((order, i) => (
-                <div
-                  key={order.id}
-                  className={cn(
-                    "grid grid-cols-5 gap-4 px-5 py-3 text-sm items-center",
-                    i < analytics.recentOrders.length - 1 && "border-b border-border"
-                  )}
-                >
-                  <span className="font-medium">{order.orderNumber}</span>
-                  <span className="text-muted truncate">{order.customerName || "Guest"}</span>
-                  <span>
-                    <span className={cn("inline-flex items-center px-2 py-0.5 rounded-full text-[11px] font-medium", statusColors[order.status] || "text-muted bg-surface")}>
-                      {order.status}
-                    </span>
-                  </span>
-                  <span className="text-right font-medium">{paiseToCurrencyShort(order.totalPaise)}</span>
-                  <span className="text-right text-muted text-xs">
-                    {new Date(order.createdAt).toLocaleDateString("en-IN", { day: "numeric", month: "short", hour: "2-digit", minute: "2-digit" })}
-                  </span>
-                </div>
-              ))}
-            </div>
-          </>
-        )}
-      </div>
-
       {/* Staff Section */}
       <div className="mt-8">
         <div className="flex items-center justify-between mb-4">
@@ -834,6 +713,145 @@ export default function AdminCafeDetailPage() {
                 </div>
               ))}
             </div>
+          </div>
+        )}
+      </div>
+
+      {/* Cafe User Accounts Section */}
+      <div className="mt-8">
+        <div className="flex items-center justify-between mb-4">
+          <h2 className="text-lg font-semibold flex items-center gap-2">
+            <Shield size={18} className="text-primary" />
+            Accounts ({cafeUsers.length})
+          </h2>
+        </div>
+
+        {cafeUsersLoading ? (
+          <div className="bg-surface rounded-2xl border border-border p-5 animate-pulse h-20" />
+        ) : cafeUsers.length === 0 ? (
+          <div className="bg-surface rounded-2xl border border-border p-8 text-center text-muted text-sm">
+            No user accounts for this cafe
+          </div>
+        ) : (
+          <div className="bg-surface rounded-2xl border border-border overflow-hidden">
+            <div className="hidden sm:block">
+              <div className="grid grid-cols-5 gap-4 px-5 py-3 bg-background border-b border-border text-xs font-medium text-muted">
+                <span>Name</span>
+                <span>Email</span>
+                <span>Role</span>
+                <span>Status</span>
+                <span className="text-right">Created</span>
+              </div>
+              {cafeUsers.map((user, i) => (
+                <div
+                  key={user.id}
+                  className={cn(
+                    "grid grid-cols-5 gap-4 px-5 py-3 text-sm items-center",
+                    i < cafeUsers.length - 1 && "border-b border-border"
+                  )}
+                >
+                  <span className="font-medium">{user.name}</span>
+                  <span className="text-muted truncate text-xs">{user.email}</span>
+                  <span>
+                    <Badge variant={user.role === "CAFE_OWNER" ? "info" : "default"}>
+                      {user.role.replace("_", " ")}
+                    </Badge>
+                  </span>
+                  <span>
+                    <Badge variant={user.isActive ? "success" : "danger"}>
+                      {user.isActive ? "Active" : "Inactive"}
+                    </Badge>
+                  </span>
+                  <span className="text-right text-muted text-xs">
+                    {new Date(user.createdAt).toLocaleDateString("en-IN", { day: "numeric", month: "short", year: "numeric" })}
+                  </span>
+                </div>
+              ))}
+            </div>
+            <div className="sm:hidden divide-y divide-border">
+              {cafeUsers.map((user) => (
+                <div key={user.id} className="flex items-center gap-3 px-4 py-3.5">
+                  <div className="w-9 h-9 rounded-full bg-primary/10 flex items-center justify-center flex-shrink-0">
+                    <span className="text-sm font-bold text-primary">{user.name.charAt(0).toUpperCase()}</span>
+                  </div>
+                  <div className="min-w-0 flex-1">
+                    <div className="flex items-center gap-2">
+                      <p className="font-medium text-sm">{user.name}</p>
+                      <Badge variant={user.role === "CAFE_OWNER" ? "info" : "default"}>
+                        {user.role.replace("_", " ")}
+                      </Badge>
+                    </div>
+                    <p className="text-xs text-muted mt-0.5">{user.email}</p>
+                  </div>
+                  <Badge variant={user.isActive ? "success" : "danger"}>
+                    {user.isActive ? "Active" : "Inactive"}
+                  </Badge>
+                </div>
+              ))}
+            </div>
+          </div>
+        )}
+      </div>
+
+      {/* Expenses Section */}
+      <div className="mt-8">
+        <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-3 mb-4">
+          <h2 className="text-lg font-semibold flex items-center gap-2">
+            <Wallet size={18} className="text-primary" />
+            Expenses {expensesTotal > 0 && <span className="text-sm font-normal text-muted">({paiseToCurrencyShort(expensesTotal)} total)</span>}
+          </h2>
+          <div className="flex items-center gap-1 bg-surface rounded-xl border border-border p-1 overflow-x-auto">
+            {(["today", "week", "month", "year", "all"] as const).map((r) => (
+              <button
+                key={r}
+                onClick={() => setExpenseRange(r)}
+                className={cn(
+                  "flex-shrink-0 px-3 py-1.5 rounded-lg text-xs font-medium transition-colors",
+                  expenseRange === r ? "bg-primary text-white shadow-sm" : "text-muted hover:text-foreground"
+                )}
+              >
+                {r === "all" ? "All" : r.charAt(0).toUpperCase() + r.slice(1)}
+              </button>
+            ))}
+          </div>
+        </div>
+
+        {expensesLoading ? (
+          <div className="space-y-3">
+            {[...Array(3)].map((_, i) => (
+              <div key={i} className="bg-surface rounded-2xl border border-border p-4 animate-pulse h-16" />
+            ))}
+          </div>
+        ) : expenses.length === 0 ? (
+          <div className="bg-surface rounded-2xl border border-border p-8 text-center text-muted text-sm">
+            No expenses in this period
+          </div>
+        ) : (
+          <div className="space-y-2">
+            {expenses.map((expense) => (
+              <div key={expense.id} className="bg-surface rounded-2xl border border-border p-4 flex items-center justify-between">
+                <div className="flex items-center gap-3 min-w-0">
+                  <div className="w-9 h-9 rounded-xl bg-danger/10 flex items-center justify-center flex-shrink-0">
+                    <Receipt size={16} className="text-danger" />
+                  </div>
+                  <div className="min-w-0">
+                    <p className="font-medium text-sm truncate">{expense.title}</p>
+                    <div className="flex items-center gap-2 mt-0.5">
+                      <span className="text-[10px] px-1.5 py-0.5 rounded-md bg-surface-hover text-muted">{expense.category}</span>
+                      {expense.description && (
+                        <span className="text-xs text-muted truncate">{expense.description}</span>
+                      )}
+                    </div>
+                  </div>
+                </div>
+                <div className="text-right flex-shrink-0 ml-4">
+                  <p className="font-semibold text-sm text-danger">{paiseToCurrencyShort(expense.amountPaise)}</p>
+                  <p className="text-xs text-muted">
+                    {new Date(expense.date).toLocaleDateString("en-IN", { day: "numeric", month: "short" })}
+                  </p>
+                </div>
+              </div>
+            ))}
           </div>
         )}
       </div>

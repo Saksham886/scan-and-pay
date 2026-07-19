@@ -219,7 +219,6 @@ export default function AdminUsersPage() {
               onChange={(e) => setFormRole(e.target.value as UserRole)}
             >
               <option value="CAFE_OWNER">Cafe Owner</option>
-              <option value="CAFE_STAFF">Cafe Staff</option>
               <option value="SUPER_ADMIN">Super Admin</option>
             </select>
           </div>
