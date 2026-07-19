@@ -1,0 +1,576 @@
+[
+  {
+    "name": "Fresh Juices",
+    "items": [
+      {
+        "name": "Water Melon Juice",
+        "pricePaise": 4000,
+        "description": "Fresh cut fruits Juice with sugar & Withour Sugar · 250 ML",
+        "isVeg": true
+      },
+      {
+        "name": "Papaya",
+        "pricePaise": 4500,
+        "description": "Fresh cut fruits Juice with sugar & Withour Sugar · 250 ML",
+        "isVeg": true
+      },
+      {
+        "name": "Mix Fruit Juice",
+        "pricePaise": 4500,
+        "description": "Fresh cut fruits Juice with sugar & Withour Sugar · 250 ML",
+        "isVeg": true
+      },
+      {
+        "name": "Mint Line June",
+        "pricePaise": 4500,
+        "description": "Fresh cut fruits Juice with sugar & Withour Sugar · 250 ML",
+        "isVeg": true
+      }
+    ]
+  },
+  {
+    "name": "Parathas",
+    "items": [
+      {
+        "name": "Aloo Paratha",
+        "pricePaise": 5000,
+        "description": "Live baked & Served with Curd & Pickle ( 1 Pices) · 400g",
+        "isVeg": true
+      },
+      {
+        "name": "Mix veg Paratha",
+        "pricePaise": 5000,
+        "description": "Live baked & Served with Curd & Pickle ( 1 Pices) · 400g",
+        "isVeg": true
+      },
+      {
+        "name": "Paneer Paratha",
+        "pricePaise": 6500,
+        "description": "Live baked & Served with Curd & Pickle ( 1 Pices) · 400g",
+        "isVeg": true
+      }
+    ]
+  },
+  {
+    "name": "South Special (Idli, Dosa & More)",
+    "items": [
+      {
+        "name": "Plain Dosa",
+        "pricePaise": 4500,
+        "description": "Live Bakes & Served with Coconut Chutney ( 2 Pices) · 400g",
+        "isVeg": true
+      },
+      {
+        "name": "Masala Dosa",
+        "pricePaise": 5500,
+        "description": "Live Bakes & Served with Coconut Chutney ( 2 Pices) · 400g",
+        "isVeg": true
+      },
+      {
+        "name": "Podi Plain Dosa",
+        "pricePaise": 5000,
+        "description": "Live Bakes & Served with Coconut Chutney ( 2 Pices) · 400g",
+        "isVeg": true
+      },
+      {
+        "name": "Podi Masala Dosa",
+        "pricePaise": 6000,
+        "description": "Live Bakes & Served with Coconut Chutney ( 2 Pices) · 400g",
+        "isVeg": true
+      },
+      {
+        "name": "Ghee Plain Dosa",
+        "pricePaise": 6000,
+        "description": "Live Bakes & Served with Coconut Chutney ( 2 Pices) · 400g",
+        "isVeg": true
+      },
+      {
+        "name": "Ghee Masala Dosa",
+        "pricePaise": 6500,
+        "description": "Live Bakes & Served with Coconut Chutney ( 2 Pices) · 400g",
+        "isVeg": true
+      },
+      {
+        "name": "Egg Dosa",
+        "pricePaise": 7000,
+        "description": "Live Bakes & Served with Coconut Chutney ( 2 Pices) · 400g",
+        "isVeg": false
+      },
+      {
+        "name": "Set Dosa",
+        "pricePaise": 5000,
+        "description": "Live Bakes & Served with Coconut Chutney ( 2 Pices) · 400g",
+        "isVeg": true
+      },
+      {
+        "name": "Onion Uttapam",
+        "pricePaise": 6000,
+        "description": "Live Bakes & Served with Coconut Chutney ( 2 Pices) · 400g",
+        "isVeg": true
+      },
+      {
+        "name": "Besan Chilla",
+        "pricePaise": 6000,
+        "description": "Live Bakes & Served with Coconut Chutney ( 2 Pices) · 400g",
+        "isVeg": true
+      },
+      {
+        "name": "Moong Dal Chilla",
+        "pricePaise": 6000,
+        "description": "Live Bakes & Served with Coconut Chutney ( 2 Pices) · 400g",
+        "isVeg": true
+      },
+      {
+        "name": "Poha",
+        "pricePaise": 4500,
+        "description": "Freshly Toss Rice Flex and serve with Mixer, Onion, lemon · 250g",
+        "isVeg": true
+      },
+      {
+        "name": "Idli Vada",
+        "pricePaise": 4500,
+        "description": "Two Idli & One Vada Serve With Sambar and Chutney · 400g",
+        "isVeg": true
+      },
+      {
+        "name": "Pasta",
+        "pricePaise": 5000,
+        "description": "Frechly Made In White Sauces · 300g",
+        "isVeg": true
+      },
+      {
+        "name": "Poori Sabji",
+        "pricePaise": 5000,
+        "description": "Three Poori Served with Chole or veg Kurma · 400g",
+        "isVeg": true
+      },
+      {
+        "name": "Mandaki",
+        "pricePaise": 4000,
+        "description": null,
+        "isVeg": true
+      },
+      {
+        "name": "Shavige Bath",
+        "pricePaise": 4500,
+        "description": "Served withCoconut Chutney · 300g",
+        "isVeg": true
+      },
+      {
+        "name": "Veg Upma",
+        "pricePaise": 4500,
+        "description": "Served with Coconut Chutney · 300g",
+        "isVeg": true
+      },
+      {
+        "name": "Veg English Breakfast",
+        "pricePaise": 5000,
+        "description": "400g",
+        "isVeg": true
+      },
+      {
+        "name": "Egg English Breakfast",
+        "pricePaise": 6000,
+        "description": "400g",
+        "isVeg": false
+      }
+    ]
+  },
+  {
+    "name": "Egg Special",
+    "items": [
+      {
+        "name": "Plain Omelette",
+        "pricePaise": 3500,
+        "description": "e Egg Cooked with Salt & pepper · 200g",
+        "isVeg": false
+      },
+      {
+        "name": "Masala Omelette",
+        "pricePaise": 4000,
+        "description": "2 Egg with Vegetables · 250g",
+        "isVeg": false
+      },
+      {
+        "name": "Cheese Omelette",
+        "pricePaise": 5000,
+        "description": "2 Egg cooked in Cheese, Salt & Pepper · 300g",
+        "isVeg": false
+      },
+      {
+        "name": "Bread Omelette",
+        "pricePaise": 4500,
+        "description": "2 egg and 2 Slice of Bread · 300g",
+        "isVeg": false
+      },
+      {
+        "name": "Bread Cheese omelette",
+        "pricePaise": 5500,
+        "description": "2 Egg & 2 Slice of Bread cooked in Cheese · 300g",
+        "isVeg": false
+      },
+      {
+        "name": "Scrumbled egg",
+        "pricePaise": 5000,
+        "description": "2 Egg Live Made · 300g",
+        "isVeg": false
+      },
+      {
+        "name": "Egg Bhurji",
+        "pricePaise": 5000,
+        "description": "2 Egg- Live made · 300g",
+        "isVeg": false
+      },
+      {
+        "name": "Boiled Egg",
+        "pricePaise": 3000,
+        "description": "2 Egg Served with Onion, Tomato, Salt & Pepper · 200g",
+        "isVeg": false
+      },
+      {
+        "name": "Half Boiled Egg",
+        "pricePaise": 4000,
+        "description": "2 Egg One Side baked · 200g",
+        "isVeg": false
+      }
+    ]
+  },
+  {
+    "name": "Maggi",
+    "items": [
+      {
+        "name": "Plain Maggi",
+        "pricePaise": 3500,
+        "description": "Freshly Made · 200g",
+        "isVeg": true
+      },
+      {
+        "name": "Veg Maggi",
+        "pricePaise": 4000,
+        "description": "Freshly made Maggi with Vegetables · 250g",
+        "isVeg": true
+      },
+      {
+        "name": "Cheese Maggi",
+        "pricePaise": 5000,
+        "description": "Freshly Made Maggi with Cheese · 250g",
+        "isVeg": true
+      },
+      {
+        "name": "Veg Cheese Maggi",
+        "pricePaise": 5500,
+        "description": "Freshly Made Maggies withWegetable and Cheeses · 300g",
+        "isVeg": true
+      },
+      {
+        "name": "Fried Maggi",
+        "pricePaise": 5000,
+        "description": "Freshly Made Maggies withWegetable · 300g",
+        "isVeg": true
+      },
+      {
+        "name": "Egg Maggi",
+        "pricePaise": 6000,
+        "description": "Freshly Made Maggies with Egg · 300g",
+        "isVeg": false
+      }
+    ]
+  },
+  {
+    "name": "Snacks",
+    "items": [
+      {
+        "name": "Samosa",
+        "pricePaise": 2500,
+        "description": null,
+        "isVeg": true
+      },
+      {
+        "name": "Dhokla",
+        "pricePaise": 2500,
+        "description": null,
+        "isVeg": true
+      },
+      {
+        "name": "Kachori",
+        "pricePaise": 2500,
+        "description": null,
+        "isVeg": true
+      },
+      {
+        "name": "Vada pav",
+        "pricePaise": 3000,
+        "description": null,
+        "isVeg": true
+      },
+      {
+        "name": "Onion pakoda",
+        "pricePaise": 4000,
+        "description": null,
+        "isVeg": true
+      },
+      {
+        "name": "Bread Pakoda",
+        "pricePaise": 4500,
+        "description": null,
+        "isVeg": true
+      },
+      {
+        "name": "Veg Burger",
+        "pricePaise": 5000,
+        "description": null,
+        "isVeg": true
+      },
+      {
+        "name": "Cheese Burger",
+        "pricePaise": 6000,
+        "description": null,
+        "isVeg": true
+      },
+      {
+        "name": "french Fried",
+        "pricePaise": 4500,
+        "description": null,
+        "isVeg": true
+      },
+      {
+        "name": "Peri peri French Fried",
+        "pricePaise": 5500,
+        "description": null,
+        "isVeg": true
+      },
+      {
+        "name": "Cheese French Freid",
+        "pricePaise": 6000,
+        "description": null,
+        "isVeg": true
+      },
+      {
+        "name": "Honey Chilli Potato",
+        "pricePaise": 5000,
+        "description": null,
+        "isVeg": true
+      }
+    ]
+  },
+  {
+    "name": "Sandwiches",
+    "items": [
+      {
+        "name": "Veg Sandwiches",
+        "pricePaise": 4500,
+        "description": "200",
+        "isVeg": true
+      },
+      {
+        "name": "Veg Cheese Sandwiches",
+        "pricePaise": 5500,
+        "description": "150",
+        "isVeg": true
+      },
+      {
+        "name": "Egg Sandwiches",
+        "pricePaise": 5500,
+        "description": "150",
+        "isVeg": false
+      },
+      {
+        "name": "Veg Rolla",
+        "pricePaise": 5000,
+        "description": "200",
+        "isVeg": true
+      },
+      {
+        "name": "Egg Roll",
+        "pricePaise": 5500,
+        "description": "250",
+        "isVeg": false
+      },
+      {
+        "name": "Chicken Roll",
+        "pricePaise": 6500,
+        "description": "200",
+        "isVeg": false
+      },
+      {
+        "name": "Chicken Egg Roll",
+        "pricePaise": 7000,
+        "description": "200",
+        "isVeg": false
+      }
+    ]
+  },
+  {
+    "name": "Meals Options",
+    "items": [
+      {
+        "name": "Full Meal",
+        "pricePaise": 12000,
+        "description": "Chapati+ Plain Rice+ Flavoured Rice+ Dal+ Veg Dry +Veg Gravy+ Salad, + Sweet + Papad · 900g",
+        "isVeg": true
+      },
+      {
+        "name": "Veg Rice Combo",
+        "pricePaise": 9000,
+        "description": "Plain Rice+ Dal+ Veg Dry or Veg Gravy+ Salad + Papad · 800g",
+        "isVeg": true
+      },
+      {
+        "name": "Veg-Roti Combo",
+        "pricePaise": 9000,
+        "description": "Chapati -4+ Dal + Veg Dry or Veg Gravy+ Salad + Papad · 800g",
+        "isVeg": true
+      },
+      {
+        "name": "Non-Veg Meal",
+        "pricePaise": 14000,
+        "description": "Chapati+ Plain Rice+ Flavoured Rice+ Dal+ Chicken Gravy+ Salad, + Swwet + Papad · 900g",
+        "isVeg": false
+      },
+      {
+        "name": "Chicken Rice Combo",
+        "pricePaise": 11000,
+        "description": "Plain Rice+ Chicken Curry +Salad + Papad · 700g",
+        "isVeg": false
+      },
+      {
+        "name": "Chicken Roti Combo",
+        "pricePaise": 11000,
+        "description": "4 Chapati + Chicken Curry + Salad Papad · 600g",
+        "isVeg": false
+      },
+      {
+        "name": "Biryani",
+        "pricePaise": 15000,
+        "description": "Chicken Biryani + Raitha or Salan + Salad+Sweet+ Papad · 700g",
+        "isVeg": true
+      },
+      {
+        "name": "Biryani Rice ( Khuska)",
+        "pricePaise": 8000,
+        "description": "Biryani Rice+ Raitha + Salad + Sweet + Papad · 700g",
+        "isVeg": true
+      },
+      {
+        "name": "Chapati",
+        "pricePaise": 1200,
+        "description": "1 Pices · 10 g",
+        "isVeg": true
+      },
+      {
+        "name": "Plain Paratha",
+        "pricePaise": 1500,
+        "description": "1 Pices · 12g",
+        "isVeg": true
+      },
+      {
+        "name": "Dal Tadka",
+        "pricePaise": 2500,
+        "description": "1 Bow · 200g",
+        "isVeg": true
+      },
+      {
+        "name": "Plain Rice",
+        "pricePaise": 2500,
+        "description": "1 Bow · 350g",
+        "isVeg": true
+      },
+      {
+        "name": "Dry Sabji",
+        "pricePaise": 2500,
+        "description": "1 Bow · 200g",
+        "isVeg": true
+      },
+      {
+        "name": "Gravy Sabji",
+        "pricePaise": 3500,
+        "description": "1 Bow · 200g",
+        "isVeg": true
+      },
+      {
+        "name": "Paneer Gravy",
+        "pricePaise": 4000,
+        "description": "1 Bow · 250g",
+        "isVeg": true
+      },
+      {
+        "name": "Chicken Gravy",
+        "pricePaise": 6000,
+        "description": "1 Bow · 250g",
+        "isVeg": false
+      },
+      {
+        "name": "Egg Bow Curry",
+        "pricePaise": 5000,
+        "description": "1 Bow · 250g",
+        "isVeg": false
+      },
+      {
+        "name": "Veg Fried rice",
+        "pricePaise": 7000,
+        "description": "1 Plate · 600g",
+        "isVeg": true
+      },
+      {
+        "name": "Egg Fried Rice ( Single Egg)",
+        "pricePaise": 8000,
+        "description": "1 Plate · 600g",
+        "isVeg": false
+      },
+      {
+        "name": "Egg Fried Rice double egg",
+        "pricePaise": 9000,
+        "description": "1 Plate · 650g",
+        "isVeg": false
+      },
+      {
+        "name": "Chicken Fried Rice",
+        "pricePaise": 9000,
+        "description": "1 Plate · 600g",
+        "isVeg": false
+      },
+      {
+        "name": "Chicken Egg Fried Rice",
+        "pricePaise": 10000,
+        "description": "1 Plate · 650g",
+        "isVeg": false
+      },
+      {
+        "name": "Paneer Fried rice",
+        "pricePaise": 10000,
+        "description": "1 Plate · 600g",
+        "isVeg": true
+      },
+      {
+        "name": "Mushrrom Fried Rice",
+        "pricePaise": 9000,
+        "description": "1 Plate · 600g",
+        "isVeg": true
+      },
+      {
+        "name": "Chilli Chicken",
+        "pricePaise": 7000,
+        "description": "1 Plate · 400g",
+        "isVeg": false
+      },
+      {
+        "name": "Chicken manchurian",
+        "pricePaise": 7000,
+        "description": "1 Plate · 400g",
+        "isVeg": false
+      },
+      {
+        "name": "Planeer Chilli",
+        "pricePaise": 7000,
+        "description": "1 Plate · 400g",
+        "isVeg": true
+      },
+      {
+        "name": "Veg Ball manchurian",
+        "pricePaise": 6000,
+        "description": "1 Plate · 400g",
+        "isVeg": true
+      }
+    ]
+  }
+]

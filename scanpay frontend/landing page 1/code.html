@@ -1,0 +1,322 @@
+<!DOCTYPE html>
+
+<html class="dark" lang="en"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>CraveFlow - Order straight from the table</title>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com/css2?family=Geist:wght@100..900&amp;family=Hanken+Grotesk:ital,wght@0,100..900;1,100..900&amp;family=Inter:ital,opsz,wght@0,14..32,100..900;1,14..32,100..900&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<style>
+        .material-symbols-outlined {
+            font-family: 'Material Symbols Outlined';
+            font-weight: normal;
+            font-style: normal;
+            font-size: 24px;
+            line-height: 1;
+            letter-spacing: normal;
+            text-transform: none;
+            display: inline-block;
+            white-space: nowrap;
+            word-wrap: normal;
+            direction: ltr;
+            -webkit-font-feature-settings: 'liga';
+            -webkit-font-smoothing: antialiased;
+        }
+        
+        .bg-noise {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100vw;
+            height: 100vh;
+            pointer-events: none;
+            z-index: 9999;
+            opacity: 0.03;
+            background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noiseFilter'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.65' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noiseFilter)'/%3E%3C/svg%3E");
+        }
+
+        .glass-panel {
+            background: rgba(30, 41, 59, 0.4);
+            backdrop-filter: blur(20px);
+            -webkit-backdrop-filter: blur(20px);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            box-shadow: 0 4px 30px rgba(0, 0, 0, 0.1);
+        }
+
+        .glow-effect {
+            position: absolute;
+            width: 300px;
+            height: 300px;
+            background: radial-gradient(circle, rgba(142, 213, 255, 0.15) 0%, rgba(142, 213, 255, 0) 70%);
+            border-radius: 50%;
+            pointer-events: none;
+            z-index: -1;
+        }
+    </style>
+<script id="tailwind-config">
+  tailwind.config = {
+    darkMode: "class",
+    theme: {
+      extend: {
+        "colors": {
+                "on-error": "#690005",
+                "on-primary-fixed-variant": "#004c69",
+                "on-background": "#e0e3e5",
+                "on-tertiary-fixed-variant": "#3f465c",
+                "inverse-primary": "#00668a",
+                "surface-container-low": "#191c1e",
+                "surface": "#101415",
+                "tertiary-fixed": "#dae2fd",
+                "on-primary": "#00354a",
+                "outline": "#87929a",
+                "on-secondary": "#233143",
+                "inverse-surface": "#e0e3e5",
+                "on-primary-fixed": "#001e2c",
+                "inverse-on-surface": "#2d3133",
+                "surface-bright": "#363a3b",
+                "surface-container-lowest": "#0b0f10",
+                "error": "#ffb4ab",
+                "error-container": "#93000a",
+                "surface-container": "#1d2022",
+                "secondary-fixed-dim": "#b9c8de",
+                "on-tertiary": "#283044",
+                "secondary-container": "#39485a",
+                "on-surface-variant": "#bdc8d1",
+                "surface-container-highest": "#323537",
+                "primary-fixed": "#c4e7ff",
+                "tertiary": "#c5cce6",
+                "primary-fixed-dim": "#7bd0ff",
+                "background": "#101415",
+                "surface-dim": "#101415",
+                "outline-variant": "#3e484f",
+                "on-surface": "#e0e3e5",
+                "on-secondary-container": "#a7b6cc",
+                "secondary-fixed": "#d4e4fa",
+                "tertiary-fixed-dim": "#bec6e0",
+                "primary-container": "#38bdf8",
+                "surface-tint": "#7bd0ff",
+                "on-primary-container": "#004965",
+                "tertiary-container": "#a9b1ca",
+                "secondary": "#b9c8de",
+                "primary": "#8ed5ff",
+                "on-secondary-fixed-variant": "#39485a",
+                "on-error-container": "#ffdad6",
+                "on-secondary-fixed": "#0d1c2d",
+                "surface-variant": "#323537",
+                "surface-container-high": "#272a2c",
+                "on-tertiary-container": "#3c4459",
+                "on-tertiary-fixed": "#131b2e"
+        },
+        "borderRadius": {
+                "DEFAULT": "0.25rem",
+                "lg": "0.5rem",
+                "xl": "0.75rem",
+                "full": "9999px"
+        },
+        "spacing": {
+                "section-gap": "160px",
+                "container-max": "1280px",
+                "margin-mobile": "24px",
+                "gutter": "32px",
+                "element-gap": "32px"
+        },
+        "fontFamily": {
+                "headline-lg-mobile": [
+                        "Hanken Grotesk"
+                ],
+                "body-lg": [
+                        "Inter"
+                ],
+                "label-sm": [
+                        "Geist"
+                ],
+                "headline-lg": [
+                        "Hanken Grotesk"
+                ],
+                "body-md": [
+                        "Inter"
+                ],
+                "headline-xl": [
+                        "Hanken Grotesk"
+                ]
+        },
+        "fontSize": {
+                "headline-lg-mobile": [
+                        "36px",
+                        {
+                                "lineHeight": "1.2",
+                                "letterSpacing": "-0.02em",
+                                "fontWeight": "700"
+                        }
+                ],
+                "body-lg": [
+                        "18px",
+                        {
+                                "lineHeight": "1.6",
+                                "fontWeight": "400"
+                        }
+                ],
+                "label-sm": [
+                        "14px",
+                        {
+                                "lineHeight": "1.0",
+                                "letterSpacing": "0.05em",
+                                "fontWeight": "500"
+                        }
+                ],
+                "headline-lg": [
+                        "48px",
+                        {
+                                "lineHeight": "1.2",
+                                "letterSpacing": "-0.02em",
+                                "fontWeight": "700"
+                        }
+                ],
+                "body-md": [
+                        "16px",
+                        {
+                                "lineHeight": "1.5",
+                                "fontWeight": "400"
+                        }
+                ],
+                "headline-xl": [
+                        "72px",
+                        {
+                                "lineHeight": "1.1",
+                                "letterSpacing": "-0.04em",
+                                "fontWeight": "800"
+                        }
+                ]
+        }
+},
+    },
+  }
+</script>
+</head>
+<body class="bg-background text-on-background font-body-md min-h-screen flex flex-col antialiased selection:bg-primary selection:text-on-primary">
+<div class="bg-noise"></div>
+<!-- TopNavBar -->
+<nav class="fixed top-0 w-full z-50 bg-background/80 backdrop-blur-xl border-b border-white/10 shadow-none">
+<div class="flex justify-between items-center px-gutter py-6 max-w-container-max mx-auto w-full">
+<div class="flex-1 flex justify-start items-center gap-2">
+<span class="material-symbols-outlined text-primary text-3xl" data-weight="fill">restaurant</span>
+<span class="font-headline-lg text-headline-lg-mobile md:text-[32px] font-extrabold text-on-surface tracking-tight">CraveFlow</span>
+</div>
+<div class="hidden md:flex flex-1 justify-center items-center gap-8">
+<a class="text-on-surface-variant hover:text-on-surface transition-colors duration-200 font-label-sm text-label-sm uppercase tracking-wider" href="#">Solutions</a>
+<a class="text-on-surface-variant hover:text-on-surface transition-colors duration-200 font-label-sm text-label-sm uppercase tracking-wider" href="#">Features</a>
+<a class="text-on-surface-variant hover:text-on-surface transition-colors duration-200 font-label-sm text-label-sm uppercase tracking-wider" href="#">Pricing</a>
+<a class="text-on-surface-variant hover:text-on-surface transition-colors duration-200 font-label-sm text-label-sm uppercase tracking-wider" href="#">About</a>
+</div>
+<div class="flex-1 flex justify-end items-center gap-4">
+<a class="hidden md:block text-on-surface-variant hover:text-on-surface transition-colors duration-200 font-label-sm text-label-sm uppercase" href="#">Login</a>
+<a class="bg-primary text-on-primary-fixed hover:scale-[1.02] active:scale-[0.98] transition-all duration-200 px-6 py-3 rounded-full font-label-sm text-label-sm uppercase flex items-center gap-2" href="#">
+                    Get Started <span class="material-symbols-outlined text-sm">arrow_forward</span>
+</a>
+</div>
+</div>
+</nav>
+<!-- Main Content -->
+<main class="flex-grow pt-32 pb-section-gap relative overflow-hidden flex flex-col justify-center">
+<!-- Background Elements -->
+<div class="absolute top-1/4 left-1/4 glow-effect" style="width: 600px; height: 600px; opacity: 0.5;"></div>
+<div class="absolute bottom-0 right-1/4 glow-effect" style="width: 800px; height: 800px; background: radial-gradient(circle, rgba(56, 189, 248, 0.08) 0%, rgba(56, 189, 248, 0) 70%);"></div>
+<div class="max-w-container-max mx-auto px-gutter w-full relative z-10 flex flex-col items-center text-center">
+<!-- Live Badge -->
+<div class="inline-flex items-center justify-center gap-2 px-4 py-2 rounded-full border border-white/10 bg-surface-container/50 backdrop-blur-sm mb-8 animate-fade-in-up">
+<span class="w-2 h-2 rounded-full bg-primary animate-pulse"></span>
+<span class="font-label-sm text-label-sm text-on-surface-variant uppercase tracking-wider">Now live at 20+ cafes across India</span>
+</div>
+<!-- Hero Text -->
+<h1 class="font-headline-xl text-headline-lg-mobile md:text-headline-xl text-on-surface max-w-4xl mb-6 tracking-tighter mx-auto text-center">
+                Order straight <br class="hidden md:block"/>
+<span class="text-transparent bg-clip-text bg-gradient-to-r from-primary to-primary-container">from the table.</span>
+</h1>
+<p class="font-body-lg text-body-lg text-on-surface-variant max-w-2xl mx-auto mb-12 text-center">
+                Customers scan a QR code, browse your menu, and pay. No app, no queue, no waiter needed. Orders reach the kitchen the moment payment clears.
+            </p>
+<!-- CTA Group -->
+<div class="flex flex-col sm:flex-row items-center justify-center gap-4 mb-24 w-full sm:w-auto mx-auto">
+<a class="w-full sm:w-auto bg-primary text-on-primary-fixed px-8 py-4 rounded-full font-label-sm text-label-sm uppercase tracking-wider hover:scale-[1.02] hover:bg-primary-fixed transition-all duration-300 flex items-center justify-center gap-2 group" href="#">
+                    Open Dashboard
+                    <span class="material-symbols-outlined text-sm group-hover:translate-x-1 transition-transform">arrow_right_alt</span>
+</a>
+<a class="w-full sm:w-auto glass-panel text-on-surface px-8 py-4 rounded-full font-label-sm text-label-sm uppercase tracking-wider hover:bg-white/5 hover:border-white/20 transition-all duration-300 flex items-center justify-center" href="#">
+                    How it works
+                </a>
+</div>
+<!-- Stats Section (Bento Style) -->
+<div class="w-full max-w-5xl flex flex-col gap-4 mt-8 mx-auto">
+<div class="grid grid-cols-1 md:grid-cols-3 gap-4 w-full">
+<!-- Stat 1 -->
+<div class="glass-panel rounded-2xl p-8 flex flex-col items-center justify-center text-center relative overflow-hidden group hover:border-primary/30 transition-colors duration-500">
+<div class="absolute inset-0 bg-gradient-to-br from-white/5 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-500"></div>
+<span class="font-headline-lg text-headline-lg text-on-surface mb-2 tracking-tight">10k+</span>
+<span class="font-label-sm text-label-sm text-on-surface-variant uppercase tracking-wider">Active Customers</span>
+</div>
+<!-- Stat 2 -->
+<div class="glass-panel rounded-2xl p-8 flex flex-col items-center justify-center text-center relative overflow-hidden group hover:border-primary/30 transition-colors duration-500">
+<div class="absolute inset-0 bg-gradient-to-br from-white/5 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-500"></div>
+<span class="font-headline-lg text-headline-lg text-on-surface mb-2 tracking-tight">20+</span>
+<span class="font-label-sm text-label-sm text-on-surface-variant uppercase tracking-wider">Partner Cafes</span>
+</div>
+<!-- Stat 3 -->
+<div class="glass-panel rounded-2xl p-8 flex flex-col items-center justify-center text-center relative overflow-hidden group hover:border-primary/30 transition-colors duration-500">
+<div class="absolute inset-0 bg-gradient-to-br from-white/5 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-500"></div>
+<div class="flex items-end justify-center gap-4 mb-2">
+<span class="font-headline-lg text-headline-lg text-on-surface tracking-tight">&lt; 2</span>
+<span class="font-headline-lg text-headline-lg-mobile text-primary-container pb-1">min</span>
+</div>
+<span class="font-label-sm text-label-sm text-on-surface-variant uppercase tracking-wider">Average Order Time</span>
+</div>
+</div>
+<!-- Stat 4 -->
+<div class="glass-panel rounded-2xl p-8 flex flex-col items-center justify-center text-center relative overflow-hidden group hover:border-primary/30 transition-colors duration-500 w-full">
+<div class="absolute inset-0 bg-gradient-to-r from-primary/5 via-transparent to-primary/5 opacity-0 group-hover:opacity-100 transition-opacity duration-700"></div>
+<div class="flex flex-col items-center justify-center gap-4">
+<span class="material-symbols-outlined text-primary text-4xl" data-weight="fill">verified</span>
+<div class="text-center">
+<span class="block font-headline-lg text-headline-lg text-on-surface tracking-tight mb-2">99.9%</span>
+<span class="block font-label-sm text-label-sm text-on-surface-variant uppercase tracking-wider">Platform Uptime SLA</span>
+</div>
+</div>
+</div>
+</div>
+</div>
+</main>
+<!-- Footer -->
+<footer class="w-full bg-surface-container-lowest border-t border-outline-variant">
+<div class="flex flex-col md:flex-row justify-between items-center px-gutter py-12 max-w-container-max mx-auto gap-8">
+<div class="flex items-center gap-2">
+<span class="material-symbols-outlined text-primary" data-weight="fill">restaurant</span>
+<span class="font-headline-lg text-xl font-bold text-on-surface tracking-tight">CraveFlow</span>
+</div>
+<p class="font-body-md text-sm text-on-surface-variant text-center md:text-left">
+                © 2024 CraveFlow. Empowering modern dining with precision.
+            </p>
+<div class="flex flex-wrap justify-center gap-6">
+<a class="font-label-sm text-xs text-on-surface-variant hover:text-primary transition-colors duration-200 uppercase tracking-wider" href="#">Privacy Policy</a>
+<a class="font-label-sm text-xs text-on-surface-variant hover:text-primary transition-colors duration-200 uppercase tracking-wider" href="#">Terms of Service</a>
+<a class="font-label-sm text-xs text-on-surface-variant hover:text-primary transition-colors duration-200 uppercase tracking-wider" href="#">Cookie Settings</a>
+<a class="font-label-sm text-xs text-on-surface-variant hover:text-primary transition-colors duration-200 uppercase tracking-wider" href="#">Contact Sales</a>
+</div>
+</div>
+</footer>
+<script>
+        // Simple entry animations for the hero elements
+        document.addEventListener('DOMContentLoaded', () => {
+            const elements = document.querySelectorAll('.animate-fade-in-up, h1, p, .flex.flex-col.sm\\:flex-row');
+            elements.forEach((el, index) => {
+                el.style.opacity = '0';
+                el.style.transform = 'translateY(20px)';
+                el.style.transition = `all 0.8s cubic-bezier(0.16, 1, 0.3, 1) ${index * 0.15}s`;
+                
+                setTimeout(() => {
+                    el.style.opacity = '1';
+                    el.style.transform = 'translateY(0)';
+                }, 100);
+            });
+        });
+    </script>
+</body></html>

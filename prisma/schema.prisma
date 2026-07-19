@@ -1,0 +1,266 @@
+generator client {
+  provider = "prisma-client-js"
+  output   = "../src/generated/prisma"
+}
+
+datasource db {
+  provider = "postgresql"
+}
+
+// ─── ENUMS ──────────────────────────────────────────────
+
+enum UserRole {
+  SUPER_ADMIN
+  CAFE_OWNER
+  CAFE_STAFF
+}
+
+enum OrderStatus {
+  CREATED
+  PAYMENT_PENDING
+  PAID
+  PREPARING
+  READY
+  COMPLETED
+  CANCELLED
+  FAILED
+}
+
+enum PaymentStatus {
+  INITIATED
+  SUCCESS
+  FAILED
+  REFUNDED
+}
+
+enum PaymentProvider {
+  PHONEPE
+  RAZORPAY
+}
+
+// ─── MODELS ─────────────────────────────────────────────
+
+model Cafe {
+  id                 String   @id @default(uuid())
+  name               String
+  slug               String   @unique
+  address            String?
+  phone              String?
+  imageUrl           String?  @map("image_url")
+  isActive           Boolean  @default(true) @map("is_active")
+  openingTime        String?  @map("opening_time")
+  closingTime        String?  @map("closing_time")
+  phonepeMerchantId  String?  @map("phonepe_merchant_id")
+  phonepeSaltKey     String?  @map("phonepe_salt_key")
+  phonepeSaltIndex   String?  @default("1") @map("phonepe_salt_index")
+  paymentProvider       PaymentProvider @default(PHONEPE) @map("payment_provider")
+  razorpayKeyId         String?         @map("razorpay_key_id")
+  razorpayKeySecret     String?         @map("razorpay_key_secret")
+  razorpayWebhookSecret String?         @map("razorpay_webhook_secret")
+  createdAt          DateTime @default(now()) @map("created_at")
+  updatedAt          DateTime @updatedAt @map("updated_at")
+
+  users         User[]
+  categories    MenuCategory[]
+  menuItems     MenuItem[]
+  orders        Order[]
+  tables        Table[]
+  staff         Staff[]
+  expenses      Expense[]
+  orderCounters OrderCounter[]
+
+  @@map("cafes")
+}
+
+model User {
+  id           String   @id @default(uuid())
+  email        String   @unique
+  passwordHash String   @map("password_hash")
+  name         String
+  role         UserRole
+  cafeId       String?  @map("cafe_id")
+  isActive     Boolean  @default(true) @map("is_active")
+  createdAt    DateTime @default(now()) @map("created_at")
+  updatedAt    DateTime @updatedAt @map("updated_at")
+
+  cafe      Cafe?       @relation(fields: [cafeId], references: [id])
+  auditLogs AuditLog[]
+
+  @@map("users")
+}
+
+model MenuCategory {
+  id        String   @id @default(uuid())
+  cafeId    String?  @map("cafe_id")
+  name      String
+  sortOrder Int      @default(0) @map("sort_order")
+  isActive  Boolean  @default(true) @map("is_active")
+  createdAt DateTime @default(now()) @map("created_at")
+
+  cafe  Cafe?      @relation(fields: [cafeId], references: [id])
+  items MenuItem[]
+
+  @@index([cafeId, isActive])
+  @@map("menu_categories")
+}
+
+model MenuItem {
+  id          String   @id @default(uuid())
+  cafeId      String?  @map("cafe_id")
+  categoryId  String?  @map("category_id")
+  name        String
+  description String?
+  pricePaise  Int      @map("price_paise")
+  imageUrl    String?  @map("image_url")
+  isAvailable Boolean  @default(true) @map("is_available")
+  isVeg       Boolean  @default(true) @map("is_veg")
+  sortOrder   Int      @default(0) @map("sort_order")
+  createdAt   DateTime @default(now()) @map("created_at")
+  updatedAt   DateTime @updatedAt @map("updated_at")
+
+  cafe       Cafe?         @relation(fields: [cafeId], references: [id])
+  category   MenuCategory? @relation(fields: [categoryId], references: [id])
+  orderItems OrderItem[]
+
+  @@index([cafeId, isAvailable])
+  @@map("menu_items")
+}
+
+model Order {
+  id              String      @id @default(uuid())
+  cafeId          String      @map("cafe_id")
+  orderNumber     String      @unique @map("order_number")
+  status          OrderStatus @default(CREATED)
+  totalPaise      Int         @map("total_paise")
+  customerName    String?     @map("customer_name")
+  customerPhone   String?     @map("customer_phone")
+  customerEmail   String?     @map("customer_email")
+  tableId         String?     @map("table_id")
+  notes           String?
+  rating          Int?
+  idempotencyKey  String      @unique @map("idempotency_key")
+  createdAt       DateTime    @default(now()) @map("created_at")
+  updatedAt       DateTime    @updatedAt @map("updated_at")
+
+  cafe     Cafe        @relation(fields: [cafeId], references: [id])
+  table    Table?      @relation(fields: [tableId], references: [id])
+  items    OrderItem[]
+  payments Payment[]
+
+  @@index([cafeId, status, createdAt(sort: Desc)])
+  @@index([cafeId, createdAt(sort: Desc)])
+  @@map("orders")
+}
+
+model OrderItem {
+  id             String @id @default(uuid())
+  orderId        String @map("order_id")
+  menuItemId     String @map("menu_item_id")
+  itemName       String @map("item_name")
+  itemPricePaise Int    @map("item_price_paise")
+  quantity       Int
+  subtotalPaise  Int    @map("subtotal_paise")
+
+  order    Order    @relation(fields: [orderId], references: [id])
+  menuItem MenuItem @relation(fields: [menuItemId], references: [id])
+
+  @@index([orderId])
+  @@map("order_items")
+}
+
+// Backs generateOrderNumber(): one row per cafe per day, incremented
+// atomically via upsert so concurrent orders never race on a shared count.
+model OrderCounter {
+  cafeId  String @map("cafe_id")
+  dateKey String @map("date_key")
+  count   Int    @default(0)
+
+  cafe Cafe @relation(fields: [cafeId], references: [id])
+
+  @@id([cafeId, dateKey])
+  @@map("order_counters")
+}
+
+model Payment {
+  id                String        @id @default(uuid())
+  orderId           String        @map("order_id")
+  amountPaise       Int           @map("amount_paise")
+  status            PaymentStatus @default(INITIATED)
+  phonepeTxnId      String?       @unique @map("phonepe_txn_id")
+  merchantTxnId     String        @unique @map("merchant_txn_id")
+  phonepeMerchantId String?       @map("phonepe_merchant_id")
+  provider          PaymentProvider @default(PHONEPE)
+  razorpayOrderId   String?       @unique @map("razorpay_order_id")
+  razorpayPaymentId String?       @unique @map("razorpay_payment_id")
+  paymentMethod     String?       @map("payment_method")
+  webhookPayload    Json?         @map("webhook_payload")
+  paidAt            DateTime?     @map("paid_at")
+  createdAt         DateTime      @default(now()) @map("created_at")
+  updatedAt         DateTime      @updatedAt @map("updated_at")
+
+  order Order @relation(fields: [orderId], references: [id])
+
+  @@index([orderId])
+  @@map("payments")
+}
+
+model Table {
+  id          String  @id @default(uuid())
+  cafeId      String  @map("cafe_id")
+  tableNumber String  @map("table_number")
+  qrToken     String  @unique @map("qr_token")
+  isActive    Boolean @default(true) @map("is_active")
+
+  cafe   Cafe    @relation(fields: [cafeId], references: [id])
+  orders Order[]
+
+  @@map("tables")
+}
+
+model Staff {
+  id           String   @id @default(uuid())
+  cafeId       String   @map("cafe_id")
+  name         String
+  age          Int
+  mobileNumber String   @map("mobile_number")
+  isActive     Boolean  @default(true) @map("is_active")
+  createdAt    DateTime @default(now()) @map("created_at")
+  updatedAt    DateTime @updatedAt @map("updated_at")
+
+  cafe Cafe @relation(fields: [cafeId], references: [id])
+
+  @@map("staff")
+}
+
+model Expense {
+  id          String   @id @default(uuid())
+  cafeId      String   @map("cafe_id")
+  title       String
+  description String?
+  amountPaise Int      @map("amount_paise")
+  category    String   @default("General")
+  date        DateTime @default(now())
+  createdAt   DateTime @default(now()) @map("created_at")
+  updatedAt   DateTime @updatedAt @map("updated_at")
+
+  cafe Cafe @relation(fields: [cafeId], references: [id])
+
+  @@index([cafeId, date(sort: Desc)])
+  @@map("expenses")
+}
+
+model AuditLog {
+  id         String   @id @default(uuid())
+  entityType String   @map("entity_type")
+  entityId   String   @map("entity_id")
+  action     String
+  actorId    String?  @map("actor_id")
+  oldData    Json?    @map("old_data")
+  newData    Json?    @map("new_data")
+  createdAt  DateTime @default(now()) @map("created_at")
+
+  actor User? @relation(fields: [actorId], references: [id])
+
+  @@index([entityType, entityId])
+  @@map("audit_log")
+}

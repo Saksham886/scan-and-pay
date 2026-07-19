@@ -1,0 +1,307 @@
+<!DOCTYPE html>
+
+<html class="dark" lang="en"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>Voltage Eats - Menu</title>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;500;700;800&amp;family=Syne:wght@700;800&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<script id="tailwind-config">
+        tailwind.config = {
+            darkMode: "class",
+            theme: {
+                extend: {
+                    "colors": {
+                        "tertiary": "#c8c6c5",
+                        "primary-container": "#a078ff",
+                        "on-error": "#690005",
+                        "error-container": "#93000a",
+                        "surface-container-low": "#1a1a2b",
+                        "surface-container": "#1e1e2f",
+                        "on-tertiary-fixed": "#1c1b1b",
+                        "on-background": "#e2e0f8",
+                        "inverse-surface": "#e2e0f8",
+                        "on-secondary": "#2b3400",
+                        "outline-variant": "#494454",
+                        "surface-dim": "#111222",
+                        "on-secondary-fixed": "#181e00",
+                        "tertiary-container": "#929090",
+                        "background": "#111222",
+                        "secondary-fixed-dim": "#b4d400",
+                        "secondary": "#ffffff",
+                        "on-secondary-fixed-variant": "#3f4c00",
+                        "error": "#ffb4ab",
+                        "on-surface": "#e2e0f8",
+                        "outline": "#958ea0",
+                        "on-primary-fixed-variant": "#5516be",
+                        "primary-fixed-dim": "#d0bcff",
+                        "on-surface-variant": "#cbc3d7",
+                        "surface-container-highest": "#333345",
+                        "tertiary-fixed": "#e5e2e1",
+                        "on-error-container": "#ffdad6",
+                        "surface-bright": "#37384a",
+                        "primary": "#d0bcff",
+                        "on-primary": "#3c0091",
+                        "on-primary-fixed": "#23005c",
+                        "inverse-on-surface": "#2e2f41",
+                        "secondary-fixed": "#cdf200",
+                        "on-tertiary": "#313030",
+                        "tertiary-fixed-dim": "#c8c6c5",
+                        "surface": "#111222",
+                        "surface-container-high": "#28283a",
+                        "inverse-primary": "#6d3bd7",
+                        "surface-variant": "#333345",
+                        "surface-container-lowest": "#0c0d1d",
+                        "on-primary-container": "#340080",
+                        "surface-tint": "#d0bcff",
+                        "primary-fixed": "#e9ddff",
+                        "secondary-container": "#cdf200",
+                        "on-tertiary-container": "#2a2a29",
+                        "on-secondary-container": "#5a6b00",
+                        "on-tertiary-fixed-variant": "#474646"
+                    },
+                    "borderRadius": {
+                        "DEFAULT": "0.25rem",
+                        "lg": "0.5rem",
+                        "xl": "0.75rem",
+                        "full": "9999px"
+                    },
+                    "spacing": {
+                        "base": "8px",
+                        "section-gap": "120px",
+                        "margin-mobile": "20px",
+                        "margin-desktop": "64px",
+                        "gutter": "24px"
+                    },
+                    "fontFamily": {
+                        "headline-lg": ["Syne"],
+                        "label-bold": ["JetBrains Mono"],
+                        "body-lg": ["JetBrains Mono"],
+                        "body-md": ["JetBrains Mono"],
+                        "headline-md": ["Syne"],
+                        "headline-lg-mobile": ["Syne"],
+                        "display": ["Syne"],
+                        "label-sm": ["JetBrains Mono"]
+                    },
+                    "fontSize": {
+                        "headline-lg": ["48px", { "lineHeight": "1.1", "letterSpacing": "-0.02em", "fontWeight": "800" }],
+                        "label-bold": ["14px", { "lineHeight": "1.0", "fontWeight": "700" }],
+                        "body-lg": ["18px", { "lineHeight": "1.6", "fontWeight": "400" }],
+                        "body-md": ["16px", { "lineHeight": "1.6", "fontWeight": "400" }],
+                        "headline-md": ["32px", { "lineHeight": "1.2", "fontWeight": "700" }],
+                        "headline-lg-mobile": ["36px", { "lineHeight": "1.1", "fontWeight": "800" }],
+                        "display": ["84px", { "lineHeight": "1.0", "letterSpacing": "-0.04em", "fontWeight": "800" }],
+                        "label-sm": ["12px", { "lineHeight": "1.0", "fontWeight": "500" }]
+                    }
+                }
+            }
+        }
+    </script>
+<style>
+        body {
+            background-color: theme('colors.surface');
+            color: theme('colors.on-surface');
+            overflow-x: hidden;
+            /* Grainy Mesh Gradient Background */
+            background-image: 
+                radial-gradient(at 0% 0%, rgba(160, 120, 255, 0.1) 0px, transparent 50%),
+                radial-gradient(at 100% 100%, rgba(205, 242, 0, 0.05) 0px, transparent 50%),
+                url('data:image/svg+xml,%3Csvg viewBox="0 0 200 200" xmlns="http://www.w3.org/2000/svg"%3E%3Cfilter id="noiseFilter"%3E%3CfeTurbulence type="fractalNoise" baseFrequency="0.65" numOctaves="3" stitchTiles="stitch"/%3E%3C/filter%3E%3Crect width="100%25" height="100%25" filter="url(%23noiseFilter)" opacity="0.15"/%3E%3C/svg%3E');
+            background-attachment: fixed;
+        }
+
+        /* Hide scrollbar for category tabs */
+        .no-scrollbar::-webkit-scrollbar {
+            display: none;
+        }
+        .no-scrollbar {
+            -ms-overflow-style: none;  /* IE and Edge */
+            scrollbar-width: none;  /* Firefox */
+        }
+        
+        .neo-shadow {
+            box-shadow: 4px 4px 0px 0px rgba(0,0,0,1);
+        }
+        
+        .neo-shadow-sm {
+            box-shadow: 2px 2px 0px 0px rgba(0,0,0,1);
+        }
+        
+        .glass-card {
+            background: rgba(160, 120, 255, 0.1);
+            backdrop-filter: blur(20px);
+            -webkit-backdrop-filter: blur(20px);
+        }
+        
+        .hover-lift:hover {
+            transform: translate(-2px, -2px);
+            box-shadow: 6px 6px 0px 0px rgba(0,0,0,1);
+        }
+        
+        .hover-press:active {
+            transform: translate(2px, 2px) !important;
+            box-shadow: 2px 2px 0px 0px rgba(0,0,0,1) !important;
+        }
+    </style>
+<style>
+    body {
+      min-height: max(884px, 100dvh);
+    }
+  </style>
+  </head>
+<body class="antialiased pb-[120px]">
+<!-- TopAppBar from JSON -->
+<header class="w-full top-0 sticky bg-surface dark:bg-surface border-b-2 border-on-surface dark:border-on-surface shadow-[4px_4px_0px_0px_rgba(0,0,0,1)] z-40">
+<div class="flex justify-between items-center px-margin-mobile py-base">
+<button class="text-secondary-fixed dark:text-secondary-fixed-dim hover:translate-x-1 hover:translate-y-1 hover:shadow-none transition-all active:scale-95">
+<span class="material-symbols-outlined" style="font-variation-settings: 'FILL' 1;">menu</span>
+</button>
+<h1 class="font-headline-md text-headline-md font-extrabold text-secondary-fixed dark:text-secondary-fixed-dim italic">
+                VOLTAGE EATS
+            </h1>
+<button class="text-secondary-fixed dark:text-secondary-fixed-dim hover:translate-x-1 hover:translate-y-1 hover:shadow-none transition-all active:scale-95">
+<span class="material-symbols-outlined" style="font-variation-settings: 'FILL' 1;">shopping_cart</span>
+</button>
+</div>
+</header>
+<main class="w-full max-w-md mx-auto px-margin-mobile pt-6 flex flex-col gap-8 relative">
+<!-- Category Tabs (Horizontal Scroll) -->
+<section class="w-full overflow-x-auto no-scrollbar -mx-margin-mobile px-margin-mobile pb-4">
+<div class="flex gap-4 w-max">
+<button class="px-6 py-3 rounded-full border-2 border-on-surface bg-secondary-container text-on-secondary-container font-label-bold text-label-bold neo-shadow hover-press transition-all">
+                    Hot Drops
+                </button>
+<button class="px-6 py-3 rounded-full border-2 border-on-surface bg-surface-container-high text-on-surface font-label-bold text-label-bold neo-shadow-sm hover:text-secondary-fixed transition-colors hover-press">
+                    Smash Burgers
+                </button>
+<button class="px-6 py-3 rounded-full border-2 border-on-surface bg-surface-container-high text-on-surface font-label-bold text-label-bold neo-shadow-sm hover:text-secondary-fixed transition-colors hover-press">
+                    Cyber Ramen
+                </button>
+<button class="px-6 py-3 rounded-full border-2 border-on-surface bg-surface-container-high text-on-surface font-label-bold text-label-bold neo-shadow-sm hover:text-secondary-fixed transition-colors hover-press">
+                    Liquid Neon
+                </button>
+</div>
+</section>
+<!-- Menu Items Grid -->
+<section class="flex flex-col gap-6">
+<!-- Item Card 1 -->
+<article class="glass-card border-2 border-on-surface rounded-xl overflow-hidden neo-shadow flex flex-col relative group">
+<!-- Popular Badge -->
+<div class="absolute top-3 left-3 z-10 bg-primary-container text-on-primary-container border-2 border-black px-3 py-1 rounded-full font-label-bold text-label-bold neo-shadow-sm flex items-center gap-1">
+<span class="material-symbols-outlined text-[16px]" style="font-variation-settings: 'FILL' 1;">local_fire_department</span>
+                    POPULAR
+                </div>
+<!-- Image Container -->
+<div class="h-48 w-full border-b-2 border-on-surface bg-surface-bright relative overflow-hidden">
+<img alt="A high-contrast, stylized photograph of a massive, dripping double cheeseburger. The scene is lit with harsh, moody neon pink and lime green lighting against an ink-black background. The bun looks perfectly toasted, cheese melting aggressively over thick beef patties, creating a decadent, indulgent fast-food aesthetic perfect for a Gen-Z brutalist UI." class="w-full h-full object-cover transition-transform duration-500 group-hover:scale-105 filter contrast-125 saturate-150" data-alt="A high-contrast, stylized photograph of a massive, dripping double cheeseburger. The scene is lit with harsh, moody neon pink and lime green lighting against an ink-black background. The bun looks perfectly toasted, cheese melting aggressively over thick beef patties, creating a decadent, indulgent fast-food aesthetic perfect for a Gen-Z brutalist UI." src="https://lh3.googleusercontent.com/aida-public/AB6AXuC50lfiwMNAwAJfLdD4BkffsUJp-WysGHglmGp4az9NtYZ8R8PWEyX19sMNfbmJTa40pnB2-qgAu9R5UPhpcA2GsMPcudDpGSy_KzAlMIdUKrFcIQU0vdirYUGug8i_2LmaZgFexJYSq0CZ6VvAGJhJpuVmjVmbNE0-dL9ko-wRWmLEBVeCze6ruTJ-B8StdmxRbG47nT3DhGWPLAIIqvaLk2PsGaGNlE8_m4VANACYhz158BksawwmMYiSZ3_ad12sp8MnM8fMl2I"/>
+<!-- Tech overlay line -->
+<div class="absolute bottom-0 left-0 w-full h-[2px] bg-secondary-fixed shadow-[0_0_10px_rgba(205,242,0,0.8)]"></div>
+</div>
+<!-- Content -->
+<div class="p-4 flex flex-col gap-2 relative">
+<div class="flex justify-between items-start gap-4">
+<h3 class="font-headline-md text-[24px] leading-tight font-extrabold text-inverse-surface tracking-tight uppercase">Nuclear Smash<br/>Double</h3>
+<span class="font-label-bold text-lg text-secondary-fixed bg-black border-2 border-secondary-fixed px-2 py-1 rounded-md neo-shadow-sm">$14.99</span>
+</div>
+<p class="font-body-md text-body-md text-on-surface-variant mt-2">Two ultra-crispy patties, toxic cheese melt, hyper-pickles, and our signature Voltage sauce on a toasted potato bun.</p>
+<!-- Action -->
+<div class="mt-4 flex justify-between items-center border-t-2 border-on-surface/20 pt-4">
+<div class="flex gap-2">
+<span class="px-2 py-1 border border-primary text-primary text-xs font-label-bold rounded-full uppercase">Beef</span>
+<span class="px-2 py-1 border border-primary text-primary text-xs font-label-bold rounded-full uppercase">Spicy</span>
+</div>
+<button aria-label="Add to cart" class="w-12 h-12 rounded-full bg-secondary-container border-2 border-black text-on-secondary-container neo-shadow-sm flex items-center justify-center hover-press transition-transform">
+<span class="material-symbols-outlined text-2xl font-bold">add</span>
+</button>
+</div>
+</div>
+</article>
+<!-- Item Card 2 -->
+<article class="glass-card border-2 border-on-surface rounded-xl overflow-hidden neo-shadow flex flex-col relative group">
+<!-- Image Container -->
+<div class="h-48 w-full border-b-2 border-on-surface bg-surface-bright relative overflow-hidden">
+<img alt="A dramatic close-up of a deep bowl of spicy ramen, glowing under intense neon violet and cyan lights. Steam rises off the deep red broth, highlighting thick noodles, a perfectly soft-boiled egg, and charred pork belly. The styling is gritty, cyberpunk, and highly saturated, fitting a brutalist digital food menu." class="w-full h-full object-cover transition-transform duration-500 group-hover:scale-105 filter contrast-125 saturate-150" data-alt="A dramatic close-up of a deep bowl of spicy ramen, glowing under intense neon violet and cyan lights. Steam rises off the deep red broth, highlighting thick noodles, a perfectly soft-boiled egg, and charred pork belly. The styling is gritty, cyberpunk, and highly saturated, fitting a brutalist digital food menu." src="https://lh3.googleusercontent.com/aida-public/AB6AXuBnejmEbf66PlTlmnN8GMAH5G5hSHkhmjtZK8XQF_iyz_vENpn-4PVmDOJ9Bvxjv8djGU7tIucW1Mf9uYtIe2pBczRhzaexuhtLav-kO6Nwwji--vW1cq92k-dDeVRv1amSR5PJmr-s5vIUOlnMqiY_V2KaByS3TB7wJQSgXEgPyx631-f90rFCuLC-QiuRbutxfqhNTOqiWapL18MhL5jx2aqNz3p7QxhjqEthTy8bGT50qTau8GZSldwtecxDj0IFWsq3LgEHrIA"/>
+</div>
+<!-- Content -->
+<div class="p-4 flex flex-col gap-2 relative">
+<div class="flex justify-between items-start gap-4">
+<h3 class="font-headline-md text-[24px] leading-tight font-extrabold text-inverse-surface tracking-tight uppercase">Neon Shoyu<br/>Ramen</h3>
+<span class="font-label-bold text-lg text-secondary-fixed bg-black border-2 border-secondary-fixed px-2 py-1 rounded-md neo-shadow-sm">$16.50</span>
+</div>
+<p class="font-body-md text-body-md text-on-surface-variant mt-2">24-hour pork bone broth spiked with chili oil, thick alkaline noodles, torched chashu, and a soy-marinated egg.</p>
+<!-- Action -->
+<div class="mt-4 flex justify-between items-center border-t-2 border-on-surface/20 pt-4">
+<div class="flex gap-2">
+<span class="px-2 py-1 border border-primary text-primary text-xs font-label-bold rounded-full uppercase">Pork</span>
+<span class="px-2 py-1 border border-primary text-primary text-xs font-label-bold rounded-full uppercase">Noodles</span>
+</div>
+<button aria-label="Add to cart" class="w-12 h-12 rounded-full bg-secondary-container border-2 border-black text-on-secondary-container neo-shadow-sm flex items-center justify-center hover-press transition-transform">
+<span class="material-symbols-outlined text-2xl font-bold">add</span>
+</button>
+</div>
+</div>
+</article>
+<!-- Item Card 3 -->
+<article class="glass-card border-2 border-on-surface rounded-xl overflow-hidden neo-shadow flex flex-col relative group">
+<!-- Image Container -->
+<div class="h-48 w-full border-b-2 border-on-surface bg-surface-bright relative overflow-hidden">
+<img alt="A vibrant, hyper-saturated macro shot of heavily seasoned, crinkle-cut french fries loaded with melted neon cheese sauce and crumbled bacon. The background is pitch black, making the acidic yellow of the cheese and the bright red of the seasoning pop violently. Styled for a raw, high-energy fast-food brand." class="w-full h-full object-cover transition-transform duration-500 group-hover:scale-105 filter contrast-125 saturate-150" data-alt="A vibrant, hyper-saturated macro shot of heavily seasoned, crinkle-cut french fries loaded with melted neon cheese sauce and crumbled bacon. The background is pitch black, making the acidic yellow of the cheese and the bright red of the seasoning pop violently. Styled for a raw, high-energy fast-food brand." src="https://lh3.googleusercontent.com/aida-public/AB6AXuAG9EuxKyi3VL_nF3J2JXRbkBkA-bidpMErF35rjLIXXoM6EIeLzVlq0xDdbMQu0aNCpm8aVYXIbagnMplTeG_Jn_TmUIJBEZODoqlhrNIXeBI_xNg5RMnTk_OdglyIAOriQQ88rPKUx1gWfSJWTk84sHW5ceELCb3XokhScIPLYQ3nlJb1wLR2uRkNW1xC6wUWByLsupC3Tyf36loxir3QDGIr0tQ59HU1kMSKnLA5iBhuAIpjLEkQ0y1Gf_4KOfd3tjiHMHZ2-9w"/>
+</div>
+<!-- Content -->
+<div class="p-4 flex flex-col gap-2 relative">
+<div class="flex justify-between items-start gap-4">
+<h3 class="font-headline-md text-[24px] leading-tight font-extrabold text-inverse-surface tracking-tight uppercase">Static Loaded<br/>Fries</h3>
+<span class="font-label-bold text-lg text-secondary-fixed bg-black border-2 border-secondary-fixed px-2 py-1 rounded-md neo-shadow-sm">$8.00</span>
+</div>
+<p class="font-body-md text-body-md text-on-surface-variant mt-2">Crinkle cuts drowned in liquid gold cheese, smoked bacon dust, and scallion static.</p>
+<!-- Action -->
+<div class="mt-4 flex justify-between items-center border-t-2 border-on-surface/20 pt-4">
+<div class="flex gap-2">
+<span class="px-2 py-1 border border-primary text-primary text-xs font-label-bold rounded-full uppercase">Side</span>
+<span class="px-2 py-1 border border-primary text-primary text-xs font-label-bold rounded-full uppercase">Veg</span>
+</div>
+<button aria-label="Add to cart" class="w-12 h-12 rounded-full bg-secondary-container border-2 border-black text-on-secondary-container neo-shadow-sm flex items-center justify-center hover-press transition-transform">
+<span class="material-symbols-outlined text-2xl font-bold">add</span>
+</button>
+</div>
+</div>
+</article>
+</section>
+<!-- Bottom padding for FAB and Nav -->
+<div class="h-10"></div>
+</main>
+<!-- Floating Action Button - View Cart -->
+<div class="fixed bottom-[100px] right-margin-mobile z-50 md:hidden">
+<button class="flex items-center gap-3 bg-secondary-container text-on-secondary-container border-2 border-black rounded-full px-6 py-4 font-label-bold text-lg uppercase tracking-wider neo-shadow hover-press transition-all hover:bg-secondary-fixed-dim group">
+<span class="material-symbols-outlined" style="font-variation-settings: 'FILL' 1;">shopping_bag</span>
+            View Cart (3)
+        </button>
+</div>
+<!-- BottomNavBar from JSON -->
+<nav class="fixed bottom-0 w-full z-50 md:hidden bg-surface dark:bg-surface border-t-2 border-on-surface dark:border-on-surface shadow-[0_-4px_0px_0px_rgba(0,0,0,1)]">
+<div class="flex justify-around items-center h-20 px-4">
+<!-- Feed (Active) -->
+<a class="flex flex-col items-center justify-center bg-secondary-container text-on-secondary-container rounded-full px-4 py-1 border-2 border-on-surface shadow-[2px_2px_0px_0px_rgba(0,0,0,1)] active:translate-y-0.5 transition-transform group" href="#">
+<span class="material-symbols-outlined mb-1" style="font-variation-settings: 'FILL' 1;">fastfood</span>
+<span class="font-label-sm text-label-sm uppercase">Feed</span>
+</a>
+<!-- Search -->
+<a class="flex flex-col items-center justify-center text-on-surface-variant opacity-70 hover:text-secondary-fixed transition-colors active:scale-95 group" href="#">
+<span class="material-symbols-outlined mb-1">search</span>
+<span class="font-label-sm text-label-sm uppercase group-hover:text-secondary-fixed">Search</span>
+</a>
+<!-- Orders -->
+<a class="flex flex-col items-center justify-center text-on-surface-variant opacity-70 hover:text-secondary-fixed transition-colors active:scale-95 group" href="#">
+<span class="material-symbols-outlined mb-1">receipt_long</span>
+<span class="font-label-sm text-label-sm uppercase group-hover:text-secondary-fixed">Orders</span>
+</a>
+<!-- Profile -->
+<a class="flex flex-col items-center justify-center text-on-surface-variant opacity-70 hover:text-secondary-fixed transition-colors active:scale-95 group" href="#">
+<span class="material-symbols-outlined mb-1">person</span>
+<span class="font-label-sm text-label-sm uppercase group-hover:text-secondary-fixed">Profile</span>
+</a>
+</div>
+</nav>
+</body></html>

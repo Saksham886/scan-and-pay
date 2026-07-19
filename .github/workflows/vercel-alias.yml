@@ -1,0 +1,28 @@
+name: Re-alias Vercel deployment
+
+on:
+  push:
+    branches: [main]
+
+jobs:
+  alias:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Wait for Vercel to finish deploying
+        run: sleep 90
+
+      - name: Re-point scanpay-ordering.vercel.app to latest deployment
+        env:
+          VERCEL_TOKEN: ${{ secrets.VERCEL_TOKEN }}
+          VERCEL_SCOPE: tanmaysachan0005-gmailcoms-projects
+        run: |
+          npm i -g vercel --silent
+          LATEST=$(vercel ls scanpay-ordering --prod --token "$VERCEL_TOKEN" --scope "$VERCEL_SCOPE" \
+            | grep -oE 'https://[a-zA-Z0-9-]+\.vercel\.app' | head -1)
+          echo "Latest deployment: $LATEST"
+          if [ -z "$LATEST" ]; then
+            echo "::error::Could not resolve the latest deployment URL from 'vercel ls' output"
+            exit 1
+          fi
+          vercel alias set "$LATEST" scanpay-ordering.vercel.app \
+            --token "$VERCEL_TOKEN" --scope "$VERCEL_SCOPE"

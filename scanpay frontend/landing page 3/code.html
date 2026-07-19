@@ -1,0 +1,200 @@
+<!DOCTYPE html>
+
+<html class="dark" lang="en"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>CraveFlow - Features For Cafes</title>
+<!-- Font Setup -->
+<link href="https://fonts.googleapis.com" rel="preconnect"/>
+<link crossorigin="" href="https://fonts.gstatic.com" rel="preconnect"/>
+<link href="https://fonts.googleapis.com/css2?family=Hanken+Grotesk:wght@300;400;500;600;700&amp;display=swap" rel="stylesheet"/>
+<!-- Tailwind CSS -->
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<!-- Tailwind Configuration for Slate & Glass Theme -->
+<script>
+    tailwind.config = {
+      darkMode: 'class',
+      theme: {
+        extend: {
+          fontFamily: {
+            sans: ['"Hanken Grotesk"', 'sans-serif'],
+          },
+          colors: {
+            surface: {
+              DEFAULT: '#101415',
+              dim: '#101415',
+              bright: '#363a3b',
+              'container-lowest': '#0b0f10',
+              'container-low': '#191c1e',
+              container: '#1d2022',
+              'container-high': '#272a2c',
+              'container-highest': '#323537',
+            },
+            primary: {
+              DEFAULT: '#72d2fb', // Light blue from the landing page ref
+              dim: 'rgba(114, 210, 251, 0.1)',
+            },
+            text: {
+              main: '#ffffff',
+              muted: '#9ca3af',
+              accent: '#72d2fb',
+            },
+            border: {
+              subtle: 'rgba(255, 255, 255, 0.08)',
+              focus: 'rgba(114, 210, 251, 0.3)',
+            }
+          },
+          backgroundImage: {
+            'glass-gradient': 'linear-gradient(180deg, rgba(30, 34, 36, 0.4) 0%, rgba(20, 24, 26, 0.6) 100%)',
+          },
+          boxShadow: {
+            'glass': '0 4px 30px rgba(0, 0, 0, 0.5)',
+            'glow': '0 0 20px rgba(114, 210, 251, 0.15)',
+          }
+        }
+      }
+    }
+  </script>
+<!-- Custom Styles for Glassmorphism & Layout -->
+<style data-purpose="glass-theme">
+    body {
+      background-color: #101415; /* Fallback */
+      background-image: radial-gradient(circle at 50% -20%, #1e2a30 0%, #101415 40%);
+      color: #ffffff;
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+    }
+
+    .glass-card {
+      background: var(--tw-gradient-stops, linear-gradient(180deg, rgba(30, 34, 36, 0.4) 0%, rgba(20, 24, 26, 0.6) 100%));
+      backdrop-filter: blur(16px);
+      -webkit-backdrop-filter: blur(16px);
+      border: 1px solid rgba(255, 255, 255, 0.08);
+      box-shadow: 0 4px 30px rgba(0, 0, 0, 0.5);
+      transition: transform 0.3s ease, box-shadow 0.3s ease, border-color 0.3s ease;
+    }
+
+    .glass-card:hover {
+      transform: translateY(-4px);
+      box-shadow: 0 10px 40px rgba(0, 0, 0, 0.6), 0 0 20px rgba(114, 210, 251, 0.1);
+      border-color: rgba(114, 210, 251, 0.2);
+    }
+
+    /* Checkmark list styling */
+    .feature-list-item::before {
+      content: url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="%2372d2fb"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"></path></svg>');
+      display: inline-block;
+      width: 16px;
+      height: 16px;
+      margin-right: 8px;
+      vertical-align: middle;
+      position: relative;
+      top: -2px;
+    }
+  </style>
+</head>
+<body class="antialiased selection:bg-primary selection:text-surface">
+<!-- BEGIN: Navigation (Placeholder for context) -->
+<header class="w-full border-b border-border-subtle py-6 px-8 flex justify-between items-center z-50">
+<div class="flex items-center gap-2">
+<svg class="w-6 h-6 text-primary" fill="none" stroke="currentColor" viewbox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path d="M12 6V4m0 2a2 2 0 100 4m0-4a2 2 0 110 4m-6 8a2 2 0 100-4m0 4a2 2 0 110-4m0 4v2m0-6V4m6 6v10m6-2a2 2 0 100-4m0 4a2 2 0 110-4m0 4v2m0-6V4" stroke-linecap="round" stroke-linejoin="round" stroke-width="2"></path></svg>
+<span class="font-bold text-xl tracking-tight text-white">CraveFlow</span>
+</div>
+<nav class="hidden md:flex gap-8 text-sm font-medium text-text-muted">
+<a class="hover:text-white transition-colors" href="#">SOLUTIONS</a>
+<a class="text-white transition-colors" href="#">FEATURES</a>
+<a class="hover:text-white transition-colors" href="#">PRICING</a>
+<a class="hover:text-white transition-colors" href="#">ABOUT</a>
+</nav>
+<div class="flex gap-4 items-center">
+<a class="text-sm font-medium text-white hover:text-primary transition-colors" href="#">LOGIN</a>
+<a class="text-sm font-semibold bg-primary text-surface px-6 py-2.5 rounded-full hover:bg-white transition-colors" href="#">GET STARTED →</a>
+</div>
+</header>
+<!-- END: Navigation -->
+<!-- BEGIN: Main Features Section -->
+<main class="flex-grow flex flex-col items-center justify-center px-4 py-24 sm:px-6 lg:px-8 relative overflow-hidden">
+<!-- Decorative background element -->
+<div class="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[800px] h-[800px] bg-primary/5 rounded-full blur-[100px] pointer-events-none"></div>
+<div class="w-full max-w-7xl mx-auto flex flex-col items-center relative z-10">
+<!-- Section Header -->
+<div class="text-center mb-20 max-w-3xl">
+<span class="inline-block py-1 px-3 rounded-full border border-border-subtle bg-surface-container/50 text-xs font-semibold tracking-wider text-text-muted mb-6 uppercase">
+          For Cafes
+        </span>
+<h2 class="text-4xl md:text-5xl lg:text-6xl font-bold text-white tracking-tight leading-tight mb-6">
+          Everything you need.<br/>
+<span class="text-text-muted">Nothing you don't.</span>
+</h2>
+<p class="text-lg text-text-muted max-w-2xl mx-auto leading-relaxed">
+          A complete back office: menus, live orders, and deep analytics,<br class="hidden sm:block"/> all in one symmetric dashboard.
+        </p>
+</div>
+<!-- Features Grid -->
+<div class="grid grid-cols-1 md:grid-cols-3 gap-6 lg:gap-8 w-full">
+<!-- Feature Card 1: Menu Management -->
+<div class="glass-card rounded-2xl p-8 flex flex-col h-full">
+<div class="w-12 h-12 rounded-xl bg-primary-dim border border-border-subtle flex items-center justify-center mb-6 text-primary">
+<svg class="w-6 h-6" fill="none" stroke="currentColor" viewbox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path d="M12 6V4m0 2a2 2 0 100 4m0-4a2 2 0 110 4m-6 8a2 2 0 100-4m0 4a2 2 0 110-4m0 4v2m0-6V4m6 6v10m6-2a2 2 0 100-4m0 4a2 2 0 110-4m0 4v2m0-6V4" stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5"></path></svg>
+</div>
+<h3 class="text-xl font-semibold text-white mb-3">Menu management</h3>
+<p class="text-text-muted text-sm leading-relaxed mb-8 flex-grow">
+            Add, edit, or disable items and categories. Changes go live on every table QR instantly.
+          </p>
+<ul class="space-y-3 text-sm text-text-muted">
+<li class="feature-list-item flex items-start">Image uploads with Cloudinary</li>
+<li class="feature-list-item flex items-start">Category and availability toggles</li>
+<li class="feature-list-item flex items-start">Updates across all tables in real time</li>
+</ul>
+</div>
+<!-- Feature Card 2: Live Order Stream -->
+<div class="glass-card rounded-2xl p-8 flex flex-col h-full">
+<div class="w-12 h-12 rounded-xl bg-primary-dim border border-border-subtle flex items-center justify-center mb-6 text-primary">
+<svg class="w-6 h-6" fill="none" stroke="currentColor" viewbox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path d="M15 17h5l-1.405-1.405A2.032 2.032 0 0118 14.158V11a6.002 6.002 0 00-4-5.659V5a2 2 0 10-4 0v.341C7.67 6.165 6 8.388 6 11v3.159c0 .538-.214 1.055-.595 1.436L4 17h5m6 0v1a3 3 0 11-6 0v-1m6 0H9" stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5"></path></svg>
+</div>
+<h3 class="text-xl font-semibold text-white mb-3">Live order stream</h3>
+<p class="text-text-muted text-sm leading-relaxed mb-8 flex-grow">
+            New orders appear on your screen the moment they're placed. Move them through prep to ready with a tap.
+          </p>
+<ul class="space-y-3 text-sm text-text-muted">
+<li class="feature-list-item flex items-start">Real-time push via Server-Sent Events</li>
+<li class="feature-list-item flex items-start">One-tap status updates</li>
+<li class="feature-list-item flex items-start">Full order history and receipts</li>
+</ul>
+</div>
+<!-- Feature Card 3: Deep Insights -->
+<div class="glass-card rounded-2xl p-8 flex flex-col h-full">
+<div class="w-12 h-12 rounded-xl bg-primary-dim border border-border-subtle flex items-center justify-center mb-6 text-primary">
+<svg class="w-6 h-6" fill="none" stroke="currentColor" viewbox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path d="M9 19v-6a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2a2 2 0 002-2zm0 0V9a2 2 0 012-2h2a2 2 0 012 2v10m-6 0a2 2 0 002 2h2a2 2 0 002-2m0 0V5a2 2 0 012-2h2a2 2 0 012 2v14a2 2 0 01-2 2h-2a2 2 0 01-2-2z" stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5"></path></svg>
+</div>
+<h3 class="text-xl font-semibold text-white mb-3">Deep insights</h3>
+<p class="text-text-muted text-sm leading-relaxed mb-8 flex-grow">
+            Peak hours, top sellers, repeat customer rate: the metrics that actually shape business decisions.
+          </p>
+<ul class="space-y-3 text-sm text-text-muted">
+<li class="feature-list-item flex items-start">Hourly and daily footfall charts</li>
+<li class="feature-list-item flex items-start">Revenue breakdown per item</li>
+<li class="feature-list-item flex items-start">Repeat customer tracking</li>
+</ul>
+</div>
+</div>
+</div>
+</main>
+<!-- END: Main Features Section -->
+<!-- BEGIN: Footer (Placeholder for context) -->
+<footer class="w-full border-t border-border-subtle py-8 px-8 flex flex-col md:flex-row justify-between items-center gap-4 mt-auto">
+<div class="flex items-center gap-2">
+<svg class="w-5 h-5 text-text-muted" fill="none" stroke="currentColor" viewbox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path d="M12 6V4m0 2a2 2 0 100 4m0-4a2 2 0 110 4m-6 8a2 2 0 100-4m0 4a2 2 0 110-4m0 4v2m0-6V4m6 6v10m6-2a2 2 0 100-4m0 4a2 2 0 110-4m0 4v2m0-6V4" stroke-linecap="round" stroke-linejoin="round" stroke-width="2"></path></svg>
+<span class="font-bold text-sm text-white">CraveFlow</span>
+</div>
+<div class="text-xs text-text-muted">
+      © 2024 CraveFlow. Empowering modern dining with precision.
+    </div>
+<div class="flex gap-6 text-xs text-text-muted">
+<a class="hover:text-white transition-colors" href="#">PRIVACY POLICY</a>
+<a class="hover:text-white transition-colors" href="#">TERMS OF SERVICE</a>
+</div>
+</footer>
+<!-- END: Footer -->
+</body></html>

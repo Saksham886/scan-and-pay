@@ -1,0 +1,96 @@
+<!DOCTYPE html>
+
+<html lang="en"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>CraveFlow - Ready for your first QR order?</title>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<style data-purpose="fonts">
+    @import url('https://fonts.googleapis.com/css2?family=Hanken+Grotesk:wght@300;400;500;600;700&display=swap');
+    body {
+      font-family: 'Hanken Grotesk', sans-serif;
+    }
+  </style>
+<script>
+    tailwind.config = {
+      theme: {
+        extend: {
+          colors: {
+            'slate-900': '#121619',
+            'slate-800': '#1A2024',
+            'slate-700': '#222A30',
+            'cyan-400': '#71D0F6',
+            'cyan-500': '#48CAE4',
+            'gray-400': '#9CA3AF',
+            'gray-300': '#D1D5DB',
+            'white': '#FFFFFF',
+          },
+          backgroundImage: {
+            'glow-cyan': 'radial-gradient(circle at center, rgba(72, 202, 228, 0.15) 0%, transparent 70%)',
+            'glass-gradient': 'linear-gradient(180deg, rgba(34, 42, 48, 0.4) 0%, rgba(26, 32, 36, 0.4) 100%)',
+          },
+          boxShadow: {
+            'glass': '0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06), inset 0 1px 0 0 rgba(255, 255, 255, 0.05)',
+          }
+        }
+      }
+    }
+  </script>
+</head>
+<body class="bg-slate-900 text-white min-h-screen flex flex-col antialiased">
+<!-- BEGIN: Call to Action Section -->
+<main class="flex-grow flex items-center justify-center relative overflow-hidden py-32 px-6">
+<!-- Background Glow -->
+<div aria-hidden="true" class="absolute inset-0 bg-glow-cyan opacity-60 pointer-events-none"></div>
+<div class="relative z-10 max-w-3xl mx-auto text-center">
+<!-- Headline -->
+<h2 class="text-4xl md:text-5xl lg:text-6xl font-bold tracking-tight text-white mb-6">
+        Ready for your first <br/>
+<span class="text-cyan-400">QR order?</span>
+</h2>
+<!-- Subheadline -->
+<p class="text-lg md:text-xl text-gray-400 mb-10 max-w-2xl mx-auto leading-relaxed">
+        Sign in to your dashboard, or reach out and we'll get your cafe onboarded in one short call.
+      </p>
+<!-- Action Buttons Container -->
+<div class="flex flex-col sm:flex-row items-center justify-center gap-4">
+<!-- Primary Button -->
+<a class="inline-flex items-center justify-center px-8 py-4 text-sm font-semibold text-slate-900 bg-cyan-400 rounded-full hover:bg-cyan-500 transition-colors duration-200 w-full sm:w-auto shadow-[0_0_15px_rgba(113,208,246,0.3)]" href="#">
+          OPEN DASHBOARD
+          <svg class="ml-2 w-4 h-4" fill="none" stroke="currentColor" viewbox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path d="M14 5l7 7m0 0l-7 7m7-7H3" stroke-linecap="round" stroke-linejoin="round" stroke-width="2"></path></svg>
+</a>
+<!-- Secondary Button (Glassmorphic) -->
+<a class="inline-flex items-center justify-center px-8 py-4 text-sm font-semibold text-gray-300 bg-glass-gradient border border-slate-700 rounded-full hover:bg-slate-800 transition-colors duration-200 w-full sm:w-auto shadow-glass backdrop-blur-md" href="#">
+          CONTACT US
+        </a>
+</div>
+</div>
+</main>
+<!-- END: Call to Action Section -->
+<!-- BEGIN: Footer -->
+<footer class="border-t border-slate-800 bg-slate-900 py-8 px-6">
+<div class="max-w-7xl mx-auto flex flex-col md:flex-row items-center justify-between gap-4">
+<!-- Logo -->
+<div class="flex items-center gap-2">
+<svg class="w-6 h-6 text-cyan-400" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" viewbox="0 0 24 24">
+<path d="M3 2v7c0 1.1.9 2 2 2h4a2 2 0 0 0 2-2V2"></path>
+<path d="M7 2v20"></path>
+<path d="M21 15V2v0a5 5 0 0 0-5 5v6c0 1.1.9 2 2 2h3Zm0 0v7"></path>
+</svg>
+<span class="text-xl font-bold tracking-tight text-white">CraveFlow</span>
+</div>
+<!-- Copyright -->
+<div class="text-sm text-gray-500 text-center md:text-left">
+        © 2024 CraveFlow. Empowering modern dining with precision.
+      </div>
+<!-- Links -->
+<div class="flex items-center gap-6 text-xs text-gray-400 tracking-wider font-medium">
+<a class="hover:text-white transition-colors" href="#">PRIVACY POLICY</a>
+<a class="hover:text-white transition-colors" href="#">TERMS OF SERVICE</a>
+<a class="hover:text-white transition-colors hidden sm:block" href="#">COOKIE SETTINGS</a>
+<a class="hover:text-white transition-colors hidden sm:block" href="#">CONTACT SALES</a>
+</div>
+</div>
+</footer>
+<!-- END: Footer -->
+</body></html>

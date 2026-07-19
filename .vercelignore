@@ -1,0 +1,9 @@
+node_modules
+.next
+.next-owner
+.next-admin
+.next-customer
+.env
+.env.local
+.claude
+prisma/migrations

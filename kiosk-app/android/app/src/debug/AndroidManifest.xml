@@ -1,0 +1,6 @@
+<manifest xmlns:android="http://schemas.android.com/apk/res/android">
+    <!-- Debug-only: allow cleartext HTTP so the kiosk can reach a local
+         dev backend (e.g. http://10.0.2.2:3003). Release builds must not
+         inherit this - production API URLs are HTTPS. -->
+    <application android:usesCleartextTraffic="true" />
+</manifest>
