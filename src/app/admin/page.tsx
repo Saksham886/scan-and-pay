@@ -20,6 +20,8 @@ import {
   QrCode,
   Users,
   Phone,
+  Eye,
+  EyeOff,
 } from "lucide-react";
 import { CafeQRModal } from "@/frontend/components/admin/cafe-qr-modal";
 
@@ -56,17 +58,34 @@ export default function AdminCafesPage() {
   const [formName, setFormName] = useState("");
   const [formAddress, setFormAddress] = useState("");
   const [formPhone, setFormPhone] = useState("");
+  const [formSlug, setFormSlug] = useState("");
+  const [slugTouched, setSlugTouched] = useState(false);
   const [ownerName, setOwnerName] = useState("");
   const [ownerEmail, setOwnerEmail] = useState("");
   const [ownerPassword, setOwnerPassword] = useState("");
+  const [showOwnerPassword, setShowOwnerPassword] = useState(false);
   const [saving, setSaving] = useState(false);
   const [formError, setFormError] = useState("");
 
-  // Derive slug from an email like "owner@branch-name.com" → "branch-name"
-  const derivedSlug = (() => {
-    const match = ownerEmail.trim().toLowerCase().match(/^owner@([a-z0-9][a-z0-9-]*)\./);
-    return match ? match[1] : "";
-  })();
+  const slugify = (raw: string) =>
+    raw
+      .trim()
+      .toLowerCase()
+      .replace(/[^a-z0-9]+/g, "-")
+      .replace(/^-+|-+$/g, "");
+
+  // Auto-suggest the URL slug from the cafe name until the admin edits it directly.
+  const handleNameChange = (value: string) => {
+    setFormName(value);
+    if (!slugTouched) setFormSlug(slugify(value));
+  };
+
+  const handleSlugChange = (value: string) => {
+    setSlugTouched(true);
+    // Lowercase + strip disallowed characters as they type, but don't trim
+    // trailing hyphens live — that would make it impossible to type one.
+    setFormSlug(value.toLowerCase().replace(/[^a-z0-9-]/g, ""));
+  };
 
   // Staff state
   const [allStaff, setAllStaff] = useState<StaffMember[]>([]);
@@ -129,8 +148,9 @@ export default function AdminCafesPage() {
     if (!formPhone.trim()) { setFormError("Phone is required"); return; }
     if (!ownerName || !ownerEmail || !ownerPassword) { setFormError("Owner credentials are required"); return; }
     if (ownerPassword.length < 6) { setFormError("Password must be at least 6 characters"); return; }
-    if (!derivedSlug) {
-      setFormError("Owner email must be in the format: owner@branch-name.com");
+    const cleanSlug = slugify(formSlug);
+    if (!cleanSlug) {
+      setFormError("Cafe URL is required (letters, numbers, and hyphens only)");
       return;
     }
 
@@ -143,6 +163,7 @@ export default function AdminCafesPage() {
           name: formName,
           address: formAddress.trim(),
           phone: formPhone.trim(),
+          slug: cleanSlug,
           ownerName,
           ownerEmail: ownerEmail.trim().toLowerCase(),
           ownerPassword,
@@ -154,9 +175,12 @@ export default function AdminCafesPage() {
         setFormName("");
         setFormAddress("");
         setFormPhone("");
+        setFormSlug("");
+        setSlugTouched(false);
         setOwnerName("");
         setOwnerEmail("");
         setOwnerPassword("");
+        setShowOwnerPassword(false);
         setFormError("");
         fetchData();
         // Auto-open QR for the newly created cafe
@@ -351,10 +375,26 @@ export default function AdminCafesPage() {
             id="cafe-name"
             label="Cafe Name"
             value={formName}
-            onChange={(e) => setFormName(e.target.value)}
+            onChange={(e) => handleNameChange(e.target.value)}
             placeholder="e.g. Downtown Brew"
             required
           />
+          <div>
+            <Input
+              id="cafe-slug"
+              label="Cafe URL"
+              value={formSlug}
+              onChange={(e) => handleSlugChange(e.target.value)}
+              placeholder="e.g. downtown-brew"
+              required
+            />
+            <p className="mt-1.5 text-xs text-muted">
+              Customer link:{" "}
+              <code className="font-mono bg-surface-hover px-1.5 py-0.5 rounded">
+                /{formSlug || "…"}
+              </code>
+            </p>
+          </div>
           <Input
             id="cafe-address"
             label="Address"
@@ -388,27 +428,34 @@ export default function AdminCafesPage() {
                 label="Owner Email"
                 value={ownerEmail}
                 onChange={(e) => setOwnerEmail(e.target.value)}
-                placeholder="owner@branch-name.com"
+                placeholder="owner@example.com"
                 type="email"
                 required
               />
-              <div className="-mt-2 text-xs text-muted">
-                Format: <code className="font-mono bg-surface-hover px-1.5 py-0.5 rounded">owner@branch-name.com</code>
-                {derivedSlug ? (
-                  <>
-                    {" "}· URL: <code className="font-mono bg-primary/20 text-primary px-1.5 py-0.5 rounded">/{derivedSlug}</code>
-                  </>
-                ) : null}
+              <div className="w-full">
+                <label htmlFor="owner-password" className="block text-xs font-semibold text-muted uppercase tracking-wide mb-1.5">
+                  Owner Password
+                </label>
+                <div className="relative">
+                  <input
+                    id="owner-password"
+                    type={showOwnerPassword ? "text" : "password"}
+                    value={ownerPassword}
+                    onChange={(e) => setOwnerPassword(e.target.value)}
+                    placeholder="Min 6 characters"
+                    required
+                    className="w-full rounded-xl border border-border bg-background px-4 py-2.5 pr-10 text-foreground text-sm placeholder:text-muted/60 transition-colors duration-150 focus:outline-none focus:ring-2 focus:ring-primary/30 focus:border-primary"
+                  />
+                  <button
+                    type="button"
+                    onClick={() => setShowOwnerPassword((v) => !v)}
+                    className="absolute right-3 top-1/2 -translate-y-1/2 text-muted hover:text-foreground transition-colors"
+                    tabIndex={-1}
+                  >
+                    {showOwnerPassword ? <EyeOff size={16} /> : <Eye size={16} />}
+                  </button>
+                </div>
               </div>
-              <Input
-                id="owner-password"
-                label="Owner Password"
-                value={ownerPassword}
-                onChange={(e) => setOwnerPassword(e.target.value)}
-                placeholder="Min 6 characters"
-                type="password"
-                required
-              />
             </div>
           </div>
 

@@ -2,6 +2,9 @@ import { NextResponse } from "next/server";
 import { auth } from "@/backend/lib/auth";
 import { adminRepository } from "@/backend/repositories/admin.repository";
 import { hashPassword } from "@/backend/lib/utils/password";
+import { validateEmail } from "@/shared/utils/validation";
+
+const SLUG_RE = /^[a-z0-9]+(?:-[a-z0-9]+)*$/;
 
 export async function GET() {
   try {
@@ -65,16 +68,21 @@ export async function POST(request: Request) {
       );
     }
 
-    // Derive slug from owner email: "owner@branch-name.com" → "branch-name"
     const normalizedEmail = String(body.ownerEmail).trim().toLowerCase();
-    const slugMatch = normalizedEmail.match(/^owner@([a-z0-9][a-z0-9-]*)\./);
-    if (!slugMatch) {
+    const emailCheck = validateEmail(normalizedEmail);
+    if (!emailCheck.valid) {
+      return NextResponse.json({ success: false, error: emailCheck.error }, { status: 400 });
+    }
+
+    // Cafe URL slug is its own field now — no longer derived from the
+    // owner's email, so any email address works.
+    const slug = String(body.slug || "").trim().toLowerCase();
+    if (!slug || !SLUG_RE.test(slug)) {
       return NextResponse.json(
-        { success: false, error: "Owner email must be in the format: owner@branch-name.com" },
+        { success: false, error: "URL slug must be lowercase letters, numbers, and hyphens only" },
         { status: 400 }
       );
     }
-    const slug = slugMatch[1];
 
     const cafe = await adminRepository.createCafe({
       name: body.name,
@@ -104,9 +112,22 @@ export async function POST(request: Request) {
   } catch (error) {
     const message = error instanceof Error ? error.message : "Failed to create cafe";
     const isDuplicate = message.includes("Unique constraint");
+    // The driver adapter nests the violated constraint's field names
+    // differently than the classic engine (see order.service.ts's
+    // isIdempotencyKeyConflict) — match broadly against the serialized error
+    // instead of one fixed property path to tell slug vs email conflicts apart.
+    const errBlob = JSON.stringify((error as { meta?: unknown })?.meta ?? {}).toLowerCase() + message.toLowerCase();
+    const duplicateField = errBlob.includes("slug") ? "slug" : errBlob.includes("email") ? "email" : null;
     console.error("Admin create cafe error:", error);
     return NextResponse.json(
-      { success: false, error: isDuplicate ? "A user with this email already exists" : message },
+      {
+        success: false,
+        error: isDuplicate
+          ? duplicateField === "slug"
+            ? "This URL is already taken by another cafe"
+            : "A user with this email already exists"
+          : message,
+      },
       { status: isDuplicate ? 409 : 500 }
     );
   }
