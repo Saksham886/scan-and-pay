@@ -137,8 +137,27 @@ exports.Prisma.CafeScalarFieldEnum = {
   razorpayKeyId: 'razorpayKeyId',
   razorpayKeySecret: 'razorpayKeySecret',
   razorpayWebhookSecret: 'razorpayWebhookSecret',
+  autoScheduleMenus: 'autoScheduleMenus',
   createdAt: 'createdAt',
   updatedAt: 'updatedAt'
+};
+
+exports.Prisma.MenuScalarFieldEnum = {
+  id: 'id',
+  cafeId: 'cafeId',
+  type: 'type',
+  isActive: 'isActive',
+  isSubsidised: 'isSubsidised',
+  createdAt: 'createdAt',
+  updatedAt: 'updatedAt'
+};
+
+exports.Prisma.FeedbackScalarFieldEnum = {
+  id: 'id',
+  cafeId: 'cafeId',
+  rating: 'rating',
+  comment: 'comment',
+  createdAt: 'createdAt'
 };
 
 exports.Prisma.UserScalarFieldEnum = {
@@ -156,6 +175,7 @@ exports.Prisma.UserScalarFieldEnum = {
 exports.Prisma.MenuCategoryScalarFieldEnum = {
   id: 'id',
   cafeId: 'cafeId',
+  menuId: 'menuId',
   name: 'name',
   sortOrder: 'sortOrder',
   isActive: 'isActive',
@@ -165,6 +185,7 @@ exports.Prisma.MenuCategoryScalarFieldEnum = {
 exports.Prisma.MenuItemScalarFieldEnum = {
   id: 'id',
   cafeId: 'cafeId',
+  menuId: 'menuId',
   categoryId: 'categoryId',
   name: 'name',
   description: 'description',
@@ -172,7 +193,10 @@ exports.Prisma.MenuItemScalarFieldEnum = {
   imageUrl: 'imageUrl',
   isAvailable: 'isAvailable',
   isVeg: 'isVeg',
+  isSubsidised: 'isSubsidised',
   sortOrder: 'sortOrder',
+  menuType: 'menuType',
+  overriddenFromId: 'overriddenFromId',
   createdAt: 'createdAt',
   updatedAt: 'updatedAt'
 };
@@ -201,7 +225,8 @@ exports.Prisma.OrderItemScalarFieldEnum = {
   itemName: 'itemName',
   itemPricePaise: 'itemPricePaise',
   quantity: 'quantity',
-  subtotalPaise: 'subtotalPaise'
+  subtotalPaise: 'subtotalPaise',
+  isSubsidised: 'isSubsidised'
 };
 
 exports.Prisma.OrderCounterScalarFieldEnum = {
@@ -300,6 +325,13 @@ exports.PaymentProvider = exports.$Enums.PaymentProvider = {
   RAZORPAY: 'RAZORPAY'
 };
 
+exports.MenuType = exports.$Enums.MenuType = {
+  BREAKFAST: 'BREAKFAST',
+  LUNCH: 'LUNCH',
+  EVENING_SNACKS: 'EVENING_SNACKS',
+  DINNER: 'DINNER'
+};
+
 exports.UserRole = exports.$Enums.UserRole = {
   SUPER_ADMIN: 'SUPER_ADMIN',
   CAFE_OWNER: 'CAFE_OWNER',
@@ -326,6 +358,8 @@ exports.PaymentStatus = exports.$Enums.PaymentStatus = {
 
 exports.Prisma.ModelName = {
   Cafe: 'Cafe',
+  Menu: 'Menu',
+  Feedback: 'Feedback',
   User: 'User',
   MenuCategory: 'MenuCategory',
   MenuItem: 'MenuItem',

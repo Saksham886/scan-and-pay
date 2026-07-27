@@ -19,6 +19,16 @@ export type PrismaPromise<T> = $Public.PrismaPromise<T>
  */
 export type Cafe = $Result.DefaultSelection<Prisma.$CafePayload>
 /**
+ * Model Menu
+ * 
+ */
+export type Menu = $Result.DefaultSelection<Prisma.$MenuPayload>
+/**
+ * Model Feedback
+ * 
+ */
+export type Feedback = $Result.DefaultSelection<Prisma.$FeedbackPayload>
+/**
  * Model User
  * 
  */
@@ -118,6 +128,16 @@ export const PaymentProvider: {
 
 export type PaymentProvider = (typeof PaymentProvider)[keyof typeof PaymentProvider]
 
+
+export const MenuType: {
+  BREAKFAST: 'BREAKFAST',
+  LUNCH: 'LUNCH',
+  EVENING_SNACKS: 'EVENING_SNACKS',
+  DINNER: 'DINNER'
+};
+
+export type MenuType = (typeof MenuType)[keyof typeof MenuType]
+
 }
 
 export type UserRole = $Enums.UserRole
@@ -135,6 +155,10 @@ export const PaymentStatus: typeof $Enums.PaymentStatus
 export type PaymentProvider = $Enums.PaymentProvider
 
 export const PaymentProvider: typeof $Enums.PaymentProvider
+
+export type MenuType = $Enums.MenuType
+
+export const MenuType: typeof $Enums.MenuType
 
 /**
  * ##  Prisma Client ʲˢ
@@ -266,6 +290,26 @@ export class PrismaClient<
     * ```
     */
   get cafe(): Prisma.CafeDelegate<ExtArgs, ClientOptions>;
+
+  /**
+   * `prisma.menu`: Exposes CRUD operations for the **Menu** model.
+    * Example usage:
+    * ```ts
+    * // Fetch zero or more Menus
+    * const menus = await prisma.menu.findMany()
+    * ```
+    */
+  get menu(): Prisma.MenuDelegate<ExtArgs, ClientOptions>;
+
+  /**
+   * `prisma.feedback`: Exposes CRUD operations for the **Feedback** model.
+    * Example usage:
+    * ```ts
+    * // Fetch zero or more Feedbacks
+    * const feedbacks = await prisma.feedback.findMany()
+    * ```
+    */
+  get feedback(): Prisma.FeedbackDelegate<ExtArgs, ClientOptions>;
 
   /**
    * `prisma.user`: Exposes CRUD operations for the **User** model.
@@ -811,6 +855,8 @@ export namespace Prisma {
 
   export const ModelName: {
     Cafe: 'Cafe',
+    Menu: 'Menu',
+    Feedback: 'Feedback',
     User: 'User',
     MenuCategory: 'MenuCategory',
     MenuItem: 'MenuItem',
@@ -837,7 +883,7 @@ export namespace Prisma {
       omit: GlobalOmitOptions
     }
     meta: {
-      modelProps: "cafe" | "user" | "menuCategory" | "menuItem" | "order" | "orderItem" | "orderCounter" | "payment" | "table" | "staff" | "expense" | "auditLog"
+      modelProps: "cafe" | "menu" | "feedback" | "user" | "menuCategory" | "menuItem" | "order" | "orderItem" | "orderCounter" | "payment" | "table" | "staff" | "expense" | "auditLog"
       txIsolationLevel: Prisma.TransactionIsolationLevel
     }
     model: {
@@ -912,6 +958,154 @@ export namespace Prisma {
           count: {
             args: Prisma.CafeCountArgs<ExtArgs>
             result: $Utils.Optional<CafeCountAggregateOutputType> | number
+          }
+        }
+      }
+      Menu: {
+        payload: Prisma.$MenuPayload<ExtArgs>
+        fields: Prisma.MenuFieldRefs
+        operations: {
+          findUnique: {
+            args: Prisma.MenuFindUniqueArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$MenuPayload> | null
+          }
+          findUniqueOrThrow: {
+            args: Prisma.MenuFindUniqueOrThrowArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$MenuPayload>
+          }
+          findFirst: {
+            args: Prisma.MenuFindFirstArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$MenuPayload> | null
+          }
+          findFirstOrThrow: {
+            args: Prisma.MenuFindFirstOrThrowArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$MenuPayload>
+          }
+          findMany: {
+            args: Prisma.MenuFindManyArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$MenuPayload>[]
+          }
+          create: {
+            args: Prisma.MenuCreateArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$MenuPayload>
+          }
+          createMany: {
+            args: Prisma.MenuCreateManyArgs<ExtArgs>
+            result: BatchPayload
+          }
+          createManyAndReturn: {
+            args: Prisma.MenuCreateManyAndReturnArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$MenuPayload>[]
+          }
+          delete: {
+            args: Prisma.MenuDeleteArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$MenuPayload>
+          }
+          update: {
+            args: Prisma.MenuUpdateArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$MenuPayload>
+          }
+          deleteMany: {
+            args: Prisma.MenuDeleteManyArgs<ExtArgs>
+            result: BatchPayload
+          }
+          updateMany: {
+            args: Prisma.MenuUpdateManyArgs<ExtArgs>
+            result: BatchPayload
+          }
+          updateManyAndReturn: {
+            args: Prisma.MenuUpdateManyAndReturnArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$MenuPayload>[]
+          }
+          upsert: {
+            args: Prisma.MenuUpsertArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$MenuPayload>
+          }
+          aggregate: {
+            args: Prisma.MenuAggregateArgs<ExtArgs>
+            result: $Utils.Optional<AggregateMenu>
+          }
+          groupBy: {
+            args: Prisma.MenuGroupByArgs<ExtArgs>
+            result: $Utils.Optional<MenuGroupByOutputType>[]
+          }
+          count: {
+            args: Prisma.MenuCountArgs<ExtArgs>
+            result: $Utils.Optional<MenuCountAggregateOutputType> | number
+          }
+        }
+      }
+      Feedback: {
+        payload: Prisma.$FeedbackPayload<ExtArgs>
+        fields: Prisma.FeedbackFieldRefs
+        operations: {
+          findUnique: {
+            args: Prisma.FeedbackFindUniqueArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$FeedbackPayload> | null
+          }
+          findUniqueOrThrow: {
+            args: Prisma.FeedbackFindUniqueOrThrowArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$FeedbackPayload>
+          }
+          findFirst: {
+            args: Prisma.FeedbackFindFirstArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$FeedbackPayload> | null
+          }
+          findFirstOrThrow: {
+            args: Prisma.FeedbackFindFirstOrThrowArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$FeedbackPayload>
+          }
+          findMany: {
+            args: Prisma.FeedbackFindManyArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$FeedbackPayload>[]
+          }
+          create: {
+            args: Prisma.FeedbackCreateArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$FeedbackPayload>
+          }
+          createMany: {
+            args: Prisma.FeedbackCreateManyArgs<ExtArgs>
+            result: BatchPayload
+          }
+          createManyAndReturn: {
+            args: Prisma.FeedbackCreateManyAndReturnArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$FeedbackPayload>[]
+          }
+          delete: {
+            args: Prisma.FeedbackDeleteArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$FeedbackPayload>
+          }
+          update: {
+            args: Prisma.FeedbackUpdateArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$FeedbackPayload>
+          }
+          deleteMany: {
+            args: Prisma.FeedbackDeleteManyArgs<ExtArgs>
+            result: BatchPayload
+          }
+          updateMany: {
+            args: Prisma.FeedbackUpdateManyArgs<ExtArgs>
+            result: BatchPayload
+          }
+          updateManyAndReturn: {
+            args: Prisma.FeedbackUpdateManyAndReturnArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$FeedbackPayload>[]
+          }
+          upsert: {
+            args: Prisma.FeedbackUpsertArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$FeedbackPayload>
+          }
+          aggregate: {
+            args: Prisma.FeedbackAggregateArgs<ExtArgs>
+            result: $Utils.Optional<AggregateFeedback>
+          }
+          groupBy: {
+            args: Prisma.FeedbackGroupByArgs<ExtArgs>
+            result: $Utils.Optional<FeedbackGroupByOutputType>[]
+          }
+          count: {
+            args: Prisma.FeedbackCountArgs<ExtArgs>
+            result: $Utils.Optional<FeedbackCountAggregateOutputType> | number
           }
         }
       }
@@ -1838,6 +2032,8 @@ export namespace Prisma {
   }
   export type GlobalOmitConfig = {
     cafe?: CafeOmit
+    menu?: MenuOmit
+    feedback?: FeedbackOmit
     user?: UserOmit
     menuCategory?: MenuCategoryOmit
     menuItem?: MenuItemOmit
@@ -1932,6 +2128,8 @@ export namespace Prisma {
     users: number
     categories: number
     menuItems: number
+    menus: number
+    feedback: number
     orders: number
     tables: number
     staff: number
@@ -1943,6 +2141,8 @@ export namespace Prisma {
     users?: boolean | CafeCountOutputTypeCountUsersArgs
     categories?: boolean | CafeCountOutputTypeCountCategoriesArgs
     menuItems?: boolean | CafeCountOutputTypeCountMenuItemsArgs
+    menus?: boolean | CafeCountOutputTypeCountMenusArgs
+    feedback?: boolean | CafeCountOutputTypeCountFeedbackArgs
     orders?: boolean | CafeCountOutputTypeCountOrdersArgs
     tables?: boolean | CafeCountOutputTypeCountTablesArgs
     staff?: boolean | CafeCountOutputTypeCountStaffArgs
@@ -1985,6 +2185,20 @@ export namespace Prisma {
   /**
    * CafeCountOutputType without action
    */
+  export type CafeCountOutputTypeCountMenusArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    where?: MenuWhereInput
+  }
+
+  /**
+   * CafeCountOutputType without action
+   */
+  export type CafeCountOutputTypeCountFeedbackArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    where?: FeedbackWhereInput
+  }
+
+  /**
+   * CafeCountOutputType without action
+   */
   export type CafeCountOutputTypeCountOrdersArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     where?: OrderWhereInput
   }
@@ -2015,6 +2229,46 @@ export namespace Prisma {
    */
   export type CafeCountOutputTypeCountOrderCountersArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     where?: OrderCounterWhereInput
+  }
+
+
+  /**
+   * Count Type MenuCountOutputType
+   */
+
+  export type MenuCountOutputType = {
+    categories: number
+    items: number
+  }
+
+  export type MenuCountOutputTypeSelect<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    categories?: boolean | MenuCountOutputTypeCountCategoriesArgs
+    items?: boolean | MenuCountOutputTypeCountItemsArgs
+  }
+
+  // Custom InputTypes
+  /**
+   * MenuCountOutputType without action
+   */
+  export type MenuCountOutputTypeDefaultArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the MenuCountOutputType
+     */
+    select?: MenuCountOutputTypeSelect<ExtArgs> | null
+  }
+
+  /**
+   * MenuCountOutputType without action
+   */
+  export type MenuCountOutputTypeCountCategoriesArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    where?: MenuCategoryWhereInput
+  }
+
+  /**
+   * MenuCountOutputType without action
+   */
+  export type MenuCountOutputTypeCountItemsArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    where?: MenuItemWhereInput
   }
 
 
@@ -2086,10 +2340,12 @@ export namespace Prisma {
 
   export type MenuItemCountOutputType = {
     orderItems: number
+    overrides: number
   }
 
   export type MenuItemCountOutputTypeSelect<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     orderItems?: boolean | MenuItemCountOutputTypeCountOrderItemsArgs
+    overrides?: boolean | MenuItemCountOutputTypeCountOverridesArgs
   }
 
   // Custom InputTypes
@@ -2108,6 +2364,13 @@ export namespace Prisma {
    */
   export type MenuItemCountOutputTypeCountOrderItemsArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     where?: OrderItemWhereInput
+  }
+
+  /**
+   * MenuItemCountOutputType without action
+   */
+  export type MenuItemCountOutputTypeCountOverridesArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    where?: MenuItemWhereInput
   }
 
 
@@ -2213,6 +2476,7 @@ export namespace Prisma {
     razorpayKeyId: string | null
     razorpayKeySecret: string | null
     razorpayWebhookSecret: string | null
+    autoScheduleMenus: boolean | null
     createdAt: Date | null
     updatedAt: Date | null
   }
@@ -2234,6 +2498,7 @@ export namespace Prisma {
     razorpayKeyId: string | null
     razorpayKeySecret: string | null
     razorpayWebhookSecret: string | null
+    autoScheduleMenus: boolean | null
     createdAt: Date | null
     updatedAt: Date | null
   }
@@ -2255,6 +2520,7 @@ export namespace Prisma {
     razorpayKeyId: number
     razorpayKeySecret: number
     razorpayWebhookSecret: number
+    autoScheduleMenus: number
     createdAt: number
     updatedAt: number
     _all: number
@@ -2278,6 +2544,7 @@ export namespace Prisma {
     razorpayKeyId?: true
     razorpayKeySecret?: true
     razorpayWebhookSecret?: true
+    autoScheduleMenus?: true
     createdAt?: true
     updatedAt?: true
   }
@@ -2299,6 +2566,7 @@ export namespace Prisma {
     razorpayKeyId?: true
     razorpayKeySecret?: true
     razorpayWebhookSecret?: true
+    autoScheduleMenus?: true
     createdAt?: true
     updatedAt?: true
   }
@@ -2320,6 +2588,7 @@ export namespace Prisma {
     razorpayKeyId?: true
     razorpayKeySecret?: true
     razorpayWebhookSecret?: true
+    autoScheduleMenus?: true
     createdAt?: true
     updatedAt?: true
     _all?: true
@@ -2414,6 +2683,7 @@ export namespace Prisma {
     razorpayKeyId: string | null
     razorpayKeySecret: string | null
     razorpayWebhookSecret: string | null
+    autoScheduleMenus: boolean
     createdAt: Date
     updatedAt: Date
     _count: CafeCountAggregateOutputType | null
@@ -2452,11 +2722,14 @@ export namespace Prisma {
     razorpayKeyId?: boolean
     razorpayKeySecret?: boolean
     razorpayWebhookSecret?: boolean
+    autoScheduleMenus?: boolean
     createdAt?: boolean
     updatedAt?: boolean
     users?: boolean | Cafe$usersArgs<ExtArgs>
     categories?: boolean | Cafe$categoriesArgs<ExtArgs>
     menuItems?: boolean | Cafe$menuItemsArgs<ExtArgs>
+    menus?: boolean | Cafe$menusArgs<ExtArgs>
+    feedback?: boolean | Cafe$feedbackArgs<ExtArgs>
     orders?: boolean | Cafe$ordersArgs<ExtArgs>
     tables?: boolean | Cafe$tablesArgs<ExtArgs>
     staff?: boolean | Cafe$staffArgs<ExtArgs>
@@ -2482,6 +2755,7 @@ export namespace Prisma {
     razorpayKeyId?: boolean
     razorpayKeySecret?: boolean
     razorpayWebhookSecret?: boolean
+    autoScheduleMenus?: boolean
     createdAt?: boolean
     updatedAt?: boolean
   }, ExtArgs["result"]["cafe"]>
@@ -2503,6 +2777,7 @@ export namespace Prisma {
     razorpayKeyId?: boolean
     razorpayKeySecret?: boolean
     razorpayWebhookSecret?: boolean
+    autoScheduleMenus?: boolean
     createdAt?: boolean
     updatedAt?: boolean
   }, ExtArgs["result"]["cafe"]>
@@ -2524,15 +2799,18 @@ export namespace Prisma {
     razorpayKeyId?: boolean
     razorpayKeySecret?: boolean
     razorpayWebhookSecret?: boolean
+    autoScheduleMenus?: boolean
     createdAt?: boolean
     updatedAt?: boolean
   }
 
-  export type CafeOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id" | "name" | "slug" | "address" | "phone" | "imageUrl" | "isActive" | "openingTime" | "closingTime" | "phonepeMerchantId" | "phonepeSaltKey" | "phonepeSaltIndex" | "paymentProvider" | "razorpayKeyId" | "razorpayKeySecret" | "razorpayWebhookSecret" | "createdAt" | "updatedAt", ExtArgs["result"]["cafe"]>
+  export type CafeOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id" | "name" | "slug" | "address" | "phone" | "imageUrl" | "isActive" | "openingTime" | "closingTime" | "phonepeMerchantId" | "phonepeSaltKey" | "phonepeSaltIndex" | "paymentProvider" | "razorpayKeyId" | "razorpayKeySecret" | "razorpayWebhookSecret" | "autoScheduleMenus" | "createdAt" | "updatedAt", ExtArgs["result"]["cafe"]>
   export type CafeInclude<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     users?: boolean | Cafe$usersArgs<ExtArgs>
     categories?: boolean | Cafe$categoriesArgs<ExtArgs>
     menuItems?: boolean | Cafe$menuItemsArgs<ExtArgs>
+    menus?: boolean | Cafe$menusArgs<ExtArgs>
+    feedback?: boolean | Cafe$feedbackArgs<ExtArgs>
     orders?: boolean | Cafe$ordersArgs<ExtArgs>
     tables?: boolean | Cafe$tablesArgs<ExtArgs>
     staff?: boolean | Cafe$staffArgs<ExtArgs>
@@ -2549,6 +2827,8 @@ export namespace Prisma {
       users: Prisma.$UserPayload<ExtArgs>[]
       categories: Prisma.$MenuCategoryPayload<ExtArgs>[]
       menuItems: Prisma.$MenuItemPayload<ExtArgs>[]
+      menus: Prisma.$MenuPayload<ExtArgs>[]
+      feedback: Prisma.$FeedbackPayload<ExtArgs>[]
       orders: Prisma.$OrderPayload<ExtArgs>[]
       tables: Prisma.$TablePayload<ExtArgs>[]
       staff: Prisma.$StaffPayload<ExtArgs>[]
@@ -2572,6 +2852,7 @@ export namespace Prisma {
       razorpayKeyId: string | null
       razorpayKeySecret: string | null
       razorpayWebhookSecret: string | null
+      autoScheduleMenus: boolean
       createdAt: Date
       updatedAt: Date
     }, ExtArgs["result"]["cafe"]>
@@ -2971,6 +3252,8 @@ export namespace Prisma {
     users<T extends Cafe$usersArgs<ExtArgs> = {}>(args?: Subset<T, Cafe$usersArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$UserPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
     categories<T extends Cafe$categoriesArgs<ExtArgs> = {}>(args?: Subset<T, Cafe$categoriesArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$MenuCategoryPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
     menuItems<T extends Cafe$menuItemsArgs<ExtArgs> = {}>(args?: Subset<T, Cafe$menuItemsArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$MenuItemPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
+    menus<T extends Cafe$menusArgs<ExtArgs> = {}>(args?: Subset<T, Cafe$menusArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$MenuPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
+    feedback<T extends Cafe$feedbackArgs<ExtArgs> = {}>(args?: Subset<T, Cafe$feedbackArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$FeedbackPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
     orders<T extends Cafe$ordersArgs<ExtArgs> = {}>(args?: Subset<T, Cafe$ordersArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$OrderPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
     tables<T extends Cafe$tablesArgs<ExtArgs> = {}>(args?: Subset<T, Cafe$tablesArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$TablePayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
     staff<T extends Cafe$staffArgs<ExtArgs> = {}>(args?: Subset<T, Cafe$staffArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$StaffPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
@@ -3021,6 +3304,7 @@ export namespace Prisma {
     readonly razorpayKeyId: FieldRef<"Cafe", 'String'>
     readonly razorpayKeySecret: FieldRef<"Cafe", 'String'>
     readonly razorpayWebhookSecret: FieldRef<"Cafe", 'String'>
+    readonly autoScheduleMenus: FieldRef<"Cafe", 'Boolean'>
     readonly createdAt: FieldRef<"Cafe", 'DateTime'>
     readonly updatedAt: FieldRef<"Cafe", 'DateTime'>
   }
@@ -3488,6 +3772,54 @@ export namespace Prisma {
   }
 
   /**
+   * Cafe.menus
+   */
+  export type Cafe$menusArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the Menu
+     */
+    select?: MenuSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the Menu
+     */
+    omit?: MenuOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: MenuInclude<ExtArgs> | null
+    where?: MenuWhereInput
+    orderBy?: MenuOrderByWithRelationInput | MenuOrderByWithRelationInput[]
+    cursor?: MenuWhereUniqueInput
+    take?: number
+    skip?: number
+    distinct?: MenuScalarFieldEnum | MenuScalarFieldEnum[]
+  }
+
+  /**
+   * Cafe.feedback
+   */
+  export type Cafe$feedbackArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the Feedback
+     */
+    select?: FeedbackSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the Feedback
+     */
+    omit?: FeedbackOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: FeedbackInclude<ExtArgs> | null
+    where?: FeedbackWhereInput
+    orderBy?: FeedbackOrderByWithRelationInput | FeedbackOrderByWithRelationInput[]
+    cursor?: FeedbackWhereUniqueInput
+    take?: number
+    skip?: number
+    distinct?: FeedbackScalarFieldEnum | FeedbackScalarFieldEnum[]
+  }
+
+  /**
    * Cafe.orders
    */
   export type Cafe$ordersArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
@@ -3623,6 +3955,2250 @@ export namespace Prisma {
      * Choose, which related nodes to fetch as well
      */
     include?: CafeInclude<ExtArgs> | null
+  }
+
+
+  /**
+   * Model Menu
+   */
+
+  export type AggregateMenu = {
+    _count: MenuCountAggregateOutputType | null
+    _min: MenuMinAggregateOutputType | null
+    _max: MenuMaxAggregateOutputType | null
+  }
+
+  export type MenuMinAggregateOutputType = {
+    id: string | null
+    cafeId: string | null
+    type: $Enums.MenuType | null
+    isActive: boolean | null
+    isSubsidised: boolean | null
+    createdAt: Date | null
+    updatedAt: Date | null
+  }
+
+  export type MenuMaxAggregateOutputType = {
+    id: string | null
+    cafeId: string | null
+    type: $Enums.MenuType | null
+    isActive: boolean | null
+    isSubsidised: boolean | null
+    createdAt: Date | null
+    updatedAt: Date | null
+  }
+
+  export type MenuCountAggregateOutputType = {
+    id: number
+    cafeId: number
+    type: number
+    isActive: number
+    isSubsidised: number
+    createdAt: number
+    updatedAt: number
+    _all: number
+  }
+
+
+  export type MenuMinAggregateInputType = {
+    id?: true
+    cafeId?: true
+    type?: true
+    isActive?: true
+    isSubsidised?: true
+    createdAt?: true
+    updatedAt?: true
+  }
+
+  export type MenuMaxAggregateInputType = {
+    id?: true
+    cafeId?: true
+    type?: true
+    isActive?: true
+    isSubsidised?: true
+    createdAt?: true
+    updatedAt?: true
+  }
+
+  export type MenuCountAggregateInputType = {
+    id?: true
+    cafeId?: true
+    type?: true
+    isActive?: true
+    isSubsidised?: true
+    createdAt?: true
+    updatedAt?: true
+    _all?: true
+  }
+
+  export type MenuAggregateArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Filter which Menu to aggregate.
+     */
+    where?: MenuWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of Menus to fetch.
+     */
+    orderBy?: MenuOrderByWithRelationInput | MenuOrderByWithRelationInput[]
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the start position
+     */
+    cursor?: MenuWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` Menus from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` Menus.
+     */
+    skip?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Count returned Menus
+    **/
+    _count?: true | MenuCountAggregateInputType
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Select which fields to find the minimum value
+    **/
+    _min?: MenuMinAggregateInputType
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Select which fields to find the maximum value
+    **/
+    _max?: MenuMaxAggregateInputType
+  }
+
+  export type GetMenuAggregateType<T extends MenuAggregateArgs> = {
+        [P in keyof T & keyof AggregateMenu]: P extends '_count' | 'count'
+      ? T[P] extends true
+        ? number
+        : GetScalarType<T[P], AggregateMenu[P]>
+      : GetScalarType<T[P], AggregateMenu[P]>
+  }
+
+
+
+
+  export type MenuGroupByArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    where?: MenuWhereInput
+    orderBy?: MenuOrderByWithAggregationInput | MenuOrderByWithAggregationInput[]
+    by: MenuScalarFieldEnum[] | MenuScalarFieldEnum
+    having?: MenuScalarWhereWithAggregatesInput
+    take?: number
+    skip?: number
+    _count?: MenuCountAggregateInputType | true
+    _min?: MenuMinAggregateInputType
+    _max?: MenuMaxAggregateInputType
+  }
+
+  export type MenuGroupByOutputType = {
+    id: string
+    cafeId: string
+    type: $Enums.MenuType
+    isActive: boolean
+    isSubsidised: boolean
+    createdAt: Date
+    updatedAt: Date
+    _count: MenuCountAggregateOutputType | null
+    _min: MenuMinAggregateOutputType | null
+    _max: MenuMaxAggregateOutputType | null
+  }
+
+  type GetMenuGroupByPayload<T extends MenuGroupByArgs> = Prisma.PrismaPromise<
+    Array<
+      PickEnumerable<MenuGroupByOutputType, T['by']> &
+        {
+          [P in ((keyof T) & (keyof MenuGroupByOutputType))]: P extends '_count'
+            ? T[P] extends boolean
+              ? number
+              : GetScalarType<T[P], MenuGroupByOutputType[P]>
+            : GetScalarType<T[P], MenuGroupByOutputType[P]>
+        }
+      >
+    >
+
+
+  export type MenuSelect<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
+    id?: boolean
+    cafeId?: boolean
+    type?: boolean
+    isActive?: boolean
+    isSubsidised?: boolean
+    createdAt?: boolean
+    updatedAt?: boolean
+    cafe?: boolean | CafeDefaultArgs<ExtArgs>
+    categories?: boolean | Menu$categoriesArgs<ExtArgs>
+    items?: boolean | Menu$itemsArgs<ExtArgs>
+    _count?: boolean | MenuCountOutputTypeDefaultArgs<ExtArgs>
+  }, ExtArgs["result"]["menu"]>
+
+  export type MenuSelectCreateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
+    id?: boolean
+    cafeId?: boolean
+    type?: boolean
+    isActive?: boolean
+    isSubsidised?: boolean
+    createdAt?: boolean
+    updatedAt?: boolean
+    cafe?: boolean | CafeDefaultArgs<ExtArgs>
+  }, ExtArgs["result"]["menu"]>
+
+  export type MenuSelectUpdateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
+    id?: boolean
+    cafeId?: boolean
+    type?: boolean
+    isActive?: boolean
+    isSubsidised?: boolean
+    createdAt?: boolean
+    updatedAt?: boolean
+    cafe?: boolean | CafeDefaultArgs<ExtArgs>
+  }, ExtArgs["result"]["menu"]>
+
+  export type MenuSelectScalar = {
+    id?: boolean
+    cafeId?: boolean
+    type?: boolean
+    isActive?: boolean
+    isSubsidised?: boolean
+    createdAt?: boolean
+    updatedAt?: boolean
+  }
+
+  export type MenuOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id" | "cafeId" | "type" | "isActive" | "isSubsidised" | "createdAt" | "updatedAt", ExtArgs["result"]["menu"]>
+  export type MenuInclude<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    cafe?: boolean | CafeDefaultArgs<ExtArgs>
+    categories?: boolean | Menu$categoriesArgs<ExtArgs>
+    items?: boolean | Menu$itemsArgs<ExtArgs>
+    _count?: boolean | MenuCountOutputTypeDefaultArgs<ExtArgs>
+  }
+  export type MenuIncludeCreateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    cafe?: boolean | CafeDefaultArgs<ExtArgs>
+  }
+  export type MenuIncludeUpdateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    cafe?: boolean | CafeDefaultArgs<ExtArgs>
+  }
+
+  export type $MenuPayload<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    name: "Menu"
+    objects: {
+      cafe: Prisma.$CafePayload<ExtArgs>
+      categories: Prisma.$MenuCategoryPayload<ExtArgs>[]
+      items: Prisma.$MenuItemPayload<ExtArgs>[]
+    }
+    scalars: $Extensions.GetPayloadResult<{
+      id: string
+      cafeId: string
+      type: $Enums.MenuType
+      isActive: boolean
+      isSubsidised: boolean
+      createdAt: Date
+      updatedAt: Date
+    }, ExtArgs["result"]["menu"]>
+    composites: {}
+  }
+
+  type MenuGetPayload<S extends boolean | null | undefined | MenuDefaultArgs> = $Result.GetResult<Prisma.$MenuPayload, S>
+
+  type MenuCountArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> =
+    Omit<MenuFindManyArgs, 'select' | 'include' | 'distinct' | 'omit'> & {
+      select?: MenuCountAggregateInputType | true
+    }
+
+  export interface MenuDelegate<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs, GlobalOmitOptions = {}> {
+    [K: symbol]: { types: Prisma.TypeMap<ExtArgs>['model']['Menu'], meta: { name: 'Menu' } }
+    /**
+     * Find zero or one Menu that matches the filter.
+     * @param {MenuFindUniqueArgs} args - Arguments to find a Menu
+     * @example
+     * // Get one Menu
+     * const menu = await prisma.menu.findUnique({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     */
+    findUnique<T extends MenuFindUniqueArgs>(args: SelectSubset<T, MenuFindUniqueArgs<ExtArgs>>): Prisma__MenuClient<$Result.GetResult<Prisma.$MenuPayload<ExtArgs>, T, "findUnique", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Find one Menu that matches the filter or throw an error with `error.code='P2025'`
+     * if no matches were found.
+     * @param {MenuFindUniqueOrThrowArgs} args - Arguments to find a Menu
+     * @example
+     * // Get one Menu
+     * const menu = await prisma.menu.findUniqueOrThrow({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     */
+    findUniqueOrThrow<T extends MenuFindUniqueOrThrowArgs>(args: SelectSubset<T, MenuFindUniqueOrThrowArgs<ExtArgs>>): Prisma__MenuClient<$Result.GetResult<Prisma.$MenuPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Find the first Menu that matches the filter.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {MenuFindFirstArgs} args - Arguments to find a Menu
+     * @example
+     * // Get one Menu
+     * const menu = await prisma.menu.findFirst({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     */
+    findFirst<T extends MenuFindFirstArgs>(args?: SelectSubset<T, MenuFindFirstArgs<ExtArgs>>): Prisma__MenuClient<$Result.GetResult<Prisma.$MenuPayload<ExtArgs>, T, "findFirst", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Find the first Menu that matches the filter or
+     * throw `PrismaKnownClientError` with `P2025` code if no matches were found.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {MenuFindFirstOrThrowArgs} args - Arguments to find a Menu
+     * @example
+     * // Get one Menu
+     * const menu = await prisma.menu.findFirstOrThrow({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     */
+    findFirstOrThrow<T extends MenuFindFirstOrThrowArgs>(args?: SelectSubset<T, MenuFindFirstOrThrowArgs<ExtArgs>>): Prisma__MenuClient<$Result.GetResult<Prisma.$MenuPayload<ExtArgs>, T, "findFirstOrThrow", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Find zero or more Menus that matches the filter.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {MenuFindManyArgs} args - Arguments to filter and select certain fields only.
+     * @example
+     * // Get all Menus
+     * const menus = await prisma.menu.findMany()
+     * 
+     * // Get first 10 Menus
+     * const menus = await prisma.menu.findMany({ take: 10 })
+     * 
+     * // Only select the `id`
+     * const menuWithIdOnly = await prisma.menu.findMany({ select: { id: true } })
+     * 
+     */
+    findMany<T extends MenuFindManyArgs>(args?: SelectSubset<T, MenuFindManyArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$MenuPayload<ExtArgs>, T, "findMany", GlobalOmitOptions>>
+
+    /**
+     * Create a Menu.
+     * @param {MenuCreateArgs} args - Arguments to create a Menu.
+     * @example
+     * // Create one Menu
+     * const Menu = await prisma.menu.create({
+     *   data: {
+     *     // ... data to create a Menu
+     *   }
+     * })
+     * 
+     */
+    create<T extends MenuCreateArgs>(args: SelectSubset<T, MenuCreateArgs<ExtArgs>>): Prisma__MenuClient<$Result.GetResult<Prisma.$MenuPayload<ExtArgs>, T, "create", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Create many Menus.
+     * @param {MenuCreateManyArgs} args - Arguments to create many Menus.
+     * @example
+     * // Create many Menus
+     * const menu = await prisma.menu.createMany({
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     *     
+     */
+    createMany<T extends MenuCreateManyArgs>(args?: SelectSubset<T, MenuCreateManyArgs<ExtArgs>>): Prisma.PrismaPromise<BatchPayload>
+
+    /**
+     * Create many Menus and returns the data saved in the database.
+     * @param {MenuCreateManyAndReturnArgs} args - Arguments to create many Menus.
+     * @example
+     * // Create many Menus
+     * const menu = await prisma.menu.createManyAndReturn({
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     * 
+     * // Create many Menus and only return the `id`
+     * const menuWithIdOnly = await prisma.menu.createManyAndReturn({
+     *   select: { id: true },
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * 
+     */
+    createManyAndReturn<T extends MenuCreateManyAndReturnArgs>(args?: SelectSubset<T, MenuCreateManyAndReturnArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$MenuPayload<ExtArgs>, T, "createManyAndReturn", GlobalOmitOptions>>
+
+    /**
+     * Delete a Menu.
+     * @param {MenuDeleteArgs} args - Arguments to delete one Menu.
+     * @example
+     * // Delete one Menu
+     * const Menu = await prisma.menu.delete({
+     *   where: {
+     *     // ... filter to delete one Menu
+     *   }
+     * })
+     * 
+     */
+    delete<T extends MenuDeleteArgs>(args: SelectSubset<T, MenuDeleteArgs<ExtArgs>>): Prisma__MenuClient<$Result.GetResult<Prisma.$MenuPayload<ExtArgs>, T, "delete", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Update one Menu.
+     * @param {MenuUpdateArgs} args - Arguments to update one Menu.
+     * @example
+     * // Update one Menu
+     * const menu = await prisma.menu.update({
+     *   where: {
+     *     // ... provide filter here
+     *   },
+     *   data: {
+     *     // ... provide data here
+     *   }
+     * })
+     * 
+     */
+    update<T extends MenuUpdateArgs>(args: SelectSubset<T, MenuUpdateArgs<ExtArgs>>): Prisma__MenuClient<$Result.GetResult<Prisma.$MenuPayload<ExtArgs>, T, "update", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Delete zero or more Menus.
+     * @param {MenuDeleteManyArgs} args - Arguments to filter Menus to delete.
+     * @example
+     * // Delete a few Menus
+     * const { count } = await prisma.menu.deleteMany({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     * 
+     */
+    deleteMany<T extends MenuDeleteManyArgs>(args?: SelectSubset<T, MenuDeleteManyArgs<ExtArgs>>): Prisma.PrismaPromise<BatchPayload>
+
+    /**
+     * Update zero or more Menus.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {MenuUpdateManyArgs} args - Arguments to update one or more rows.
+     * @example
+     * // Update many Menus
+     * const menu = await prisma.menu.updateMany({
+     *   where: {
+     *     // ... provide filter here
+     *   },
+     *   data: {
+     *     // ... provide data here
+     *   }
+     * })
+     * 
+     */
+    updateMany<T extends MenuUpdateManyArgs>(args: SelectSubset<T, MenuUpdateManyArgs<ExtArgs>>): Prisma.PrismaPromise<BatchPayload>
+
+    /**
+     * Update zero or more Menus and returns the data updated in the database.
+     * @param {MenuUpdateManyAndReturnArgs} args - Arguments to update many Menus.
+     * @example
+     * // Update many Menus
+     * const menu = await prisma.menu.updateManyAndReturn({
+     *   where: {
+     *     // ... provide filter here
+     *   },
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     * 
+     * // Update zero or more Menus and only return the `id`
+     * const menuWithIdOnly = await prisma.menu.updateManyAndReturn({
+     *   select: { id: true },
+     *   where: {
+     *     // ... provide filter here
+     *   },
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * 
+     */
+    updateManyAndReturn<T extends MenuUpdateManyAndReturnArgs>(args: SelectSubset<T, MenuUpdateManyAndReturnArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$MenuPayload<ExtArgs>, T, "updateManyAndReturn", GlobalOmitOptions>>
+
+    /**
+     * Create or update one Menu.
+     * @param {MenuUpsertArgs} args - Arguments to update or create a Menu.
+     * @example
+     * // Update or create a Menu
+     * const menu = await prisma.menu.upsert({
+     *   create: {
+     *     // ... data to create a Menu
+     *   },
+     *   update: {
+     *     // ... in case it already exists, update
+     *   },
+     *   where: {
+     *     // ... the filter for the Menu we want to update
+     *   }
+     * })
+     */
+    upsert<T extends MenuUpsertArgs>(args: SelectSubset<T, MenuUpsertArgs<ExtArgs>>): Prisma__MenuClient<$Result.GetResult<Prisma.$MenuPayload<ExtArgs>, T, "upsert", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+
+    /**
+     * Count the number of Menus.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {MenuCountArgs} args - Arguments to filter Menus to count.
+     * @example
+     * // Count the number of Menus
+     * const count = await prisma.menu.count({
+     *   where: {
+     *     // ... the filter for the Menus we want to count
+     *   }
+     * })
+    **/
+    count<T extends MenuCountArgs>(
+      args?: Subset<T, MenuCountArgs>,
+    ): Prisma.PrismaPromise<
+      T extends $Utils.Record<'select', any>
+        ? T['select'] extends true
+          ? number
+          : GetScalarType<T['select'], MenuCountAggregateOutputType>
+        : number
+    >
+
+    /**
+     * Allows you to perform aggregations operations on a Menu.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {MenuAggregateArgs} args - Select which aggregations you would like to apply and on what fields.
+     * @example
+     * // Ordered by age ascending
+     * // Where email contains prisma.io
+     * // Limited to the 10 users
+     * const aggregations = await prisma.user.aggregate({
+     *   _avg: {
+     *     age: true,
+     *   },
+     *   where: {
+     *     email: {
+     *       contains: "prisma.io",
+     *     },
+     *   },
+     *   orderBy: {
+     *     age: "asc",
+     *   },
+     *   take: 10,
+     * })
+    **/
+    aggregate<T extends MenuAggregateArgs>(args: Subset<T, MenuAggregateArgs>): Prisma.PrismaPromise<GetMenuAggregateType<T>>
+
+    /**
+     * Group by Menu.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {MenuGroupByArgs} args - Group by arguments.
+     * @example
+     * // Group by city, order by createdAt, get count
+     * const result = await prisma.user.groupBy({
+     *   by: ['city', 'createdAt'],
+     *   orderBy: {
+     *     createdAt: true
+     *   },
+     *   _count: {
+     *     _all: true
+     *   },
+     * })
+     * 
+    **/
+    groupBy<
+      T extends MenuGroupByArgs,
+      HasSelectOrTake extends Or<
+        Extends<'skip', Keys<T>>,
+        Extends<'take', Keys<T>>
+      >,
+      OrderByArg extends True extends HasSelectOrTake
+        ? { orderBy: MenuGroupByArgs['orderBy'] }
+        : { orderBy?: MenuGroupByArgs['orderBy'] },
+      OrderFields extends ExcludeUnderscoreKeys<Keys<MaybeTupleToUnion<T['orderBy']>>>,
+      ByFields extends MaybeTupleToUnion<T['by']>,
+      ByValid extends Has<ByFields, OrderFields>,
+      HavingFields extends GetHavingFields<T['having']>,
+      HavingValid extends Has<ByFields, HavingFields>,
+      ByEmpty extends T['by'] extends never[] ? True : False,
+      InputErrors extends ByEmpty extends True
+      ? `Error: "by" must not be empty.`
+      : HavingValid extends False
+      ? {
+          [P in HavingFields]: P extends ByFields
+            ? never
+            : P extends string
+            ? `Error: Field "${P}" used in "having" needs to be provided in "by".`
+            : [
+                Error,
+                'Field ',
+                P,
+                ` in "having" needs to be provided in "by"`,
+              ]
+        }[HavingFields]
+      : 'take' extends Keys<T>
+      ? 'orderBy' extends Keys<T>
+        ? ByValid extends True
+          ? {}
+          : {
+              [P in OrderFields]: P extends ByFields
+                ? never
+                : `Error: Field "${P}" in "orderBy" needs to be provided in "by"`
+            }[OrderFields]
+        : 'Error: If you provide "take", you also need to provide "orderBy"'
+      : 'skip' extends Keys<T>
+      ? 'orderBy' extends Keys<T>
+        ? ByValid extends True
+          ? {}
+          : {
+              [P in OrderFields]: P extends ByFields
+                ? never
+                : `Error: Field "${P}" in "orderBy" needs to be provided in "by"`
+            }[OrderFields]
+        : 'Error: If you provide "skip", you also need to provide "orderBy"'
+      : ByValid extends True
+      ? {}
+      : {
+          [P in OrderFields]: P extends ByFields
+            ? never
+            : `Error: Field "${P}" in "orderBy" needs to be provided in "by"`
+        }[OrderFields]
+    >(args: SubsetIntersection<T, MenuGroupByArgs, OrderByArg> & InputErrors): {} extends InputErrors ? GetMenuGroupByPayload<T> : Prisma.PrismaPromise<InputErrors>
+  /**
+   * Fields of the Menu model
+   */
+  readonly fields: MenuFieldRefs;
+  }
+
+  /**
+   * The delegate class that acts as a "Promise-like" for Menu.
+   * Why is this prefixed with `Prisma__`?
+   * Because we want to prevent naming conflicts as mentioned in
+   * https://github.com/prisma/prisma-client-js/issues/707
+   */
+  export interface Prisma__MenuClient<T, Null = never, ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs, GlobalOmitOptions = {}> extends Prisma.PrismaPromise<T> {
+    readonly [Symbol.toStringTag]: "PrismaPromise"
+    cafe<T extends CafeDefaultArgs<ExtArgs> = {}>(args?: Subset<T, CafeDefaultArgs<ExtArgs>>): Prisma__CafeClient<$Result.GetResult<Prisma.$CafePayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | Null, Null, ExtArgs, GlobalOmitOptions>
+    categories<T extends Menu$categoriesArgs<ExtArgs> = {}>(args?: Subset<T, Menu$categoriesArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$MenuCategoryPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
+    items<T extends Menu$itemsArgs<ExtArgs> = {}>(args?: Subset<T, Menu$itemsArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$MenuItemPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
+    /**
+     * Attaches callbacks for the resolution and/or rejection of the Promise.
+     * @param onfulfilled The callback to execute when the Promise is resolved.
+     * @param onrejected The callback to execute when the Promise is rejected.
+     * @returns A Promise for the completion of which ever callback is executed.
+     */
+    then<TResult1 = T, TResult2 = never>(onfulfilled?: ((value: T) => TResult1 | PromiseLike<TResult1>) | undefined | null, onrejected?: ((reason: any) => TResult2 | PromiseLike<TResult2>) | undefined | null): $Utils.JsPromise<TResult1 | TResult2>
+    /**
+     * Attaches a callback for only the rejection of the Promise.
+     * @param onrejected The callback to execute when the Promise is rejected.
+     * @returns A Promise for the completion of the callback.
+     */
+    catch<TResult = never>(onrejected?: ((reason: any) => TResult | PromiseLike<TResult>) | undefined | null): $Utils.JsPromise<T | TResult>
+    /**
+     * Attaches a callback that is invoked when the Promise is settled (fulfilled or rejected). The
+     * resolved value cannot be modified from the callback.
+     * @param onfinally The callback to execute when the Promise is settled (fulfilled or rejected).
+     * @returns A Promise for the completion of the callback.
+     */
+    finally(onfinally?: (() => void) | undefined | null): $Utils.JsPromise<T>
+  }
+
+
+
+
+  /**
+   * Fields of the Menu model
+   */
+  interface MenuFieldRefs {
+    readonly id: FieldRef<"Menu", 'String'>
+    readonly cafeId: FieldRef<"Menu", 'String'>
+    readonly type: FieldRef<"Menu", 'MenuType'>
+    readonly isActive: FieldRef<"Menu", 'Boolean'>
+    readonly isSubsidised: FieldRef<"Menu", 'Boolean'>
+    readonly createdAt: FieldRef<"Menu", 'DateTime'>
+    readonly updatedAt: FieldRef<"Menu", 'DateTime'>
+  }
+    
+
+  // Custom InputTypes
+  /**
+   * Menu findUnique
+   */
+  export type MenuFindUniqueArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the Menu
+     */
+    select?: MenuSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the Menu
+     */
+    omit?: MenuOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: MenuInclude<ExtArgs> | null
+    /**
+     * Filter, which Menu to fetch.
+     */
+    where: MenuWhereUniqueInput
+  }
+
+  /**
+   * Menu findUniqueOrThrow
+   */
+  export type MenuFindUniqueOrThrowArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the Menu
+     */
+    select?: MenuSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the Menu
+     */
+    omit?: MenuOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: MenuInclude<ExtArgs> | null
+    /**
+     * Filter, which Menu to fetch.
+     */
+    where: MenuWhereUniqueInput
+  }
+
+  /**
+   * Menu findFirst
+   */
+  export type MenuFindFirstArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the Menu
+     */
+    select?: MenuSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the Menu
+     */
+    omit?: MenuOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: MenuInclude<ExtArgs> | null
+    /**
+     * Filter, which Menu to fetch.
+     */
+    where?: MenuWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of Menus to fetch.
+     */
+    orderBy?: MenuOrderByWithRelationInput | MenuOrderByWithRelationInput[]
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the position for searching for Menus.
+     */
+    cursor?: MenuWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` Menus from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` Menus.
+     */
+    skip?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/distinct Distinct Docs}
+     * 
+     * Filter by unique combinations of Menus.
+     */
+    distinct?: MenuScalarFieldEnum | MenuScalarFieldEnum[]
+  }
+
+  /**
+   * Menu findFirstOrThrow
+   */
+  export type MenuFindFirstOrThrowArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the Menu
+     */
+    select?: MenuSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the Menu
+     */
+    omit?: MenuOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: MenuInclude<ExtArgs> | null
+    /**
+     * Filter, which Menu to fetch.
+     */
+    where?: MenuWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of Menus to fetch.
+     */
+    orderBy?: MenuOrderByWithRelationInput | MenuOrderByWithRelationInput[]
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the position for searching for Menus.
+     */
+    cursor?: MenuWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` Menus from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` Menus.
+     */
+    skip?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/distinct Distinct Docs}
+     * 
+     * Filter by unique combinations of Menus.
+     */
+    distinct?: MenuScalarFieldEnum | MenuScalarFieldEnum[]
+  }
+
+  /**
+   * Menu findMany
+   */
+  export type MenuFindManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the Menu
+     */
+    select?: MenuSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the Menu
+     */
+    omit?: MenuOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: MenuInclude<ExtArgs> | null
+    /**
+     * Filter, which Menus to fetch.
+     */
+    where?: MenuWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of Menus to fetch.
+     */
+    orderBy?: MenuOrderByWithRelationInput | MenuOrderByWithRelationInput[]
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the position for listing Menus.
+     */
+    cursor?: MenuWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` Menus from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` Menus.
+     */
+    skip?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/distinct Distinct Docs}
+     * 
+     * Filter by unique combinations of Menus.
+     */
+    distinct?: MenuScalarFieldEnum | MenuScalarFieldEnum[]
+  }
+
+  /**
+   * Menu create
+   */
+  export type MenuCreateArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the Menu
+     */
+    select?: MenuSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the Menu
+     */
+    omit?: MenuOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: MenuInclude<ExtArgs> | null
+    /**
+     * The data needed to create a Menu.
+     */
+    data: XOR<MenuCreateInput, MenuUncheckedCreateInput>
+  }
+
+  /**
+   * Menu createMany
+   */
+  export type MenuCreateManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * The data used to create many Menus.
+     */
+    data: MenuCreateManyInput | MenuCreateManyInput[]
+    skipDuplicates?: boolean
+  }
+
+  /**
+   * Menu createManyAndReturn
+   */
+  export type MenuCreateManyAndReturnArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the Menu
+     */
+    select?: MenuSelectCreateManyAndReturn<ExtArgs> | null
+    /**
+     * Omit specific fields from the Menu
+     */
+    omit?: MenuOmit<ExtArgs> | null
+    /**
+     * The data used to create many Menus.
+     */
+    data: MenuCreateManyInput | MenuCreateManyInput[]
+    skipDuplicates?: boolean
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: MenuIncludeCreateManyAndReturn<ExtArgs> | null
+  }
+
+  /**
+   * Menu update
+   */
+  export type MenuUpdateArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the Menu
+     */
+    select?: MenuSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the Menu
+     */
+    omit?: MenuOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: MenuInclude<ExtArgs> | null
+    /**
+     * The data needed to update a Menu.
+     */
+    data: XOR<MenuUpdateInput, MenuUncheckedUpdateInput>
+    /**
+     * Choose, which Menu to update.
+     */
+    where: MenuWhereUniqueInput
+  }
+
+  /**
+   * Menu updateMany
+   */
+  export type MenuUpdateManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * The data used to update Menus.
+     */
+    data: XOR<MenuUpdateManyMutationInput, MenuUncheckedUpdateManyInput>
+    /**
+     * Filter which Menus to update
+     */
+    where?: MenuWhereInput
+    /**
+     * Limit how many Menus to update.
+     */
+    limit?: number
+  }
+
+  /**
+   * Menu updateManyAndReturn
+   */
+  export type MenuUpdateManyAndReturnArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the Menu
+     */
+    select?: MenuSelectUpdateManyAndReturn<ExtArgs> | null
+    /**
+     * Omit specific fields from the Menu
+     */
+    omit?: MenuOmit<ExtArgs> | null
+    /**
+     * The data used to update Menus.
+     */
+    data: XOR<MenuUpdateManyMutationInput, MenuUncheckedUpdateManyInput>
+    /**
+     * Filter which Menus to update
+     */
+    where?: MenuWhereInput
+    /**
+     * Limit how many Menus to update.
+     */
+    limit?: number
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: MenuIncludeUpdateManyAndReturn<ExtArgs> | null
+  }
+
+  /**
+   * Menu upsert
+   */
+  export type MenuUpsertArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the Menu
+     */
+    select?: MenuSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the Menu
+     */
+    omit?: MenuOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: MenuInclude<ExtArgs> | null
+    /**
+     * The filter to search for the Menu to update in case it exists.
+     */
+    where: MenuWhereUniqueInput
+    /**
+     * In case the Menu found by the `where` argument doesn't exist, create a new Menu with this data.
+     */
+    create: XOR<MenuCreateInput, MenuUncheckedCreateInput>
+    /**
+     * In case the Menu was found with the provided `where` argument, update it with this data.
+     */
+    update: XOR<MenuUpdateInput, MenuUncheckedUpdateInput>
+  }
+
+  /**
+   * Menu delete
+   */
+  export type MenuDeleteArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the Menu
+     */
+    select?: MenuSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the Menu
+     */
+    omit?: MenuOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: MenuInclude<ExtArgs> | null
+    /**
+     * Filter which Menu to delete.
+     */
+    where: MenuWhereUniqueInput
+  }
+
+  /**
+   * Menu deleteMany
+   */
+  export type MenuDeleteManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Filter which Menus to delete
+     */
+    where?: MenuWhereInput
+    /**
+     * Limit how many Menus to delete.
+     */
+    limit?: number
+  }
+
+  /**
+   * Menu.categories
+   */
+  export type Menu$categoriesArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the MenuCategory
+     */
+    select?: MenuCategorySelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the MenuCategory
+     */
+    omit?: MenuCategoryOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: MenuCategoryInclude<ExtArgs> | null
+    where?: MenuCategoryWhereInput
+    orderBy?: MenuCategoryOrderByWithRelationInput | MenuCategoryOrderByWithRelationInput[]
+    cursor?: MenuCategoryWhereUniqueInput
+    take?: number
+    skip?: number
+    distinct?: MenuCategoryScalarFieldEnum | MenuCategoryScalarFieldEnum[]
+  }
+
+  /**
+   * Menu.items
+   */
+  export type Menu$itemsArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the MenuItem
+     */
+    select?: MenuItemSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the MenuItem
+     */
+    omit?: MenuItemOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: MenuItemInclude<ExtArgs> | null
+    where?: MenuItemWhereInput
+    orderBy?: MenuItemOrderByWithRelationInput | MenuItemOrderByWithRelationInput[]
+    cursor?: MenuItemWhereUniqueInput
+    take?: number
+    skip?: number
+    distinct?: MenuItemScalarFieldEnum | MenuItemScalarFieldEnum[]
+  }
+
+  /**
+   * Menu without action
+   */
+  export type MenuDefaultArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the Menu
+     */
+    select?: MenuSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the Menu
+     */
+    omit?: MenuOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: MenuInclude<ExtArgs> | null
+  }
+
+
+  /**
+   * Model Feedback
+   */
+
+  export type AggregateFeedback = {
+    _count: FeedbackCountAggregateOutputType | null
+    _avg: FeedbackAvgAggregateOutputType | null
+    _sum: FeedbackSumAggregateOutputType | null
+    _min: FeedbackMinAggregateOutputType | null
+    _max: FeedbackMaxAggregateOutputType | null
+  }
+
+  export type FeedbackAvgAggregateOutputType = {
+    rating: number | null
+  }
+
+  export type FeedbackSumAggregateOutputType = {
+    rating: number | null
+  }
+
+  export type FeedbackMinAggregateOutputType = {
+    id: string | null
+    cafeId: string | null
+    rating: number | null
+    comment: string | null
+    createdAt: Date | null
+  }
+
+  export type FeedbackMaxAggregateOutputType = {
+    id: string | null
+    cafeId: string | null
+    rating: number | null
+    comment: string | null
+    createdAt: Date | null
+  }
+
+  export type FeedbackCountAggregateOutputType = {
+    id: number
+    cafeId: number
+    rating: number
+    comment: number
+    createdAt: number
+    _all: number
+  }
+
+
+  export type FeedbackAvgAggregateInputType = {
+    rating?: true
+  }
+
+  export type FeedbackSumAggregateInputType = {
+    rating?: true
+  }
+
+  export type FeedbackMinAggregateInputType = {
+    id?: true
+    cafeId?: true
+    rating?: true
+    comment?: true
+    createdAt?: true
+  }
+
+  export type FeedbackMaxAggregateInputType = {
+    id?: true
+    cafeId?: true
+    rating?: true
+    comment?: true
+    createdAt?: true
+  }
+
+  export type FeedbackCountAggregateInputType = {
+    id?: true
+    cafeId?: true
+    rating?: true
+    comment?: true
+    createdAt?: true
+    _all?: true
+  }
+
+  export type FeedbackAggregateArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Filter which Feedback to aggregate.
+     */
+    where?: FeedbackWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of Feedbacks to fetch.
+     */
+    orderBy?: FeedbackOrderByWithRelationInput | FeedbackOrderByWithRelationInput[]
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the start position
+     */
+    cursor?: FeedbackWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` Feedbacks from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` Feedbacks.
+     */
+    skip?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Count returned Feedbacks
+    **/
+    _count?: true | FeedbackCountAggregateInputType
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Select which fields to average
+    **/
+    _avg?: FeedbackAvgAggregateInputType
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Select which fields to sum
+    **/
+    _sum?: FeedbackSumAggregateInputType
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Select which fields to find the minimum value
+    **/
+    _min?: FeedbackMinAggregateInputType
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Select which fields to find the maximum value
+    **/
+    _max?: FeedbackMaxAggregateInputType
+  }
+
+  export type GetFeedbackAggregateType<T extends FeedbackAggregateArgs> = {
+        [P in keyof T & keyof AggregateFeedback]: P extends '_count' | 'count'
+      ? T[P] extends true
+        ? number
+        : GetScalarType<T[P], AggregateFeedback[P]>
+      : GetScalarType<T[P], AggregateFeedback[P]>
+  }
+
+
+
+
+  export type FeedbackGroupByArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    where?: FeedbackWhereInput
+    orderBy?: FeedbackOrderByWithAggregationInput | FeedbackOrderByWithAggregationInput[]
+    by: FeedbackScalarFieldEnum[] | FeedbackScalarFieldEnum
+    having?: FeedbackScalarWhereWithAggregatesInput
+    take?: number
+    skip?: number
+    _count?: FeedbackCountAggregateInputType | true
+    _avg?: FeedbackAvgAggregateInputType
+    _sum?: FeedbackSumAggregateInputType
+    _min?: FeedbackMinAggregateInputType
+    _max?: FeedbackMaxAggregateInputType
+  }
+
+  export type FeedbackGroupByOutputType = {
+    id: string
+    cafeId: string
+    rating: number
+    comment: string | null
+    createdAt: Date
+    _count: FeedbackCountAggregateOutputType | null
+    _avg: FeedbackAvgAggregateOutputType | null
+    _sum: FeedbackSumAggregateOutputType | null
+    _min: FeedbackMinAggregateOutputType | null
+    _max: FeedbackMaxAggregateOutputType | null
+  }
+
+  type GetFeedbackGroupByPayload<T extends FeedbackGroupByArgs> = Prisma.PrismaPromise<
+    Array<
+      PickEnumerable<FeedbackGroupByOutputType, T['by']> &
+        {
+          [P in ((keyof T) & (keyof FeedbackGroupByOutputType))]: P extends '_count'
+            ? T[P] extends boolean
+              ? number
+              : GetScalarType<T[P], FeedbackGroupByOutputType[P]>
+            : GetScalarType<T[P], FeedbackGroupByOutputType[P]>
+        }
+      >
+    >
+
+
+  export type FeedbackSelect<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
+    id?: boolean
+    cafeId?: boolean
+    rating?: boolean
+    comment?: boolean
+    createdAt?: boolean
+    cafe?: boolean | CafeDefaultArgs<ExtArgs>
+  }, ExtArgs["result"]["feedback"]>
+
+  export type FeedbackSelectCreateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
+    id?: boolean
+    cafeId?: boolean
+    rating?: boolean
+    comment?: boolean
+    createdAt?: boolean
+    cafe?: boolean | CafeDefaultArgs<ExtArgs>
+  }, ExtArgs["result"]["feedback"]>
+
+  export type FeedbackSelectUpdateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
+    id?: boolean
+    cafeId?: boolean
+    rating?: boolean
+    comment?: boolean
+    createdAt?: boolean
+    cafe?: boolean | CafeDefaultArgs<ExtArgs>
+  }, ExtArgs["result"]["feedback"]>
+
+  export type FeedbackSelectScalar = {
+    id?: boolean
+    cafeId?: boolean
+    rating?: boolean
+    comment?: boolean
+    createdAt?: boolean
+  }
+
+  export type FeedbackOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id" | "cafeId" | "rating" | "comment" | "createdAt", ExtArgs["result"]["feedback"]>
+  export type FeedbackInclude<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    cafe?: boolean | CafeDefaultArgs<ExtArgs>
+  }
+  export type FeedbackIncludeCreateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    cafe?: boolean | CafeDefaultArgs<ExtArgs>
+  }
+  export type FeedbackIncludeUpdateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    cafe?: boolean | CafeDefaultArgs<ExtArgs>
+  }
+
+  export type $FeedbackPayload<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    name: "Feedback"
+    objects: {
+      cafe: Prisma.$CafePayload<ExtArgs>
+    }
+    scalars: $Extensions.GetPayloadResult<{
+      id: string
+      cafeId: string
+      rating: number
+      comment: string | null
+      createdAt: Date
+    }, ExtArgs["result"]["feedback"]>
+    composites: {}
+  }
+
+  type FeedbackGetPayload<S extends boolean | null | undefined | FeedbackDefaultArgs> = $Result.GetResult<Prisma.$FeedbackPayload, S>
+
+  type FeedbackCountArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> =
+    Omit<FeedbackFindManyArgs, 'select' | 'include' | 'distinct' | 'omit'> & {
+      select?: FeedbackCountAggregateInputType | true
+    }
+
+  export interface FeedbackDelegate<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs, GlobalOmitOptions = {}> {
+    [K: symbol]: { types: Prisma.TypeMap<ExtArgs>['model']['Feedback'], meta: { name: 'Feedback' } }
+    /**
+     * Find zero or one Feedback that matches the filter.
+     * @param {FeedbackFindUniqueArgs} args - Arguments to find a Feedback
+     * @example
+     * // Get one Feedback
+     * const feedback = await prisma.feedback.findUnique({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     */
+    findUnique<T extends FeedbackFindUniqueArgs>(args: SelectSubset<T, FeedbackFindUniqueArgs<ExtArgs>>): Prisma__FeedbackClient<$Result.GetResult<Prisma.$FeedbackPayload<ExtArgs>, T, "findUnique", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Find one Feedback that matches the filter or throw an error with `error.code='P2025'`
+     * if no matches were found.
+     * @param {FeedbackFindUniqueOrThrowArgs} args - Arguments to find a Feedback
+     * @example
+     * // Get one Feedback
+     * const feedback = await prisma.feedback.findUniqueOrThrow({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     */
+    findUniqueOrThrow<T extends FeedbackFindUniqueOrThrowArgs>(args: SelectSubset<T, FeedbackFindUniqueOrThrowArgs<ExtArgs>>): Prisma__FeedbackClient<$Result.GetResult<Prisma.$FeedbackPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Find the first Feedback that matches the filter.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {FeedbackFindFirstArgs} args - Arguments to find a Feedback
+     * @example
+     * // Get one Feedback
+     * const feedback = await prisma.feedback.findFirst({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     */
+    findFirst<T extends FeedbackFindFirstArgs>(args?: SelectSubset<T, FeedbackFindFirstArgs<ExtArgs>>): Prisma__FeedbackClient<$Result.GetResult<Prisma.$FeedbackPayload<ExtArgs>, T, "findFirst", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Find the first Feedback that matches the filter or
+     * throw `PrismaKnownClientError` with `P2025` code if no matches were found.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {FeedbackFindFirstOrThrowArgs} args - Arguments to find a Feedback
+     * @example
+     * // Get one Feedback
+     * const feedback = await prisma.feedback.findFirstOrThrow({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     */
+    findFirstOrThrow<T extends FeedbackFindFirstOrThrowArgs>(args?: SelectSubset<T, FeedbackFindFirstOrThrowArgs<ExtArgs>>): Prisma__FeedbackClient<$Result.GetResult<Prisma.$FeedbackPayload<ExtArgs>, T, "findFirstOrThrow", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Find zero or more Feedbacks that matches the filter.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {FeedbackFindManyArgs} args - Arguments to filter and select certain fields only.
+     * @example
+     * // Get all Feedbacks
+     * const feedbacks = await prisma.feedback.findMany()
+     * 
+     * // Get first 10 Feedbacks
+     * const feedbacks = await prisma.feedback.findMany({ take: 10 })
+     * 
+     * // Only select the `id`
+     * const feedbackWithIdOnly = await prisma.feedback.findMany({ select: { id: true } })
+     * 
+     */
+    findMany<T extends FeedbackFindManyArgs>(args?: SelectSubset<T, FeedbackFindManyArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$FeedbackPayload<ExtArgs>, T, "findMany", GlobalOmitOptions>>
+
+    /**
+     * Create a Feedback.
+     * @param {FeedbackCreateArgs} args - Arguments to create a Feedback.
+     * @example
+     * // Create one Feedback
+     * const Feedback = await prisma.feedback.create({
+     *   data: {
+     *     // ... data to create a Feedback
+     *   }
+     * })
+     * 
+     */
+    create<T extends FeedbackCreateArgs>(args: SelectSubset<T, FeedbackCreateArgs<ExtArgs>>): Prisma__FeedbackClient<$Result.GetResult<Prisma.$FeedbackPayload<ExtArgs>, T, "create", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Create many Feedbacks.
+     * @param {FeedbackCreateManyArgs} args - Arguments to create many Feedbacks.
+     * @example
+     * // Create many Feedbacks
+     * const feedback = await prisma.feedback.createMany({
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     *     
+     */
+    createMany<T extends FeedbackCreateManyArgs>(args?: SelectSubset<T, FeedbackCreateManyArgs<ExtArgs>>): Prisma.PrismaPromise<BatchPayload>
+
+    /**
+     * Create many Feedbacks and returns the data saved in the database.
+     * @param {FeedbackCreateManyAndReturnArgs} args - Arguments to create many Feedbacks.
+     * @example
+     * // Create many Feedbacks
+     * const feedback = await prisma.feedback.createManyAndReturn({
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     * 
+     * // Create many Feedbacks and only return the `id`
+     * const feedbackWithIdOnly = await prisma.feedback.createManyAndReturn({
+     *   select: { id: true },
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * 
+     */
+    createManyAndReturn<T extends FeedbackCreateManyAndReturnArgs>(args?: SelectSubset<T, FeedbackCreateManyAndReturnArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$FeedbackPayload<ExtArgs>, T, "createManyAndReturn", GlobalOmitOptions>>
+
+    /**
+     * Delete a Feedback.
+     * @param {FeedbackDeleteArgs} args - Arguments to delete one Feedback.
+     * @example
+     * // Delete one Feedback
+     * const Feedback = await prisma.feedback.delete({
+     *   where: {
+     *     // ... filter to delete one Feedback
+     *   }
+     * })
+     * 
+     */
+    delete<T extends FeedbackDeleteArgs>(args: SelectSubset<T, FeedbackDeleteArgs<ExtArgs>>): Prisma__FeedbackClient<$Result.GetResult<Prisma.$FeedbackPayload<ExtArgs>, T, "delete", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Update one Feedback.
+     * @param {FeedbackUpdateArgs} args - Arguments to update one Feedback.
+     * @example
+     * // Update one Feedback
+     * const feedback = await prisma.feedback.update({
+     *   where: {
+     *     // ... provide filter here
+     *   },
+     *   data: {
+     *     // ... provide data here
+     *   }
+     * })
+     * 
+     */
+    update<T extends FeedbackUpdateArgs>(args: SelectSubset<T, FeedbackUpdateArgs<ExtArgs>>): Prisma__FeedbackClient<$Result.GetResult<Prisma.$FeedbackPayload<ExtArgs>, T, "update", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Delete zero or more Feedbacks.
+     * @param {FeedbackDeleteManyArgs} args - Arguments to filter Feedbacks to delete.
+     * @example
+     * // Delete a few Feedbacks
+     * const { count } = await prisma.feedback.deleteMany({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     * 
+     */
+    deleteMany<T extends FeedbackDeleteManyArgs>(args?: SelectSubset<T, FeedbackDeleteManyArgs<ExtArgs>>): Prisma.PrismaPromise<BatchPayload>
+
+    /**
+     * Update zero or more Feedbacks.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {FeedbackUpdateManyArgs} args - Arguments to update one or more rows.
+     * @example
+     * // Update many Feedbacks
+     * const feedback = await prisma.feedback.updateMany({
+     *   where: {
+     *     // ... provide filter here
+     *   },
+     *   data: {
+     *     // ... provide data here
+     *   }
+     * })
+     * 
+     */
+    updateMany<T extends FeedbackUpdateManyArgs>(args: SelectSubset<T, FeedbackUpdateManyArgs<ExtArgs>>): Prisma.PrismaPromise<BatchPayload>
+
+    /**
+     * Update zero or more Feedbacks and returns the data updated in the database.
+     * @param {FeedbackUpdateManyAndReturnArgs} args - Arguments to update many Feedbacks.
+     * @example
+     * // Update many Feedbacks
+     * const feedback = await prisma.feedback.updateManyAndReturn({
+     *   where: {
+     *     // ... provide filter here
+     *   },
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     * 
+     * // Update zero or more Feedbacks and only return the `id`
+     * const feedbackWithIdOnly = await prisma.feedback.updateManyAndReturn({
+     *   select: { id: true },
+     *   where: {
+     *     // ... provide filter here
+     *   },
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * 
+     */
+    updateManyAndReturn<T extends FeedbackUpdateManyAndReturnArgs>(args: SelectSubset<T, FeedbackUpdateManyAndReturnArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$FeedbackPayload<ExtArgs>, T, "updateManyAndReturn", GlobalOmitOptions>>
+
+    /**
+     * Create or update one Feedback.
+     * @param {FeedbackUpsertArgs} args - Arguments to update or create a Feedback.
+     * @example
+     * // Update or create a Feedback
+     * const feedback = await prisma.feedback.upsert({
+     *   create: {
+     *     // ... data to create a Feedback
+     *   },
+     *   update: {
+     *     // ... in case it already exists, update
+     *   },
+     *   where: {
+     *     // ... the filter for the Feedback we want to update
+     *   }
+     * })
+     */
+    upsert<T extends FeedbackUpsertArgs>(args: SelectSubset<T, FeedbackUpsertArgs<ExtArgs>>): Prisma__FeedbackClient<$Result.GetResult<Prisma.$FeedbackPayload<ExtArgs>, T, "upsert", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+
+    /**
+     * Count the number of Feedbacks.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {FeedbackCountArgs} args - Arguments to filter Feedbacks to count.
+     * @example
+     * // Count the number of Feedbacks
+     * const count = await prisma.feedback.count({
+     *   where: {
+     *     // ... the filter for the Feedbacks we want to count
+     *   }
+     * })
+    **/
+    count<T extends FeedbackCountArgs>(
+      args?: Subset<T, FeedbackCountArgs>,
+    ): Prisma.PrismaPromise<
+      T extends $Utils.Record<'select', any>
+        ? T['select'] extends true
+          ? number
+          : GetScalarType<T['select'], FeedbackCountAggregateOutputType>
+        : number
+    >
+
+    /**
+     * Allows you to perform aggregations operations on a Feedback.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {FeedbackAggregateArgs} args - Select which aggregations you would like to apply and on what fields.
+     * @example
+     * // Ordered by age ascending
+     * // Where email contains prisma.io
+     * // Limited to the 10 users
+     * const aggregations = await prisma.user.aggregate({
+     *   _avg: {
+     *     age: true,
+     *   },
+     *   where: {
+     *     email: {
+     *       contains: "prisma.io",
+     *     },
+     *   },
+     *   orderBy: {
+     *     age: "asc",
+     *   },
+     *   take: 10,
+     * })
+    **/
+    aggregate<T extends FeedbackAggregateArgs>(args: Subset<T, FeedbackAggregateArgs>): Prisma.PrismaPromise<GetFeedbackAggregateType<T>>
+
+    /**
+     * Group by Feedback.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {FeedbackGroupByArgs} args - Group by arguments.
+     * @example
+     * // Group by city, order by createdAt, get count
+     * const result = await prisma.user.groupBy({
+     *   by: ['city', 'createdAt'],
+     *   orderBy: {
+     *     createdAt: true
+     *   },
+     *   _count: {
+     *     _all: true
+     *   },
+     * })
+     * 
+    **/
+    groupBy<
+      T extends FeedbackGroupByArgs,
+      HasSelectOrTake extends Or<
+        Extends<'skip', Keys<T>>,
+        Extends<'take', Keys<T>>
+      >,
+      OrderByArg extends True extends HasSelectOrTake
+        ? { orderBy: FeedbackGroupByArgs['orderBy'] }
+        : { orderBy?: FeedbackGroupByArgs['orderBy'] },
+      OrderFields extends ExcludeUnderscoreKeys<Keys<MaybeTupleToUnion<T['orderBy']>>>,
+      ByFields extends MaybeTupleToUnion<T['by']>,
+      ByValid extends Has<ByFields, OrderFields>,
+      HavingFields extends GetHavingFields<T['having']>,
+      HavingValid extends Has<ByFields, HavingFields>,
+      ByEmpty extends T['by'] extends never[] ? True : False,
+      InputErrors extends ByEmpty extends True
+      ? `Error: "by" must not be empty.`
+      : HavingValid extends False
+      ? {
+          [P in HavingFields]: P extends ByFields
+            ? never
+            : P extends string
+            ? `Error: Field "${P}" used in "having" needs to be provided in "by".`
+            : [
+                Error,
+                'Field ',
+                P,
+                ` in "having" needs to be provided in "by"`,
+              ]
+        }[HavingFields]
+      : 'take' extends Keys<T>
+      ? 'orderBy' extends Keys<T>
+        ? ByValid extends True
+          ? {}
+          : {
+              [P in OrderFields]: P extends ByFields
+                ? never
+                : `Error: Field "${P}" in "orderBy" needs to be provided in "by"`
+            }[OrderFields]
+        : 'Error: If you provide "take", you also need to provide "orderBy"'
+      : 'skip' extends Keys<T>
+      ? 'orderBy' extends Keys<T>
+        ? ByValid extends True
+          ? {}
+          : {
+              [P in OrderFields]: P extends ByFields
+                ? never
+                : `Error: Field "${P}" in "orderBy" needs to be provided in "by"`
+            }[OrderFields]
+        : 'Error: If you provide "skip", you also need to provide "orderBy"'
+      : ByValid extends True
+      ? {}
+      : {
+          [P in OrderFields]: P extends ByFields
+            ? never
+            : `Error: Field "${P}" in "orderBy" needs to be provided in "by"`
+        }[OrderFields]
+    >(args: SubsetIntersection<T, FeedbackGroupByArgs, OrderByArg> & InputErrors): {} extends InputErrors ? GetFeedbackGroupByPayload<T> : Prisma.PrismaPromise<InputErrors>
+  /**
+   * Fields of the Feedback model
+   */
+  readonly fields: FeedbackFieldRefs;
+  }
+
+  /**
+   * The delegate class that acts as a "Promise-like" for Feedback.
+   * Why is this prefixed with `Prisma__`?
+   * Because we want to prevent naming conflicts as mentioned in
+   * https://github.com/prisma/prisma-client-js/issues/707
+   */
+  export interface Prisma__FeedbackClient<T, Null = never, ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs, GlobalOmitOptions = {}> extends Prisma.PrismaPromise<T> {
+    readonly [Symbol.toStringTag]: "PrismaPromise"
+    cafe<T extends CafeDefaultArgs<ExtArgs> = {}>(args?: Subset<T, CafeDefaultArgs<ExtArgs>>): Prisma__CafeClient<$Result.GetResult<Prisma.$CafePayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | Null, Null, ExtArgs, GlobalOmitOptions>
+    /**
+     * Attaches callbacks for the resolution and/or rejection of the Promise.
+     * @param onfulfilled The callback to execute when the Promise is resolved.
+     * @param onrejected The callback to execute when the Promise is rejected.
+     * @returns A Promise for the completion of which ever callback is executed.
+     */
+    then<TResult1 = T, TResult2 = never>(onfulfilled?: ((value: T) => TResult1 | PromiseLike<TResult1>) | undefined | null, onrejected?: ((reason: any) => TResult2 | PromiseLike<TResult2>) | undefined | null): $Utils.JsPromise<TResult1 | TResult2>
+    /**
+     * Attaches a callback for only the rejection of the Promise.
+     * @param onrejected The callback to execute when the Promise is rejected.
+     * @returns A Promise for the completion of the callback.
+     */
+    catch<TResult = never>(onrejected?: ((reason: any) => TResult | PromiseLike<TResult>) | undefined | null): $Utils.JsPromise<T | TResult>
+    /**
+     * Attaches a callback that is invoked when the Promise is settled (fulfilled or rejected). The
+     * resolved value cannot be modified from the callback.
+     * @param onfinally The callback to execute when the Promise is settled (fulfilled or rejected).
+     * @returns A Promise for the completion of the callback.
+     */
+    finally(onfinally?: (() => void) | undefined | null): $Utils.JsPromise<T>
+  }
+
+
+
+
+  /**
+   * Fields of the Feedback model
+   */
+  interface FeedbackFieldRefs {
+    readonly id: FieldRef<"Feedback", 'String'>
+    readonly cafeId: FieldRef<"Feedback", 'String'>
+    readonly rating: FieldRef<"Feedback", 'Int'>
+    readonly comment: FieldRef<"Feedback", 'String'>
+    readonly createdAt: FieldRef<"Feedback", 'DateTime'>
+  }
+    
+
+  // Custom InputTypes
+  /**
+   * Feedback findUnique
+   */
+  export type FeedbackFindUniqueArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the Feedback
+     */
+    select?: FeedbackSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the Feedback
+     */
+    omit?: FeedbackOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: FeedbackInclude<ExtArgs> | null
+    /**
+     * Filter, which Feedback to fetch.
+     */
+    where: FeedbackWhereUniqueInput
+  }
+
+  /**
+   * Feedback findUniqueOrThrow
+   */
+  export type FeedbackFindUniqueOrThrowArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the Feedback
+     */
+    select?: FeedbackSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the Feedback
+     */
+    omit?: FeedbackOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: FeedbackInclude<ExtArgs> | null
+    /**
+     * Filter, which Feedback to fetch.
+     */
+    where: FeedbackWhereUniqueInput
+  }
+
+  /**
+   * Feedback findFirst
+   */
+  export type FeedbackFindFirstArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the Feedback
+     */
+    select?: FeedbackSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the Feedback
+     */
+    omit?: FeedbackOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: FeedbackInclude<ExtArgs> | null
+    /**
+     * Filter, which Feedback to fetch.
+     */
+    where?: FeedbackWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of Feedbacks to fetch.
+     */
+    orderBy?: FeedbackOrderByWithRelationInput | FeedbackOrderByWithRelationInput[]
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the position for searching for Feedbacks.
+     */
+    cursor?: FeedbackWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` Feedbacks from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` Feedbacks.
+     */
+    skip?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/distinct Distinct Docs}
+     * 
+     * Filter by unique combinations of Feedbacks.
+     */
+    distinct?: FeedbackScalarFieldEnum | FeedbackScalarFieldEnum[]
+  }
+
+  /**
+   * Feedback findFirstOrThrow
+   */
+  export type FeedbackFindFirstOrThrowArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the Feedback
+     */
+    select?: FeedbackSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the Feedback
+     */
+    omit?: FeedbackOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: FeedbackInclude<ExtArgs> | null
+    /**
+     * Filter, which Feedback to fetch.
+     */
+    where?: FeedbackWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of Feedbacks to fetch.
+     */
+    orderBy?: FeedbackOrderByWithRelationInput | FeedbackOrderByWithRelationInput[]
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the position for searching for Feedbacks.
+     */
+    cursor?: FeedbackWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` Feedbacks from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` Feedbacks.
+     */
+    skip?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/distinct Distinct Docs}
+     * 
+     * Filter by unique combinations of Feedbacks.
+     */
+    distinct?: FeedbackScalarFieldEnum | FeedbackScalarFieldEnum[]
+  }
+
+  /**
+   * Feedback findMany
+   */
+  export type FeedbackFindManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the Feedback
+     */
+    select?: FeedbackSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the Feedback
+     */
+    omit?: FeedbackOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: FeedbackInclude<ExtArgs> | null
+    /**
+     * Filter, which Feedbacks to fetch.
+     */
+    where?: FeedbackWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of Feedbacks to fetch.
+     */
+    orderBy?: FeedbackOrderByWithRelationInput | FeedbackOrderByWithRelationInput[]
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the position for listing Feedbacks.
+     */
+    cursor?: FeedbackWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` Feedbacks from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` Feedbacks.
+     */
+    skip?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/distinct Distinct Docs}
+     * 
+     * Filter by unique combinations of Feedbacks.
+     */
+    distinct?: FeedbackScalarFieldEnum | FeedbackScalarFieldEnum[]
+  }
+
+  /**
+   * Feedback create
+   */
+  export type FeedbackCreateArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the Feedback
+     */
+    select?: FeedbackSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the Feedback
+     */
+    omit?: FeedbackOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: FeedbackInclude<ExtArgs> | null
+    /**
+     * The data needed to create a Feedback.
+     */
+    data: XOR<FeedbackCreateInput, FeedbackUncheckedCreateInput>
+  }
+
+  /**
+   * Feedback createMany
+   */
+  export type FeedbackCreateManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * The data used to create many Feedbacks.
+     */
+    data: FeedbackCreateManyInput | FeedbackCreateManyInput[]
+    skipDuplicates?: boolean
+  }
+
+  /**
+   * Feedback createManyAndReturn
+   */
+  export type FeedbackCreateManyAndReturnArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the Feedback
+     */
+    select?: FeedbackSelectCreateManyAndReturn<ExtArgs> | null
+    /**
+     * Omit specific fields from the Feedback
+     */
+    omit?: FeedbackOmit<ExtArgs> | null
+    /**
+     * The data used to create many Feedbacks.
+     */
+    data: FeedbackCreateManyInput | FeedbackCreateManyInput[]
+    skipDuplicates?: boolean
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: FeedbackIncludeCreateManyAndReturn<ExtArgs> | null
+  }
+
+  /**
+   * Feedback update
+   */
+  export type FeedbackUpdateArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the Feedback
+     */
+    select?: FeedbackSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the Feedback
+     */
+    omit?: FeedbackOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: FeedbackInclude<ExtArgs> | null
+    /**
+     * The data needed to update a Feedback.
+     */
+    data: XOR<FeedbackUpdateInput, FeedbackUncheckedUpdateInput>
+    /**
+     * Choose, which Feedback to update.
+     */
+    where: FeedbackWhereUniqueInput
+  }
+
+  /**
+   * Feedback updateMany
+   */
+  export type FeedbackUpdateManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * The data used to update Feedbacks.
+     */
+    data: XOR<FeedbackUpdateManyMutationInput, FeedbackUncheckedUpdateManyInput>
+    /**
+     * Filter which Feedbacks to update
+     */
+    where?: FeedbackWhereInput
+    /**
+     * Limit how many Feedbacks to update.
+     */
+    limit?: number
+  }
+
+  /**
+   * Feedback updateManyAndReturn
+   */
+  export type FeedbackUpdateManyAndReturnArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the Feedback
+     */
+    select?: FeedbackSelectUpdateManyAndReturn<ExtArgs> | null
+    /**
+     * Omit specific fields from the Feedback
+     */
+    omit?: FeedbackOmit<ExtArgs> | null
+    /**
+     * The data used to update Feedbacks.
+     */
+    data: XOR<FeedbackUpdateManyMutationInput, FeedbackUncheckedUpdateManyInput>
+    /**
+     * Filter which Feedbacks to update
+     */
+    where?: FeedbackWhereInput
+    /**
+     * Limit how many Feedbacks to update.
+     */
+    limit?: number
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: FeedbackIncludeUpdateManyAndReturn<ExtArgs> | null
+  }
+
+  /**
+   * Feedback upsert
+   */
+  export type FeedbackUpsertArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the Feedback
+     */
+    select?: FeedbackSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the Feedback
+     */
+    omit?: FeedbackOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: FeedbackInclude<ExtArgs> | null
+    /**
+     * The filter to search for the Feedback to update in case it exists.
+     */
+    where: FeedbackWhereUniqueInput
+    /**
+     * In case the Feedback found by the `where` argument doesn't exist, create a new Feedback with this data.
+     */
+    create: XOR<FeedbackCreateInput, FeedbackUncheckedCreateInput>
+    /**
+     * In case the Feedback was found with the provided `where` argument, update it with this data.
+     */
+    update: XOR<FeedbackUpdateInput, FeedbackUncheckedUpdateInput>
+  }
+
+  /**
+   * Feedback delete
+   */
+  export type FeedbackDeleteArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the Feedback
+     */
+    select?: FeedbackSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the Feedback
+     */
+    omit?: FeedbackOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: FeedbackInclude<ExtArgs> | null
+    /**
+     * Filter which Feedback to delete.
+     */
+    where: FeedbackWhereUniqueInput
+  }
+
+  /**
+   * Feedback deleteMany
+   */
+  export type FeedbackDeleteManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Filter which Feedbacks to delete
+     */
+    where?: FeedbackWhereInput
+    /**
+     * Limit how many Feedbacks to delete.
+     */
+    limit?: number
+  }
+
+  /**
+   * Feedback without action
+   */
+  export type FeedbackDefaultArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the Feedback
+     */
+    select?: FeedbackSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the Feedback
+     */
+    omit?: FeedbackOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: FeedbackInclude<ExtArgs> | null
   }
 
 
@@ -4813,6 +7389,7 @@ export namespace Prisma {
   export type MenuCategoryMinAggregateOutputType = {
     id: string | null
     cafeId: string | null
+    menuId: string | null
     name: string | null
     sortOrder: number | null
     isActive: boolean | null
@@ -4822,6 +7399,7 @@ export namespace Prisma {
   export type MenuCategoryMaxAggregateOutputType = {
     id: string | null
     cafeId: string | null
+    menuId: string | null
     name: string | null
     sortOrder: number | null
     isActive: boolean | null
@@ -4831,6 +7409,7 @@ export namespace Prisma {
   export type MenuCategoryCountAggregateOutputType = {
     id: number
     cafeId: number
+    menuId: number
     name: number
     sortOrder: number
     isActive: number
@@ -4850,6 +7429,7 @@ export namespace Prisma {
   export type MenuCategoryMinAggregateInputType = {
     id?: true
     cafeId?: true
+    menuId?: true
     name?: true
     sortOrder?: true
     isActive?: true
@@ -4859,6 +7439,7 @@ export namespace Prisma {
   export type MenuCategoryMaxAggregateInputType = {
     id?: true
     cafeId?: true
+    menuId?: true
     name?: true
     sortOrder?: true
     isActive?: true
@@ -4868,6 +7449,7 @@ export namespace Prisma {
   export type MenuCategoryCountAggregateInputType = {
     id?: true
     cafeId?: true
+    menuId?: true
     name?: true
     sortOrder?: true
     isActive?: true
@@ -4964,6 +7546,7 @@ export namespace Prisma {
   export type MenuCategoryGroupByOutputType = {
     id: string
     cafeId: string | null
+    menuId: string | null
     name: string
     sortOrder: number
     isActive: boolean
@@ -4992,11 +7575,13 @@ export namespace Prisma {
   export type MenuCategorySelect<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
     id?: boolean
     cafeId?: boolean
+    menuId?: boolean
     name?: boolean
     sortOrder?: boolean
     isActive?: boolean
     createdAt?: boolean
     cafe?: boolean | MenuCategory$cafeArgs<ExtArgs>
+    menu?: boolean | MenuCategory$menuArgs<ExtArgs>
     items?: boolean | MenuCategory$itemsArgs<ExtArgs>
     _count?: boolean | MenuCategoryCountOutputTypeDefaultArgs<ExtArgs>
   }, ExtArgs["result"]["menuCategory"]>
@@ -5004,54 +7589,64 @@ export namespace Prisma {
   export type MenuCategorySelectCreateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
     id?: boolean
     cafeId?: boolean
+    menuId?: boolean
     name?: boolean
     sortOrder?: boolean
     isActive?: boolean
     createdAt?: boolean
     cafe?: boolean | MenuCategory$cafeArgs<ExtArgs>
+    menu?: boolean | MenuCategory$menuArgs<ExtArgs>
   }, ExtArgs["result"]["menuCategory"]>
 
   export type MenuCategorySelectUpdateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
     id?: boolean
     cafeId?: boolean
+    menuId?: boolean
     name?: boolean
     sortOrder?: boolean
     isActive?: boolean
     createdAt?: boolean
     cafe?: boolean | MenuCategory$cafeArgs<ExtArgs>
+    menu?: boolean | MenuCategory$menuArgs<ExtArgs>
   }, ExtArgs["result"]["menuCategory"]>
 
   export type MenuCategorySelectScalar = {
     id?: boolean
     cafeId?: boolean
+    menuId?: boolean
     name?: boolean
     sortOrder?: boolean
     isActive?: boolean
     createdAt?: boolean
   }
 
-  export type MenuCategoryOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id" | "cafeId" | "name" | "sortOrder" | "isActive" | "createdAt", ExtArgs["result"]["menuCategory"]>
+  export type MenuCategoryOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id" | "cafeId" | "menuId" | "name" | "sortOrder" | "isActive" | "createdAt", ExtArgs["result"]["menuCategory"]>
   export type MenuCategoryInclude<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     cafe?: boolean | MenuCategory$cafeArgs<ExtArgs>
+    menu?: boolean | MenuCategory$menuArgs<ExtArgs>
     items?: boolean | MenuCategory$itemsArgs<ExtArgs>
     _count?: boolean | MenuCategoryCountOutputTypeDefaultArgs<ExtArgs>
   }
   export type MenuCategoryIncludeCreateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     cafe?: boolean | MenuCategory$cafeArgs<ExtArgs>
+    menu?: boolean | MenuCategory$menuArgs<ExtArgs>
   }
   export type MenuCategoryIncludeUpdateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     cafe?: boolean | MenuCategory$cafeArgs<ExtArgs>
+    menu?: boolean | MenuCategory$menuArgs<ExtArgs>
   }
 
   export type $MenuCategoryPayload<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     name: "MenuCategory"
     objects: {
       cafe: Prisma.$CafePayload<ExtArgs> | null
+      menu: Prisma.$MenuPayload<ExtArgs> | null
       items: Prisma.$MenuItemPayload<ExtArgs>[]
     }
     scalars: $Extensions.GetPayloadResult<{
       id: string
       cafeId: string | null
+      menuId: string | null
       name: string
       sortOrder: number
       isActive: boolean
@@ -5451,6 +8046,7 @@ export namespace Prisma {
   export interface Prisma__MenuCategoryClient<T, Null = never, ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs, GlobalOmitOptions = {}> extends Prisma.PrismaPromise<T> {
     readonly [Symbol.toStringTag]: "PrismaPromise"
     cafe<T extends MenuCategory$cafeArgs<ExtArgs> = {}>(args?: Subset<T, MenuCategory$cafeArgs<ExtArgs>>): Prisma__CafeClient<$Result.GetResult<Prisma.$CafePayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
+    menu<T extends MenuCategory$menuArgs<ExtArgs> = {}>(args?: Subset<T, MenuCategory$menuArgs<ExtArgs>>): Prisma__MenuClient<$Result.GetResult<Prisma.$MenuPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
     items<T extends MenuCategory$itemsArgs<ExtArgs> = {}>(args?: Subset<T, MenuCategory$itemsArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$MenuItemPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
     /**
      * Attaches callbacks for the resolution and/or rejection of the Promise.
@@ -5483,6 +8079,7 @@ export namespace Prisma {
   interface MenuCategoryFieldRefs {
     readonly id: FieldRef<"MenuCategory", 'String'>
     readonly cafeId: FieldRef<"MenuCategory", 'String'>
+    readonly menuId: FieldRef<"MenuCategory", 'String'>
     readonly name: FieldRef<"MenuCategory", 'String'>
     readonly sortOrder: FieldRef<"MenuCategory", 'Int'>
     readonly isActive: FieldRef<"MenuCategory", 'Boolean'>
@@ -5907,6 +8504,25 @@ export namespace Prisma {
   }
 
   /**
+   * MenuCategory.menu
+   */
+  export type MenuCategory$menuArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the Menu
+     */
+    select?: MenuSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the Menu
+     */
+    omit?: MenuOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: MenuInclude<ExtArgs> | null
+    where?: MenuWhereInput
+  }
+
+  /**
    * MenuCategory.items
    */
   export type MenuCategory$itemsArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
@@ -5974,6 +8590,7 @@ export namespace Prisma {
   export type MenuItemMinAggregateOutputType = {
     id: string | null
     cafeId: string | null
+    menuId: string | null
     categoryId: string | null
     name: string | null
     description: string | null
@@ -5981,7 +8598,10 @@ export namespace Prisma {
     imageUrl: string | null
     isAvailable: boolean | null
     isVeg: boolean | null
+    isSubsidised: boolean | null
     sortOrder: number | null
+    menuType: $Enums.MenuType | null
+    overriddenFromId: string | null
     createdAt: Date | null
     updatedAt: Date | null
   }
@@ -5989,6 +8609,7 @@ export namespace Prisma {
   export type MenuItemMaxAggregateOutputType = {
     id: string | null
     cafeId: string | null
+    menuId: string | null
     categoryId: string | null
     name: string | null
     description: string | null
@@ -5996,7 +8617,10 @@ export namespace Prisma {
     imageUrl: string | null
     isAvailable: boolean | null
     isVeg: boolean | null
+    isSubsidised: boolean | null
     sortOrder: number | null
+    menuType: $Enums.MenuType | null
+    overriddenFromId: string | null
     createdAt: Date | null
     updatedAt: Date | null
   }
@@ -6004,6 +8628,7 @@ export namespace Prisma {
   export type MenuItemCountAggregateOutputType = {
     id: number
     cafeId: number
+    menuId: number
     categoryId: number
     name: number
     description: number
@@ -6011,7 +8636,10 @@ export namespace Prisma {
     imageUrl: number
     isAvailable: number
     isVeg: number
+    isSubsidised: number
     sortOrder: number
+    menuType: number
+    overriddenFromId: number
     createdAt: number
     updatedAt: number
     _all: number
@@ -6031,6 +8659,7 @@ export namespace Prisma {
   export type MenuItemMinAggregateInputType = {
     id?: true
     cafeId?: true
+    menuId?: true
     categoryId?: true
     name?: true
     description?: true
@@ -6038,7 +8667,10 @@ export namespace Prisma {
     imageUrl?: true
     isAvailable?: true
     isVeg?: true
+    isSubsidised?: true
     sortOrder?: true
+    menuType?: true
+    overriddenFromId?: true
     createdAt?: true
     updatedAt?: true
   }
@@ -6046,6 +8678,7 @@ export namespace Prisma {
   export type MenuItemMaxAggregateInputType = {
     id?: true
     cafeId?: true
+    menuId?: true
     categoryId?: true
     name?: true
     description?: true
@@ -6053,7 +8686,10 @@ export namespace Prisma {
     imageUrl?: true
     isAvailable?: true
     isVeg?: true
+    isSubsidised?: true
     sortOrder?: true
+    menuType?: true
+    overriddenFromId?: true
     createdAt?: true
     updatedAt?: true
   }
@@ -6061,6 +8697,7 @@ export namespace Prisma {
   export type MenuItemCountAggregateInputType = {
     id?: true
     cafeId?: true
+    menuId?: true
     categoryId?: true
     name?: true
     description?: true
@@ -6068,7 +8705,10 @@ export namespace Prisma {
     imageUrl?: true
     isAvailable?: true
     isVeg?: true
+    isSubsidised?: true
     sortOrder?: true
+    menuType?: true
+    overriddenFromId?: true
     createdAt?: true
     updatedAt?: true
     _all?: true
@@ -6163,6 +8803,7 @@ export namespace Prisma {
   export type MenuItemGroupByOutputType = {
     id: string
     cafeId: string | null
+    menuId: string | null
     categoryId: string | null
     name: string
     description: string | null
@@ -6170,7 +8811,10 @@ export namespace Prisma {
     imageUrl: string | null
     isAvailable: boolean
     isVeg: boolean
+    isSubsidised: boolean
     sortOrder: number
+    menuType: $Enums.MenuType | null
+    overriddenFromId: string | null
     createdAt: Date
     updatedAt: Date
     _count: MenuItemCountAggregateOutputType | null
@@ -6197,6 +8841,7 @@ export namespace Prisma {
   export type MenuItemSelect<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
     id?: boolean
     cafeId?: boolean
+    menuId?: boolean
     categoryId?: boolean
     name?: boolean
     description?: boolean
@@ -6204,18 +8849,25 @@ export namespace Prisma {
     imageUrl?: boolean
     isAvailable?: boolean
     isVeg?: boolean
+    isSubsidised?: boolean
     sortOrder?: boolean
+    menuType?: boolean
+    overriddenFromId?: boolean
     createdAt?: boolean
     updatedAt?: boolean
     cafe?: boolean | MenuItem$cafeArgs<ExtArgs>
+    menu?: boolean | MenuItem$menuArgs<ExtArgs>
     category?: boolean | MenuItem$categoryArgs<ExtArgs>
     orderItems?: boolean | MenuItem$orderItemsArgs<ExtArgs>
+    overriddenFrom?: boolean | MenuItem$overriddenFromArgs<ExtArgs>
+    overrides?: boolean | MenuItem$overridesArgs<ExtArgs>
     _count?: boolean | MenuItemCountOutputTypeDefaultArgs<ExtArgs>
   }, ExtArgs["result"]["menuItem"]>
 
   export type MenuItemSelectCreateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
     id?: boolean
     cafeId?: boolean
+    menuId?: boolean
     categoryId?: boolean
     name?: boolean
     description?: boolean
@@ -6223,16 +8875,22 @@ export namespace Prisma {
     imageUrl?: boolean
     isAvailable?: boolean
     isVeg?: boolean
+    isSubsidised?: boolean
     sortOrder?: boolean
+    menuType?: boolean
+    overriddenFromId?: boolean
     createdAt?: boolean
     updatedAt?: boolean
     cafe?: boolean | MenuItem$cafeArgs<ExtArgs>
+    menu?: boolean | MenuItem$menuArgs<ExtArgs>
     category?: boolean | MenuItem$categoryArgs<ExtArgs>
+    overriddenFrom?: boolean | MenuItem$overriddenFromArgs<ExtArgs>
   }, ExtArgs["result"]["menuItem"]>
 
   export type MenuItemSelectUpdateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
     id?: boolean
     cafeId?: boolean
+    menuId?: boolean
     categoryId?: boolean
     name?: boolean
     description?: boolean
@@ -6240,16 +8898,22 @@ export namespace Prisma {
     imageUrl?: boolean
     isAvailable?: boolean
     isVeg?: boolean
+    isSubsidised?: boolean
     sortOrder?: boolean
+    menuType?: boolean
+    overriddenFromId?: boolean
     createdAt?: boolean
     updatedAt?: boolean
     cafe?: boolean | MenuItem$cafeArgs<ExtArgs>
+    menu?: boolean | MenuItem$menuArgs<ExtArgs>
     category?: boolean | MenuItem$categoryArgs<ExtArgs>
+    overriddenFrom?: boolean | MenuItem$overriddenFromArgs<ExtArgs>
   }, ExtArgs["result"]["menuItem"]>
 
   export type MenuItemSelectScalar = {
     id?: boolean
     cafeId?: boolean
+    menuId?: boolean
     categoryId?: boolean
     name?: boolean
     description?: boolean
@@ -6257,37 +8921,51 @@ export namespace Prisma {
     imageUrl?: boolean
     isAvailable?: boolean
     isVeg?: boolean
+    isSubsidised?: boolean
     sortOrder?: boolean
+    menuType?: boolean
+    overriddenFromId?: boolean
     createdAt?: boolean
     updatedAt?: boolean
   }
 
-  export type MenuItemOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id" | "cafeId" | "categoryId" | "name" | "description" | "pricePaise" | "imageUrl" | "isAvailable" | "isVeg" | "sortOrder" | "createdAt" | "updatedAt", ExtArgs["result"]["menuItem"]>
+  export type MenuItemOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id" | "cafeId" | "menuId" | "categoryId" | "name" | "description" | "pricePaise" | "imageUrl" | "isAvailable" | "isVeg" | "isSubsidised" | "sortOrder" | "menuType" | "overriddenFromId" | "createdAt" | "updatedAt", ExtArgs["result"]["menuItem"]>
   export type MenuItemInclude<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     cafe?: boolean | MenuItem$cafeArgs<ExtArgs>
+    menu?: boolean | MenuItem$menuArgs<ExtArgs>
     category?: boolean | MenuItem$categoryArgs<ExtArgs>
     orderItems?: boolean | MenuItem$orderItemsArgs<ExtArgs>
+    overriddenFrom?: boolean | MenuItem$overriddenFromArgs<ExtArgs>
+    overrides?: boolean | MenuItem$overridesArgs<ExtArgs>
     _count?: boolean | MenuItemCountOutputTypeDefaultArgs<ExtArgs>
   }
   export type MenuItemIncludeCreateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     cafe?: boolean | MenuItem$cafeArgs<ExtArgs>
+    menu?: boolean | MenuItem$menuArgs<ExtArgs>
     category?: boolean | MenuItem$categoryArgs<ExtArgs>
+    overriddenFrom?: boolean | MenuItem$overriddenFromArgs<ExtArgs>
   }
   export type MenuItemIncludeUpdateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     cafe?: boolean | MenuItem$cafeArgs<ExtArgs>
+    menu?: boolean | MenuItem$menuArgs<ExtArgs>
     category?: boolean | MenuItem$categoryArgs<ExtArgs>
+    overriddenFrom?: boolean | MenuItem$overriddenFromArgs<ExtArgs>
   }
 
   export type $MenuItemPayload<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     name: "MenuItem"
     objects: {
       cafe: Prisma.$CafePayload<ExtArgs> | null
+      menu: Prisma.$MenuPayload<ExtArgs> | null
       category: Prisma.$MenuCategoryPayload<ExtArgs> | null
       orderItems: Prisma.$OrderItemPayload<ExtArgs>[]
+      overriddenFrom: Prisma.$MenuItemPayload<ExtArgs> | null
+      overrides: Prisma.$MenuItemPayload<ExtArgs>[]
     }
     scalars: $Extensions.GetPayloadResult<{
       id: string
       cafeId: string | null
+      menuId: string | null
       categoryId: string | null
       name: string
       description: string | null
@@ -6295,7 +8973,10 @@ export namespace Prisma {
       imageUrl: string | null
       isAvailable: boolean
       isVeg: boolean
+      isSubsidised: boolean
       sortOrder: number
+      menuType: $Enums.MenuType | null
+      overriddenFromId: string | null
       createdAt: Date
       updatedAt: Date
     }, ExtArgs["result"]["menuItem"]>
@@ -6693,8 +9374,11 @@ export namespace Prisma {
   export interface Prisma__MenuItemClient<T, Null = never, ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs, GlobalOmitOptions = {}> extends Prisma.PrismaPromise<T> {
     readonly [Symbol.toStringTag]: "PrismaPromise"
     cafe<T extends MenuItem$cafeArgs<ExtArgs> = {}>(args?: Subset<T, MenuItem$cafeArgs<ExtArgs>>): Prisma__CafeClient<$Result.GetResult<Prisma.$CafePayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
+    menu<T extends MenuItem$menuArgs<ExtArgs> = {}>(args?: Subset<T, MenuItem$menuArgs<ExtArgs>>): Prisma__MenuClient<$Result.GetResult<Prisma.$MenuPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
     category<T extends MenuItem$categoryArgs<ExtArgs> = {}>(args?: Subset<T, MenuItem$categoryArgs<ExtArgs>>): Prisma__MenuCategoryClient<$Result.GetResult<Prisma.$MenuCategoryPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
     orderItems<T extends MenuItem$orderItemsArgs<ExtArgs> = {}>(args?: Subset<T, MenuItem$orderItemsArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$OrderItemPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
+    overriddenFrom<T extends MenuItem$overriddenFromArgs<ExtArgs> = {}>(args?: Subset<T, MenuItem$overriddenFromArgs<ExtArgs>>): Prisma__MenuItemClient<$Result.GetResult<Prisma.$MenuItemPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
+    overrides<T extends MenuItem$overridesArgs<ExtArgs> = {}>(args?: Subset<T, MenuItem$overridesArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$MenuItemPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
     /**
      * Attaches callbacks for the resolution and/or rejection of the Promise.
      * @param onfulfilled The callback to execute when the Promise is resolved.
@@ -6726,6 +9410,7 @@ export namespace Prisma {
   interface MenuItemFieldRefs {
     readonly id: FieldRef<"MenuItem", 'String'>
     readonly cafeId: FieldRef<"MenuItem", 'String'>
+    readonly menuId: FieldRef<"MenuItem", 'String'>
     readonly categoryId: FieldRef<"MenuItem", 'String'>
     readonly name: FieldRef<"MenuItem", 'String'>
     readonly description: FieldRef<"MenuItem", 'String'>
@@ -6733,7 +9418,10 @@ export namespace Prisma {
     readonly imageUrl: FieldRef<"MenuItem", 'String'>
     readonly isAvailable: FieldRef<"MenuItem", 'Boolean'>
     readonly isVeg: FieldRef<"MenuItem", 'Boolean'>
+    readonly isSubsidised: FieldRef<"MenuItem", 'Boolean'>
     readonly sortOrder: FieldRef<"MenuItem", 'Int'>
+    readonly menuType: FieldRef<"MenuItem", 'MenuType'>
+    readonly overriddenFromId: FieldRef<"MenuItem", 'String'>
     readonly createdAt: FieldRef<"MenuItem", 'DateTime'>
     readonly updatedAt: FieldRef<"MenuItem", 'DateTime'>
   }
@@ -7156,6 +9844,25 @@ export namespace Prisma {
   }
 
   /**
+   * MenuItem.menu
+   */
+  export type MenuItem$menuArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the Menu
+     */
+    select?: MenuSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the Menu
+     */
+    omit?: MenuOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: MenuInclude<ExtArgs> | null
+    where?: MenuWhereInput
+  }
+
+  /**
    * MenuItem.category
    */
   export type MenuItem$categoryArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
@@ -7196,6 +9903,49 @@ export namespace Prisma {
     take?: number
     skip?: number
     distinct?: OrderItemScalarFieldEnum | OrderItemScalarFieldEnum[]
+  }
+
+  /**
+   * MenuItem.overriddenFrom
+   */
+  export type MenuItem$overriddenFromArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the MenuItem
+     */
+    select?: MenuItemSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the MenuItem
+     */
+    omit?: MenuItemOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: MenuItemInclude<ExtArgs> | null
+    where?: MenuItemWhereInput
+  }
+
+  /**
+   * MenuItem.overrides
+   */
+  export type MenuItem$overridesArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the MenuItem
+     */
+    select?: MenuItemSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the MenuItem
+     */
+    omit?: MenuItemOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: MenuItemInclude<ExtArgs> | null
+    where?: MenuItemWhereInput
+    orderBy?: MenuItemOrderByWithRelationInput | MenuItemOrderByWithRelationInput[]
+    cursor?: MenuItemWhereUniqueInput
+    take?: number
+    skip?: number
+    distinct?: MenuItemScalarFieldEnum | MenuItemScalarFieldEnum[]
   }
 
   /**
@@ -8552,6 +11302,7 @@ export namespace Prisma {
     itemPricePaise: number | null
     quantity: number | null
     subtotalPaise: number | null
+    isSubsidised: boolean | null
   }
 
   export type OrderItemMaxAggregateOutputType = {
@@ -8562,6 +11313,7 @@ export namespace Prisma {
     itemPricePaise: number | null
     quantity: number | null
     subtotalPaise: number | null
+    isSubsidised: boolean | null
   }
 
   export type OrderItemCountAggregateOutputType = {
@@ -8572,6 +11324,7 @@ export namespace Prisma {
     itemPricePaise: number
     quantity: number
     subtotalPaise: number
+    isSubsidised: number
     _all: number
   }
 
@@ -8596,6 +11349,7 @@ export namespace Prisma {
     itemPricePaise?: true
     quantity?: true
     subtotalPaise?: true
+    isSubsidised?: true
   }
 
   export type OrderItemMaxAggregateInputType = {
@@ -8606,6 +11360,7 @@ export namespace Prisma {
     itemPricePaise?: true
     quantity?: true
     subtotalPaise?: true
+    isSubsidised?: true
   }
 
   export type OrderItemCountAggregateInputType = {
@@ -8616,6 +11371,7 @@ export namespace Prisma {
     itemPricePaise?: true
     quantity?: true
     subtotalPaise?: true
+    isSubsidised?: true
     _all?: true
   }
 
@@ -8713,6 +11469,7 @@ export namespace Prisma {
     itemPricePaise: number
     quantity: number
     subtotalPaise: number
+    isSubsidised: boolean
     _count: OrderItemCountAggregateOutputType | null
     _avg: OrderItemAvgAggregateOutputType | null
     _sum: OrderItemSumAggregateOutputType | null
@@ -8742,6 +11499,7 @@ export namespace Prisma {
     itemPricePaise?: boolean
     quantity?: boolean
     subtotalPaise?: boolean
+    isSubsidised?: boolean
     order?: boolean | OrderDefaultArgs<ExtArgs>
     menuItem?: boolean | MenuItemDefaultArgs<ExtArgs>
   }, ExtArgs["result"]["orderItem"]>
@@ -8754,6 +11512,7 @@ export namespace Prisma {
     itemPricePaise?: boolean
     quantity?: boolean
     subtotalPaise?: boolean
+    isSubsidised?: boolean
     order?: boolean | OrderDefaultArgs<ExtArgs>
     menuItem?: boolean | MenuItemDefaultArgs<ExtArgs>
   }, ExtArgs["result"]["orderItem"]>
@@ -8766,6 +11525,7 @@ export namespace Prisma {
     itemPricePaise?: boolean
     quantity?: boolean
     subtotalPaise?: boolean
+    isSubsidised?: boolean
     order?: boolean | OrderDefaultArgs<ExtArgs>
     menuItem?: boolean | MenuItemDefaultArgs<ExtArgs>
   }, ExtArgs["result"]["orderItem"]>
@@ -8778,9 +11538,10 @@ export namespace Prisma {
     itemPricePaise?: boolean
     quantity?: boolean
     subtotalPaise?: boolean
+    isSubsidised?: boolean
   }
 
-  export type OrderItemOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id" | "orderId" | "menuItemId" | "itemName" | "itemPricePaise" | "quantity" | "subtotalPaise", ExtArgs["result"]["orderItem"]>
+  export type OrderItemOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id" | "orderId" | "menuItemId" | "itemName" | "itemPricePaise" | "quantity" | "subtotalPaise" | "isSubsidised", ExtArgs["result"]["orderItem"]>
   export type OrderItemInclude<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     order?: boolean | OrderDefaultArgs<ExtArgs>
     menuItem?: boolean | MenuItemDefaultArgs<ExtArgs>
@@ -8808,6 +11569,7 @@ export namespace Prisma {
       itemPricePaise: number
       quantity: number
       subtotalPaise: number
+      isSubsidised: boolean
     }, ExtArgs["result"]["orderItem"]>
     composites: {}
   }
@@ -9240,6 +12002,7 @@ export namespace Prisma {
     readonly itemPricePaise: FieldRef<"OrderItem", 'Int'>
     readonly quantity: FieldRef<"OrderItem", 'Int'>
     readonly subtotalPaise: FieldRef<"OrderItem", 'Int'>
+    readonly isSubsidised: FieldRef<"OrderItem", 'Boolean'>
   }
     
 
@@ -16475,11 +19238,36 @@ export namespace Prisma {
     razorpayKeyId: 'razorpayKeyId',
     razorpayKeySecret: 'razorpayKeySecret',
     razorpayWebhookSecret: 'razorpayWebhookSecret',
+    autoScheduleMenus: 'autoScheduleMenus',
     createdAt: 'createdAt',
     updatedAt: 'updatedAt'
   };
 
   export type CafeScalarFieldEnum = (typeof CafeScalarFieldEnum)[keyof typeof CafeScalarFieldEnum]
+
+
+  export const MenuScalarFieldEnum: {
+    id: 'id',
+    cafeId: 'cafeId',
+    type: 'type',
+    isActive: 'isActive',
+    isSubsidised: 'isSubsidised',
+    createdAt: 'createdAt',
+    updatedAt: 'updatedAt'
+  };
+
+  export type MenuScalarFieldEnum = (typeof MenuScalarFieldEnum)[keyof typeof MenuScalarFieldEnum]
+
+
+  export const FeedbackScalarFieldEnum: {
+    id: 'id',
+    cafeId: 'cafeId',
+    rating: 'rating',
+    comment: 'comment',
+    createdAt: 'createdAt'
+  };
+
+  export type FeedbackScalarFieldEnum = (typeof FeedbackScalarFieldEnum)[keyof typeof FeedbackScalarFieldEnum]
 
 
   export const UserScalarFieldEnum: {
@@ -16500,6 +19288,7 @@ export namespace Prisma {
   export const MenuCategoryScalarFieldEnum: {
     id: 'id',
     cafeId: 'cafeId',
+    menuId: 'menuId',
     name: 'name',
     sortOrder: 'sortOrder',
     isActive: 'isActive',
@@ -16512,6 +19301,7 @@ export namespace Prisma {
   export const MenuItemScalarFieldEnum: {
     id: 'id',
     cafeId: 'cafeId',
+    menuId: 'menuId',
     categoryId: 'categoryId',
     name: 'name',
     description: 'description',
@@ -16519,7 +19309,10 @@ export namespace Prisma {
     imageUrl: 'imageUrl',
     isAvailable: 'isAvailable',
     isVeg: 'isVeg',
+    isSubsidised: 'isSubsidised',
     sortOrder: 'sortOrder',
+    menuType: 'menuType',
+    overriddenFromId: 'overriddenFromId',
     createdAt: 'createdAt',
     updatedAt: 'updatedAt'
   };
@@ -16554,7 +19347,8 @@ export namespace Prisma {
     itemName: 'itemName',
     itemPricePaise: 'itemPricePaise',
     quantity: 'quantity',
-    subtotalPaise: 'subtotalPaise'
+    subtotalPaise: 'subtotalPaise',
+    isSubsidised: 'isSubsidised'
   };
 
   export type OrderItemScalarFieldEnum = (typeof OrderItemScalarFieldEnum)[keyof typeof OrderItemScalarFieldEnum]
@@ -16740,16 +19534,16 @@ export namespace Prisma {
 
 
   /**
-   * Reference to a field of type 'UserRole'
+   * Reference to a field of type 'MenuType'
    */
-  export type EnumUserRoleFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'UserRole'>
+  export type EnumMenuTypeFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'MenuType'>
     
 
 
   /**
-   * Reference to a field of type 'UserRole[]'
+   * Reference to a field of type 'MenuType[]'
    */
-  export type ListEnumUserRoleFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'UserRole[]'>
+  export type ListEnumMenuTypeFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'MenuType[]'>
     
 
 
@@ -16764,6 +19558,20 @@ export namespace Prisma {
    * Reference to a field of type 'Int[]'
    */
   export type ListIntFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'Int[]'>
+    
+
+
+  /**
+   * Reference to a field of type 'UserRole'
+   */
+  export type EnumUserRoleFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'UserRole'>
+    
+
+
+  /**
+   * Reference to a field of type 'UserRole[]'
+   */
+  export type ListEnumUserRoleFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'UserRole[]'>
     
 
 
@@ -16846,11 +19654,14 @@ export namespace Prisma {
     razorpayKeyId?: StringNullableFilter<"Cafe"> | string | null
     razorpayKeySecret?: StringNullableFilter<"Cafe"> | string | null
     razorpayWebhookSecret?: StringNullableFilter<"Cafe"> | string | null
+    autoScheduleMenus?: BoolFilter<"Cafe"> | boolean
     createdAt?: DateTimeFilter<"Cafe"> | Date | string
     updatedAt?: DateTimeFilter<"Cafe"> | Date | string
     users?: UserListRelationFilter
     categories?: MenuCategoryListRelationFilter
     menuItems?: MenuItemListRelationFilter
+    menus?: MenuListRelationFilter
+    feedback?: FeedbackListRelationFilter
     orders?: OrderListRelationFilter
     tables?: TableListRelationFilter
     staff?: StaffListRelationFilter
@@ -16875,11 +19686,14 @@ export namespace Prisma {
     razorpayKeyId?: SortOrderInput | SortOrder
     razorpayKeySecret?: SortOrderInput | SortOrder
     razorpayWebhookSecret?: SortOrderInput | SortOrder
+    autoScheduleMenus?: SortOrder
     createdAt?: SortOrder
     updatedAt?: SortOrder
     users?: UserOrderByRelationAggregateInput
     categories?: MenuCategoryOrderByRelationAggregateInput
     menuItems?: MenuItemOrderByRelationAggregateInput
+    menus?: MenuOrderByRelationAggregateInput
+    feedback?: FeedbackOrderByRelationAggregateInput
     orders?: OrderOrderByRelationAggregateInput
     tables?: TableOrderByRelationAggregateInput
     staff?: StaffOrderByRelationAggregateInput
@@ -16907,11 +19721,14 @@ export namespace Prisma {
     razorpayKeyId?: StringNullableFilter<"Cafe"> | string | null
     razorpayKeySecret?: StringNullableFilter<"Cafe"> | string | null
     razorpayWebhookSecret?: StringNullableFilter<"Cafe"> | string | null
+    autoScheduleMenus?: BoolFilter<"Cafe"> | boolean
     createdAt?: DateTimeFilter<"Cafe"> | Date | string
     updatedAt?: DateTimeFilter<"Cafe"> | Date | string
     users?: UserListRelationFilter
     categories?: MenuCategoryListRelationFilter
     menuItems?: MenuItemListRelationFilter
+    menus?: MenuListRelationFilter
+    feedback?: FeedbackListRelationFilter
     orders?: OrderListRelationFilter
     tables?: TableListRelationFilter
     staff?: StaffListRelationFilter
@@ -16936,6 +19753,7 @@ export namespace Prisma {
     razorpayKeyId?: SortOrderInput | SortOrder
     razorpayKeySecret?: SortOrderInput | SortOrder
     razorpayWebhookSecret?: SortOrderInput | SortOrder
+    autoScheduleMenus?: SortOrder
     createdAt?: SortOrder
     updatedAt?: SortOrder
     _count?: CafeCountOrderByAggregateInput
@@ -16963,8 +19781,138 @@ export namespace Prisma {
     razorpayKeyId?: StringNullableWithAggregatesFilter<"Cafe"> | string | null
     razorpayKeySecret?: StringNullableWithAggregatesFilter<"Cafe"> | string | null
     razorpayWebhookSecret?: StringNullableWithAggregatesFilter<"Cafe"> | string | null
+    autoScheduleMenus?: BoolWithAggregatesFilter<"Cafe"> | boolean
     createdAt?: DateTimeWithAggregatesFilter<"Cafe"> | Date | string
     updatedAt?: DateTimeWithAggregatesFilter<"Cafe"> | Date | string
+  }
+
+  export type MenuWhereInput = {
+    AND?: MenuWhereInput | MenuWhereInput[]
+    OR?: MenuWhereInput[]
+    NOT?: MenuWhereInput | MenuWhereInput[]
+    id?: StringFilter<"Menu"> | string
+    cafeId?: StringFilter<"Menu"> | string
+    type?: EnumMenuTypeFilter<"Menu"> | $Enums.MenuType
+    isActive?: BoolFilter<"Menu"> | boolean
+    isSubsidised?: BoolFilter<"Menu"> | boolean
+    createdAt?: DateTimeFilter<"Menu"> | Date | string
+    updatedAt?: DateTimeFilter<"Menu"> | Date | string
+    cafe?: XOR<CafeScalarRelationFilter, CafeWhereInput>
+    categories?: MenuCategoryListRelationFilter
+    items?: MenuItemListRelationFilter
+  }
+
+  export type MenuOrderByWithRelationInput = {
+    id?: SortOrder
+    cafeId?: SortOrder
+    type?: SortOrder
+    isActive?: SortOrder
+    isSubsidised?: SortOrder
+    createdAt?: SortOrder
+    updatedAt?: SortOrder
+    cafe?: CafeOrderByWithRelationInput
+    categories?: MenuCategoryOrderByRelationAggregateInput
+    items?: MenuItemOrderByRelationAggregateInput
+  }
+
+  export type MenuWhereUniqueInput = Prisma.AtLeast<{
+    id?: string
+    cafeId_type?: MenuCafeIdTypeCompoundUniqueInput
+    AND?: MenuWhereInput | MenuWhereInput[]
+    OR?: MenuWhereInput[]
+    NOT?: MenuWhereInput | MenuWhereInput[]
+    cafeId?: StringFilter<"Menu"> | string
+    type?: EnumMenuTypeFilter<"Menu"> | $Enums.MenuType
+    isActive?: BoolFilter<"Menu"> | boolean
+    isSubsidised?: BoolFilter<"Menu"> | boolean
+    createdAt?: DateTimeFilter<"Menu"> | Date | string
+    updatedAt?: DateTimeFilter<"Menu"> | Date | string
+    cafe?: XOR<CafeScalarRelationFilter, CafeWhereInput>
+    categories?: MenuCategoryListRelationFilter
+    items?: MenuItemListRelationFilter
+  }, "id" | "cafeId_type">
+
+  export type MenuOrderByWithAggregationInput = {
+    id?: SortOrder
+    cafeId?: SortOrder
+    type?: SortOrder
+    isActive?: SortOrder
+    isSubsidised?: SortOrder
+    createdAt?: SortOrder
+    updatedAt?: SortOrder
+    _count?: MenuCountOrderByAggregateInput
+    _max?: MenuMaxOrderByAggregateInput
+    _min?: MenuMinOrderByAggregateInput
+  }
+
+  export type MenuScalarWhereWithAggregatesInput = {
+    AND?: MenuScalarWhereWithAggregatesInput | MenuScalarWhereWithAggregatesInput[]
+    OR?: MenuScalarWhereWithAggregatesInput[]
+    NOT?: MenuScalarWhereWithAggregatesInput | MenuScalarWhereWithAggregatesInput[]
+    id?: StringWithAggregatesFilter<"Menu"> | string
+    cafeId?: StringWithAggregatesFilter<"Menu"> | string
+    type?: EnumMenuTypeWithAggregatesFilter<"Menu"> | $Enums.MenuType
+    isActive?: BoolWithAggregatesFilter<"Menu"> | boolean
+    isSubsidised?: BoolWithAggregatesFilter<"Menu"> | boolean
+    createdAt?: DateTimeWithAggregatesFilter<"Menu"> | Date | string
+    updatedAt?: DateTimeWithAggregatesFilter<"Menu"> | Date | string
+  }
+
+  export type FeedbackWhereInput = {
+    AND?: FeedbackWhereInput | FeedbackWhereInput[]
+    OR?: FeedbackWhereInput[]
+    NOT?: FeedbackWhereInput | FeedbackWhereInput[]
+    id?: StringFilter<"Feedback"> | string
+    cafeId?: StringFilter<"Feedback"> | string
+    rating?: IntFilter<"Feedback"> | number
+    comment?: StringNullableFilter<"Feedback"> | string | null
+    createdAt?: DateTimeFilter<"Feedback"> | Date | string
+    cafe?: XOR<CafeScalarRelationFilter, CafeWhereInput>
+  }
+
+  export type FeedbackOrderByWithRelationInput = {
+    id?: SortOrder
+    cafeId?: SortOrder
+    rating?: SortOrder
+    comment?: SortOrderInput | SortOrder
+    createdAt?: SortOrder
+    cafe?: CafeOrderByWithRelationInput
+  }
+
+  export type FeedbackWhereUniqueInput = Prisma.AtLeast<{
+    id?: string
+    AND?: FeedbackWhereInput | FeedbackWhereInput[]
+    OR?: FeedbackWhereInput[]
+    NOT?: FeedbackWhereInput | FeedbackWhereInput[]
+    cafeId?: StringFilter<"Feedback"> | string
+    rating?: IntFilter<"Feedback"> | number
+    comment?: StringNullableFilter<"Feedback"> | string | null
+    createdAt?: DateTimeFilter<"Feedback"> | Date | string
+    cafe?: XOR<CafeScalarRelationFilter, CafeWhereInput>
+  }, "id">
+
+  export type FeedbackOrderByWithAggregationInput = {
+    id?: SortOrder
+    cafeId?: SortOrder
+    rating?: SortOrder
+    comment?: SortOrderInput | SortOrder
+    createdAt?: SortOrder
+    _count?: FeedbackCountOrderByAggregateInput
+    _avg?: FeedbackAvgOrderByAggregateInput
+    _max?: FeedbackMaxOrderByAggregateInput
+    _min?: FeedbackMinOrderByAggregateInput
+    _sum?: FeedbackSumOrderByAggregateInput
+  }
+
+  export type FeedbackScalarWhereWithAggregatesInput = {
+    AND?: FeedbackScalarWhereWithAggregatesInput | FeedbackScalarWhereWithAggregatesInput[]
+    OR?: FeedbackScalarWhereWithAggregatesInput[]
+    NOT?: FeedbackScalarWhereWithAggregatesInput | FeedbackScalarWhereWithAggregatesInput[]
+    id?: StringWithAggregatesFilter<"Feedback"> | string
+    cafeId?: StringWithAggregatesFilter<"Feedback"> | string
+    rating?: IntWithAggregatesFilter<"Feedback"> | number
+    comment?: StringNullableWithAggregatesFilter<"Feedback"> | string | null
+    createdAt?: DateTimeWithAggregatesFilter<"Feedback"> | Date | string
   }
 
   export type UserWhereInput = {
@@ -17051,22 +19999,26 @@ export namespace Prisma {
     NOT?: MenuCategoryWhereInput | MenuCategoryWhereInput[]
     id?: StringFilter<"MenuCategory"> | string
     cafeId?: StringNullableFilter<"MenuCategory"> | string | null
+    menuId?: StringNullableFilter<"MenuCategory"> | string | null
     name?: StringFilter<"MenuCategory"> | string
     sortOrder?: IntFilter<"MenuCategory"> | number
     isActive?: BoolFilter<"MenuCategory"> | boolean
     createdAt?: DateTimeFilter<"MenuCategory"> | Date | string
     cafe?: XOR<CafeNullableScalarRelationFilter, CafeWhereInput> | null
+    menu?: XOR<MenuNullableScalarRelationFilter, MenuWhereInput> | null
     items?: MenuItemListRelationFilter
   }
 
   export type MenuCategoryOrderByWithRelationInput = {
     id?: SortOrder
     cafeId?: SortOrderInput | SortOrder
+    menuId?: SortOrderInput | SortOrder
     name?: SortOrder
     sortOrder?: SortOrder
     isActive?: SortOrder
     createdAt?: SortOrder
     cafe?: CafeOrderByWithRelationInput
+    menu?: MenuOrderByWithRelationInput
     items?: MenuItemOrderByRelationAggregateInput
   }
 
@@ -17076,17 +20028,20 @@ export namespace Prisma {
     OR?: MenuCategoryWhereInput[]
     NOT?: MenuCategoryWhereInput | MenuCategoryWhereInput[]
     cafeId?: StringNullableFilter<"MenuCategory"> | string | null
+    menuId?: StringNullableFilter<"MenuCategory"> | string | null
     name?: StringFilter<"MenuCategory"> | string
     sortOrder?: IntFilter<"MenuCategory"> | number
     isActive?: BoolFilter<"MenuCategory"> | boolean
     createdAt?: DateTimeFilter<"MenuCategory"> | Date | string
     cafe?: XOR<CafeNullableScalarRelationFilter, CafeWhereInput> | null
+    menu?: XOR<MenuNullableScalarRelationFilter, MenuWhereInput> | null
     items?: MenuItemListRelationFilter
   }, "id">
 
   export type MenuCategoryOrderByWithAggregationInput = {
     id?: SortOrder
     cafeId?: SortOrderInput | SortOrder
+    menuId?: SortOrderInput | SortOrder
     name?: SortOrder
     sortOrder?: SortOrder
     isActive?: SortOrder
@@ -17104,6 +20059,7 @@ export namespace Prisma {
     NOT?: MenuCategoryScalarWhereWithAggregatesInput | MenuCategoryScalarWhereWithAggregatesInput[]
     id?: StringWithAggregatesFilter<"MenuCategory"> | string
     cafeId?: StringNullableWithAggregatesFilter<"MenuCategory"> | string | null
+    menuId?: StringNullableWithAggregatesFilter<"MenuCategory"> | string | null
     name?: StringWithAggregatesFilter<"MenuCategory"> | string
     sortOrder?: IntWithAggregatesFilter<"MenuCategory"> | number
     isActive?: BoolWithAggregatesFilter<"MenuCategory"> | boolean
@@ -17116,6 +20072,7 @@ export namespace Prisma {
     NOT?: MenuItemWhereInput | MenuItemWhereInput[]
     id?: StringFilter<"MenuItem"> | string
     cafeId?: StringNullableFilter<"MenuItem"> | string | null
+    menuId?: StringNullableFilter<"MenuItem"> | string | null
     categoryId?: StringNullableFilter<"MenuItem"> | string | null
     name?: StringFilter<"MenuItem"> | string
     description?: StringNullableFilter<"MenuItem"> | string | null
@@ -17123,17 +20080,24 @@ export namespace Prisma {
     imageUrl?: StringNullableFilter<"MenuItem"> | string | null
     isAvailable?: BoolFilter<"MenuItem"> | boolean
     isVeg?: BoolFilter<"MenuItem"> | boolean
+    isSubsidised?: BoolFilter<"MenuItem"> | boolean
     sortOrder?: IntFilter<"MenuItem"> | number
+    menuType?: EnumMenuTypeNullableFilter<"MenuItem"> | $Enums.MenuType | null
+    overriddenFromId?: StringNullableFilter<"MenuItem"> | string | null
     createdAt?: DateTimeFilter<"MenuItem"> | Date | string
     updatedAt?: DateTimeFilter<"MenuItem"> | Date | string
     cafe?: XOR<CafeNullableScalarRelationFilter, CafeWhereInput> | null
+    menu?: XOR<MenuNullableScalarRelationFilter, MenuWhereInput> | null
     category?: XOR<MenuCategoryNullableScalarRelationFilter, MenuCategoryWhereInput> | null
     orderItems?: OrderItemListRelationFilter
+    overriddenFrom?: XOR<MenuItemNullableScalarRelationFilter, MenuItemWhereInput> | null
+    overrides?: MenuItemListRelationFilter
   }
 
   export type MenuItemOrderByWithRelationInput = {
     id?: SortOrder
     cafeId?: SortOrderInput | SortOrder
+    menuId?: SortOrderInput | SortOrder
     categoryId?: SortOrderInput | SortOrder
     name?: SortOrder
     description?: SortOrderInput | SortOrder
@@ -17141,12 +20105,18 @@ export namespace Prisma {
     imageUrl?: SortOrderInput | SortOrder
     isAvailable?: SortOrder
     isVeg?: SortOrder
+    isSubsidised?: SortOrder
     sortOrder?: SortOrder
+    menuType?: SortOrderInput | SortOrder
+    overriddenFromId?: SortOrderInput | SortOrder
     createdAt?: SortOrder
     updatedAt?: SortOrder
     cafe?: CafeOrderByWithRelationInput
+    menu?: MenuOrderByWithRelationInput
     category?: MenuCategoryOrderByWithRelationInput
     orderItems?: OrderItemOrderByRelationAggregateInput
+    overriddenFrom?: MenuItemOrderByWithRelationInput
+    overrides?: MenuItemOrderByRelationAggregateInput
   }
 
   export type MenuItemWhereUniqueInput = Prisma.AtLeast<{
@@ -17155,6 +20125,7 @@ export namespace Prisma {
     OR?: MenuItemWhereInput[]
     NOT?: MenuItemWhereInput | MenuItemWhereInput[]
     cafeId?: StringNullableFilter<"MenuItem"> | string | null
+    menuId?: StringNullableFilter<"MenuItem"> | string | null
     categoryId?: StringNullableFilter<"MenuItem"> | string | null
     name?: StringFilter<"MenuItem"> | string
     description?: StringNullableFilter<"MenuItem"> | string | null
@@ -17162,17 +20133,24 @@ export namespace Prisma {
     imageUrl?: StringNullableFilter<"MenuItem"> | string | null
     isAvailable?: BoolFilter<"MenuItem"> | boolean
     isVeg?: BoolFilter<"MenuItem"> | boolean
+    isSubsidised?: BoolFilter<"MenuItem"> | boolean
     sortOrder?: IntFilter<"MenuItem"> | number
+    menuType?: EnumMenuTypeNullableFilter<"MenuItem"> | $Enums.MenuType | null
+    overriddenFromId?: StringNullableFilter<"MenuItem"> | string | null
     createdAt?: DateTimeFilter<"MenuItem"> | Date | string
     updatedAt?: DateTimeFilter<"MenuItem"> | Date | string
     cafe?: XOR<CafeNullableScalarRelationFilter, CafeWhereInput> | null
+    menu?: XOR<MenuNullableScalarRelationFilter, MenuWhereInput> | null
     category?: XOR<MenuCategoryNullableScalarRelationFilter, MenuCategoryWhereInput> | null
     orderItems?: OrderItemListRelationFilter
+    overriddenFrom?: XOR<MenuItemNullableScalarRelationFilter, MenuItemWhereInput> | null
+    overrides?: MenuItemListRelationFilter
   }, "id">
 
   export type MenuItemOrderByWithAggregationInput = {
     id?: SortOrder
     cafeId?: SortOrderInput | SortOrder
+    menuId?: SortOrderInput | SortOrder
     categoryId?: SortOrderInput | SortOrder
     name?: SortOrder
     description?: SortOrderInput | SortOrder
@@ -17180,7 +20158,10 @@ export namespace Prisma {
     imageUrl?: SortOrderInput | SortOrder
     isAvailable?: SortOrder
     isVeg?: SortOrder
+    isSubsidised?: SortOrder
     sortOrder?: SortOrder
+    menuType?: SortOrderInput | SortOrder
+    overriddenFromId?: SortOrderInput | SortOrder
     createdAt?: SortOrder
     updatedAt?: SortOrder
     _count?: MenuItemCountOrderByAggregateInput
@@ -17196,6 +20177,7 @@ export namespace Prisma {
     NOT?: MenuItemScalarWhereWithAggregatesInput | MenuItemScalarWhereWithAggregatesInput[]
     id?: StringWithAggregatesFilter<"MenuItem"> | string
     cafeId?: StringNullableWithAggregatesFilter<"MenuItem"> | string | null
+    menuId?: StringNullableWithAggregatesFilter<"MenuItem"> | string | null
     categoryId?: StringNullableWithAggregatesFilter<"MenuItem"> | string | null
     name?: StringWithAggregatesFilter<"MenuItem"> | string
     description?: StringNullableWithAggregatesFilter<"MenuItem"> | string | null
@@ -17203,7 +20185,10 @@ export namespace Prisma {
     imageUrl?: StringNullableWithAggregatesFilter<"MenuItem"> | string | null
     isAvailable?: BoolWithAggregatesFilter<"MenuItem"> | boolean
     isVeg?: BoolWithAggregatesFilter<"MenuItem"> | boolean
+    isSubsidised?: BoolWithAggregatesFilter<"MenuItem"> | boolean
     sortOrder?: IntWithAggregatesFilter<"MenuItem"> | number
+    menuType?: EnumMenuTypeNullableWithAggregatesFilter<"MenuItem"> | $Enums.MenuType | null
+    overriddenFromId?: StringNullableWithAggregatesFilter<"MenuItem"> | string | null
     createdAt?: DateTimeWithAggregatesFilter<"MenuItem"> | Date | string
     updatedAt?: DateTimeWithAggregatesFilter<"MenuItem"> | Date | string
   }
@@ -17330,6 +20315,7 @@ export namespace Prisma {
     itemPricePaise?: IntFilter<"OrderItem"> | number
     quantity?: IntFilter<"OrderItem"> | number
     subtotalPaise?: IntFilter<"OrderItem"> | number
+    isSubsidised?: BoolFilter<"OrderItem"> | boolean
     order?: XOR<OrderScalarRelationFilter, OrderWhereInput>
     menuItem?: XOR<MenuItemScalarRelationFilter, MenuItemWhereInput>
   }
@@ -17342,6 +20328,7 @@ export namespace Prisma {
     itemPricePaise?: SortOrder
     quantity?: SortOrder
     subtotalPaise?: SortOrder
+    isSubsidised?: SortOrder
     order?: OrderOrderByWithRelationInput
     menuItem?: MenuItemOrderByWithRelationInput
   }
@@ -17357,6 +20344,7 @@ export namespace Prisma {
     itemPricePaise?: IntFilter<"OrderItem"> | number
     quantity?: IntFilter<"OrderItem"> | number
     subtotalPaise?: IntFilter<"OrderItem"> | number
+    isSubsidised?: BoolFilter<"OrderItem"> | boolean
     order?: XOR<OrderScalarRelationFilter, OrderWhereInput>
     menuItem?: XOR<MenuItemScalarRelationFilter, MenuItemWhereInput>
   }, "id">
@@ -17369,6 +20357,7 @@ export namespace Prisma {
     itemPricePaise?: SortOrder
     quantity?: SortOrder
     subtotalPaise?: SortOrder
+    isSubsidised?: SortOrder
     _count?: OrderItemCountOrderByAggregateInput
     _avg?: OrderItemAvgOrderByAggregateInput
     _max?: OrderItemMaxOrderByAggregateInput
@@ -17387,6 +20376,7 @@ export namespace Prisma {
     itemPricePaise?: IntWithAggregatesFilter<"OrderItem"> | number
     quantity?: IntWithAggregatesFilter<"OrderItem"> | number
     subtotalPaise?: IntWithAggregatesFilter<"OrderItem"> | number
+    isSubsidised?: BoolWithAggregatesFilter<"OrderItem"> | boolean
   }
 
   export type OrderCounterWhereInput = {
@@ -17838,11 +20828,14 @@ export namespace Prisma {
     razorpayKeyId?: string | null
     razorpayKeySecret?: string | null
     razorpayWebhookSecret?: string | null
+    autoScheduleMenus?: boolean
     createdAt?: Date | string
     updatedAt?: Date | string
     users?: UserCreateNestedManyWithoutCafeInput
     categories?: MenuCategoryCreateNestedManyWithoutCafeInput
     menuItems?: MenuItemCreateNestedManyWithoutCafeInput
+    menus?: MenuCreateNestedManyWithoutCafeInput
+    feedback?: FeedbackCreateNestedManyWithoutCafeInput
     orders?: OrderCreateNestedManyWithoutCafeInput
     tables?: TableCreateNestedManyWithoutCafeInput
     staff?: StaffCreateNestedManyWithoutCafeInput
@@ -17867,11 +20860,14 @@ export namespace Prisma {
     razorpayKeyId?: string | null
     razorpayKeySecret?: string | null
     razorpayWebhookSecret?: string | null
+    autoScheduleMenus?: boolean
     createdAt?: Date | string
     updatedAt?: Date | string
     users?: UserUncheckedCreateNestedManyWithoutCafeInput
     categories?: MenuCategoryUncheckedCreateNestedManyWithoutCafeInput
     menuItems?: MenuItemUncheckedCreateNestedManyWithoutCafeInput
+    menus?: MenuUncheckedCreateNestedManyWithoutCafeInput
+    feedback?: FeedbackUncheckedCreateNestedManyWithoutCafeInput
     orders?: OrderUncheckedCreateNestedManyWithoutCafeInput
     tables?: TableUncheckedCreateNestedManyWithoutCafeInput
     staff?: StaffUncheckedCreateNestedManyWithoutCafeInput
@@ -17896,11 +20892,14 @@ export namespace Prisma {
     razorpayKeyId?: NullableStringFieldUpdateOperationsInput | string | null
     razorpayKeySecret?: NullableStringFieldUpdateOperationsInput | string | null
     razorpayWebhookSecret?: NullableStringFieldUpdateOperationsInput | string | null
+    autoScheduleMenus?: BoolFieldUpdateOperationsInput | boolean
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     users?: UserUpdateManyWithoutCafeNestedInput
     categories?: MenuCategoryUpdateManyWithoutCafeNestedInput
     menuItems?: MenuItemUpdateManyWithoutCafeNestedInput
+    menus?: MenuUpdateManyWithoutCafeNestedInput
+    feedback?: FeedbackUpdateManyWithoutCafeNestedInput
     orders?: OrderUpdateManyWithoutCafeNestedInput
     tables?: TableUpdateManyWithoutCafeNestedInput
     staff?: StaffUpdateManyWithoutCafeNestedInput
@@ -17925,11 +20924,14 @@ export namespace Prisma {
     razorpayKeyId?: NullableStringFieldUpdateOperationsInput | string | null
     razorpayKeySecret?: NullableStringFieldUpdateOperationsInput | string | null
     razorpayWebhookSecret?: NullableStringFieldUpdateOperationsInput | string | null
+    autoScheduleMenus?: BoolFieldUpdateOperationsInput | boolean
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     users?: UserUncheckedUpdateManyWithoutCafeNestedInput
     categories?: MenuCategoryUncheckedUpdateManyWithoutCafeNestedInput
     menuItems?: MenuItemUncheckedUpdateManyWithoutCafeNestedInput
+    menus?: MenuUncheckedUpdateManyWithoutCafeNestedInput
+    feedback?: FeedbackUncheckedUpdateManyWithoutCafeNestedInput
     orders?: OrderUncheckedUpdateManyWithoutCafeNestedInput
     tables?: TableUncheckedUpdateManyWithoutCafeNestedInput
     staff?: StaffUncheckedUpdateManyWithoutCafeNestedInput
@@ -17954,6 +20956,7 @@ export namespace Prisma {
     razorpayKeyId?: string | null
     razorpayKeySecret?: string | null
     razorpayWebhookSecret?: string | null
+    autoScheduleMenus?: boolean
     createdAt?: Date | string
     updatedAt?: Date | string
   }
@@ -17975,6 +20978,7 @@ export namespace Prisma {
     razorpayKeyId?: NullableStringFieldUpdateOperationsInput | string | null
     razorpayKeySecret?: NullableStringFieldUpdateOperationsInput | string | null
     razorpayWebhookSecret?: NullableStringFieldUpdateOperationsInput | string | null
+    autoScheduleMenus?: BoolFieldUpdateOperationsInput | boolean
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
   }
@@ -17996,8 +21000,141 @@ export namespace Prisma {
     razorpayKeyId?: NullableStringFieldUpdateOperationsInput | string | null
     razorpayKeySecret?: NullableStringFieldUpdateOperationsInput | string | null
     razorpayWebhookSecret?: NullableStringFieldUpdateOperationsInput | string | null
+    autoScheduleMenus?: BoolFieldUpdateOperationsInput | boolean
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
+  export type MenuCreateInput = {
+    id?: string
+    type: $Enums.MenuType
+    isActive?: boolean
+    isSubsidised?: boolean
+    createdAt?: Date | string
+    updatedAt?: Date | string
+    cafe: CafeCreateNestedOneWithoutMenusInput
+    categories?: MenuCategoryCreateNestedManyWithoutMenuInput
+    items?: MenuItemCreateNestedManyWithoutMenuInput
+  }
+
+  export type MenuUncheckedCreateInput = {
+    id?: string
+    cafeId: string
+    type: $Enums.MenuType
+    isActive?: boolean
+    isSubsidised?: boolean
+    createdAt?: Date | string
+    updatedAt?: Date | string
+    categories?: MenuCategoryUncheckedCreateNestedManyWithoutMenuInput
+    items?: MenuItemUncheckedCreateNestedManyWithoutMenuInput
+  }
+
+  export type MenuUpdateInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    type?: EnumMenuTypeFieldUpdateOperationsInput | $Enums.MenuType
+    isActive?: BoolFieldUpdateOperationsInput | boolean
+    isSubsidised?: BoolFieldUpdateOperationsInput | boolean
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    cafe?: CafeUpdateOneRequiredWithoutMenusNestedInput
+    categories?: MenuCategoryUpdateManyWithoutMenuNestedInput
+    items?: MenuItemUpdateManyWithoutMenuNestedInput
+  }
+
+  export type MenuUncheckedUpdateInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    cafeId?: StringFieldUpdateOperationsInput | string
+    type?: EnumMenuTypeFieldUpdateOperationsInput | $Enums.MenuType
+    isActive?: BoolFieldUpdateOperationsInput | boolean
+    isSubsidised?: BoolFieldUpdateOperationsInput | boolean
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    categories?: MenuCategoryUncheckedUpdateManyWithoutMenuNestedInput
+    items?: MenuItemUncheckedUpdateManyWithoutMenuNestedInput
+  }
+
+  export type MenuCreateManyInput = {
+    id?: string
+    cafeId: string
+    type: $Enums.MenuType
+    isActive?: boolean
+    isSubsidised?: boolean
+    createdAt?: Date | string
+    updatedAt?: Date | string
+  }
+
+  export type MenuUpdateManyMutationInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    type?: EnumMenuTypeFieldUpdateOperationsInput | $Enums.MenuType
+    isActive?: BoolFieldUpdateOperationsInput | boolean
+    isSubsidised?: BoolFieldUpdateOperationsInput | boolean
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
+  export type MenuUncheckedUpdateManyInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    cafeId?: StringFieldUpdateOperationsInput | string
+    type?: EnumMenuTypeFieldUpdateOperationsInput | $Enums.MenuType
+    isActive?: BoolFieldUpdateOperationsInput | boolean
+    isSubsidised?: BoolFieldUpdateOperationsInput | boolean
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
+  export type FeedbackCreateInput = {
+    id?: string
+    rating: number
+    comment?: string | null
+    createdAt?: Date | string
+    cafe: CafeCreateNestedOneWithoutFeedbackInput
+  }
+
+  export type FeedbackUncheckedCreateInput = {
+    id?: string
+    cafeId: string
+    rating: number
+    comment?: string | null
+    createdAt?: Date | string
+  }
+
+  export type FeedbackUpdateInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    rating?: IntFieldUpdateOperationsInput | number
+    comment?: NullableStringFieldUpdateOperationsInput | string | null
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    cafe?: CafeUpdateOneRequiredWithoutFeedbackNestedInput
+  }
+
+  export type FeedbackUncheckedUpdateInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    cafeId?: StringFieldUpdateOperationsInput | string
+    rating?: IntFieldUpdateOperationsInput | number
+    comment?: NullableStringFieldUpdateOperationsInput | string | null
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
+  export type FeedbackCreateManyInput = {
+    id?: string
+    cafeId: string
+    rating: number
+    comment?: string | null
+    createdAt?: Date | string
+  }
+
+  export type FeedbackUpdateManyMutationInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    rating?: IntFieldUpdateOperationsInput | number
+    comment?: NullableStringFieldUpdateOperationsInput | string | null
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
+  export type FeedbackUncheckedUpdateManyInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    cafeId?: StringFieldUpdateOperationsInput | string
+    rating?: IntFieldUpdateOperationsInput | number
+    comment?: NullableStringFieldUpdateOperationsInput | string | null
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
   }
 
   export type UserCreateInput = {
@@ -18094,12 +21231,14 @@ export namespace Prisma {
     isActive?: boolean
     createdAt?: Date | string
     cafe?: CafeCreateNestedOneWithoutCategoriesInput
+    menu?: MenuCreateNestedOneWithoutCategoriesInput
     items?: MenuItemCreateNestedManyWithoutCategoryInput
   }
 
   export type MenuCategoryUncheckedCreateInput = {
     id?: string
     cafeId?: string | null
+    menuId?: string | null
     name: string
     sortOrder?: number
     isActive?: boolean
@@ -18114,12 +21253,14 @@ export namespace Prisma {
     isActive?: BoolFieldUpdateOperationsInput | boolean
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     cafe?: CafeUpdateOneWithoutCategoriesNestedInput
+    menu?: MenuUpdateOneWithoutCategoriesNestedInput
     items?: MenuItemUpdateManyWithoutCategoryNestedInput
   }
 
   export type MenuCategoryUncheckedUpdateInput = {
     id?: StringFieldUpdateOperationsInput | string
     cafeId?: NullableStringFieldUpdateOperationsInput | string | null
+    menuId?: NullableStringFieldUpdateOperationsInput | string | null
     name?: StringFieldUpdateOperationsInput | string
     sortOrder?: IntFieldUpdateOperationsInput | number
     isActive?: BoolFieldUpdateOperationsInput | boolean
@@ -18130,6 +21271,7 @@ export namespace Prisma {
   export type MenuCategoryCreateManyInput = {
     id?: string
     cafeId?: string | null
+    menuId?: string | null
     name: string
     sortOrder?: number
     isActive?: boolean
@@ -18147,6 +21289,7 @@ export namespace Prisma {
   export type MenuCategoryUncheckedUpdateManyInput = {
     id?: StringFieldUpdateOperationsInput | string
     cafeId?: NullableStringFieldUpdateOperationsInput | string | null
+    menuId?: NullableStringFieldUpdateOperationsInput | string | null
     name?: StringFieldUpdateOperationsInput | string
     sortOrder?: IntFieldUpdateOperationsInput | number
     isActive?: BoolFieldUpdateOperationsInput | boolean
@@ -18161,17 +21304,23 @@ export namespace Prisma {
     imageUrl?: string | null
     isAvailable?: boolean
     isVeg?: boolean
+    isSubsidised?: boolean
     sortOrder?: number
+    menuType?: $Enums.MenuType | null
     createdAt?: Date | string
     updatedAt?: Date | string
     cafe?: CafeCreateNestedOneWithoutMenuItemsInput
+    menu?: MenuCreateNestedOneWithoutItemsInput
     category?: MenuCategoryCreateNestedOneWithoutItemsInput
     orderItems?: OrderItemCreateNestedManyWithoutMenuItemInput
+    overriddenFrom?: MenuItemCreateNestedOneWithoutOverridesInput
+    overrides?: MenuItemCreateNestedManyWithoutOverriddenFromInput
   }
 
   export type MenuItemUncheckedCreateInput = {
     id?: string
     cafeId?: string | null
+    menuId?: string | null
     categoryId?: string | null
     name: string
     description?: string | null
@@ -18179,10 +21328,14 @@ export namespace Prisma {
     imageUrl?: string | null
     isAvailable?: boolean
     isVeg?: boolean
+    isSubsidised?: boolean
     sortOrder?: number
+    menuType?: $Enums.MenuType | null
+    overriddenFromId?: string | null
     createdAt?: Date | string
     updatedAt?: Date | string
     orderItems?: OrderItemUncheckedCreateNestedManyWithoutMenuItemInput
+    overrides?: MenuItemUncheckedCreateNestedManyWithoutOverriddenFromInput
   }
 
   export type MenuItemUpdateInput = {
@@ -18193,17 +21346,23 @@ export namespace Prisma {
     imageUrl?: NullableStringFieldUpdateOperationsInput | string | null
     isAvailable?: BoolFieldUpdateOperationsInput | boolean
     isVeg?: BoolFieldUpdateOperationsInput | boolean
+    isSubsidised?: BoolFieldUpdateOperationsInput | boolean
     sortOrder?: IntFieldUpdateOperationsInput | number
+    menuType?: NullableEnumMenuTypeFieldUpdateOperationsInput | $Enums.MenuType | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     cafe?: CafeUpdateOneWithoutMenuItemsNestedInput
+    menu?: MenuUpdateOneWithoutItemsNestedInput
     category?: MenuCategoryUpdateOneWithoutItemsNestedInput
     orderItems?: OrderItemUpdateManyWithoutMenuItemNestedInput
+    overriddenFrom?: MenuItemUpdateOneWithoutOverridesNestedInput
+    overrides?: MenuItemUpdateManyWithoutOverriddenFromNestedInput
   }
 
   export type MenuItemUncheckedUpdateInput = {
     id?: StringFieldUpdateOperationsInput | string
     cafeId?: NullableStringFieldUpdateOperationsInput | string | null
+    menuId?: NullableStringFieldUpdateOperationsInput | string | null
     categoryId?: NullableStringFieldUpdateOperationsInput | string | null
     name?: StringFieldUpdateOperationsInput | string
     description?: NullableStringFieldUpdateOperationsInput | string | null
@@ -18211,15 +21370,20 @@ export namespace Prisma {
     imageUrl?: NullableStringFieldUpdateOperationsInput | string | null
     isAvailable?: BoolFieldUpdateOperationsInput | boolean
     isVeg?: BoolFieldUpdateOperationsInput | boolean
+    isSubsidised?: BoolFieldUpdateOperationsInput | boolean
     sortOrder?: IntFieldUpdateOperationsInput | number
+    menuType?: NullableEnumMenuTypeFieldUpdateOperationsInput | $Enums.MenuType | null
+    overriddenFromId?: NullableStringFieldUpdateOperationsInput | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     orderItems?: OrderItemUncheckedUpdateManyWithoutMenuItemNestedInput
+    overrides?: MenuItemUncheckedUpdateManyWithoutOverriddenFromNestedInput
   }
 
   export type MenuItemCreateManyInput = {
     id?: string
     cafeId?: string | null
+    menuId?: string | null
     categoryId?: string | null
     name: string
     description?: string | null
@@ -18227,7 +21391,10 @@ export namespace Prisma {
     imageUrl?: string | null
     isAvailable?: boolean
     isVeg?: boolean
+    isSubsidised?: boolean
     sortOrder?: number
+    menuType?: $Enums.MenuType | null
+    overriddenFromId?: string | null
     createdAt?: Date | string
     updatedAt?: Date | string
   }
@@ -18240,7 +21407,9 @@ export namespace Prisma {
     imageUrl?: NullableStringFieldUpdateOperationsInput | string | null
     isAvailable?: BoolFieldUpdateOperationsInput | boolean
     isVeg?: BoolFieldUpdateOperationsInput | boolean
+    isSubsidised?: BoolFieldUpdateOperationsInput | boolean
     sortOrder?: IntFieldUpdateOperationsInput | number
+    menuType?: NullableEnumMenuTypeFieldUpdateOperationsInput | $Enums.MenuType | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
   }
@@ -18248,6 +21417,7 @@ export namespace Prisma {
   export type MenuItemUncheckedUpdateManyInput = {
     id?: StringFieldUpdateOperationsInput | string
     cafeId?: NullableStringFieldUpdateOperationsInput | string | null
+    menuId?: NullableStringFieldUpdateOperationsInput | string | null
     categoryId?: NullableStringFieldUpdateOperationsInput | string | null
     name?: StringFieldUpdateOperationsInput | string
     description?: NullableStringFieldUpdateOperationsInput | string | null
@@ -18255,7 +21425,10 @@ export namespace Prisma {
     imageUrl?: NullableStringFieldUpdateOperationsInput | string | null
     isAvailable?: BoolFieldUpdateOperationsInput | boolean
     isVeg?: BoolFieldUpdateOperationsInput | boolean
+    isSubsidised?: BoolFieldUpdateOperationsInput | boolean
     sortOrder?: IntFieldUpdateOperationsInput | number
+    menuType?: NullableEnumMenuTypeFieldUpdateOperationsInput | $Enums.MenuType | null
+    overriddenFromId?: NullableStringFieldUpdateOperationsInput | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
   }
@@ -18391,6 +21564,7 @@ export namespace Prisma {
     itemPricePaise: number
     quantity: number
     subtotalPaise: number
+    isSubsidised?: boolean
     order: OrderCreateNestedOneWithoutItemsInput
     menuItem: MenuItemCreateNestedOneWithoutOrderItemsInput
   }
@@ -18403,6 +21577,7 @@ export namespace Prisma {
     itemPricePaise: number
     quantity: number
     subtotalPaise: number
+    isSubsidised?: boolean
   }
 
   export type OrderItemUpdateInput = {
@@ -18411,6 +21586,7 @@ export namespace Prisma {
     itemPricePaise?: IntFieldUpdateOperationsInput | number
     quantity?: IntFieldUpdateOperationsInput | number
     subtotalPaise?: IntFieldUpdateOperationsInput | number
+    isSubsidised?: BoolFieldUpdateOperationsInput | boolean
     order?: OrderUpdateOneRequiredWithoutItemsNestedInput
     menuItem?: MenuItemUpdateOneRequiredWithoutOrderItemsNestedInput
   }
@@ -18423,6 +21599,7 @@ export namespace Prisma {
     itemPricePaise?: IntFieldUpdateOperationsInput | number
     quantity?: IntFieldUpdateOperationsInput | number
     subtotalPaise?: IntFieldUpdateOperationsInput | number
+    isSubsidised?: BoolFieldUpdateOperationsInput | boolean
   }
 
   export type OrderItemCreateManyInput = {
@@ -18433,6 +21610,7 @@ export namespace Prisma {
     itemPricePaise: number
     quantity: number
     subtotalPaise: number
+    isSubsidised?: boolean
   }
 
   export type OrderItemUpdateManyMutationInput = {
@@ -18441,6 +21619,7 @@ export namespace Prisma {
     itemPricePaise?: IntFieldUpdateOperationsInput | number
     quantity?: IntFieldUpdateOperationsInput | number
     subtotalPaise?: IntFieldUpdateOperationsInput | number
+    isSubsidised?: BoolFieldUpdateOperationsInput | boolean
   }
 
   export type OrderItemUncheckedUpdateManyInput = {
@@ -18451,6 +21630,7 @@ export namespace Prisma {
     itemPricePaise?: IntFieldUpdateOperationsInput | number
     quantity?: IntFieldUpdateOperationsInput | number
     subtotalPaise?: IntFieldUpdateOperationsInput | number
+    isSubsidised?: BoolFieldUpdateOperationsInput | boolean
   }
 
   export type OrderCounterCreateInput = {
@@ -18984,6 +22164,18 @@ export namespace Prisma {
     none?: MenuItemWhereInput
   }
 
+  export type MenuListRelationFilter = {
+    every?: MenuWhereInput
+    some?: MenuWhereInput
+    none?: MenuWhereInput
+  }
+
+  export type FeedbackListRelationFilter = {
+    every?: FeedbackWhereInput
+    some?: FeedbackWhereInput
+    none?: FeedbackWhereInput
+  }
+
   export type OrderListRelationFilter = {
     every?: OrderWhereInput
     some?: OrderWhereInput
@@ -19031,6 +22223,14 @@ export namespace Prisma {
     _count?: SortOrder
   }
 
+  export type MenuOrderByRelationAggregateInput = {
+    _count?: SortOrder
+  }
+
+  export type FeedbackOrderByRelationAggregateInput = {
+    _count?: SortOrder
+  }
+
   export type OrderOrderByRelationAggregateInput = {
     _count?: SortOrder
   }
@@ -19068,6 +22268,7 @@ export namespace Prisma {
     razorpayKeyId?: SortOrder
     razorpayKeySecret?: SortOrder
     razorpayWebhookSecret?: SortOrder
+    autoScheduleMenus?: SortOrder
     createdAt?: SortOrder
     updatedAt?: SortOrder
   }
@@ -19089,6 +22290,7 @@ export namespace Prisma {
     razorpayKeyId?: SortOrder
     razorpayKeySecret?: SortOrder
     razorpayWebhookSecret?: SortOrder
+    autoScheduleMenus?: SortOrder
     createdAt?: SortOrder
     updatedAt?: SortOrder
   }
@@ -19110,6 +22312,7 @@ export namespace Prisma {
     razorpayKeyId?: SortOrder
     razorpayKeySecret?: SortOrder
     razorpayWebhookSecret?: SortOrder
+    autoScheduleMenus?: SortOrder
     createdAt?: SortOrder
     updatedAt?: SortOrder
   }
@@ -19182,6 +22385,122 @@ export namespace Prisma {
     _max?: NestedDateTimeFilter<$PrismaModel>
   }
 
+  export type EnumMenuTypeFilter<$PrismaModel = never> = {
+    equals?: $Enums.MenuType | EnumMenuTypeFieldRefInput<$PrismaModel>
+    in?: $Enums.MenuType[] | ListEnumMenuTypeFieldRefInput<$PrismaModel>
+    notIn?: $Enums.MenuType[] | ListEnumMenuTypeFieldRefInput<$PrismaModel>
+    not?: NestedEnumMenuTypeFilter<$PrismaModel> | $Enums.MenuType
+  }
+
+  export type CafeScalarRelationFilter = {
+    is?: CafeWhereInput
+    isNot?: CafeWhereInput
+  }
+
+  export type MenuCafeIdTypeCompoundUniqueInput = {
+    cafeId: string
+    type: $Enums.MenuType
+  }
+
+  export type MenuCountOrderByAggregateInput = {
+    id?: SortOrder
+    cafeId?: SortOrder
+    type?: SortOrder
+    isActive?: SortOrder
+    isSubsidised?: SortOrder
+    createdAt?: SortOrder
+    updatedAt?: SortOrder
+  }
+
+  export type MenuMaxOrderByAggregateInput = {
+    id?: SortOrder
+    cafeId?: SortOrder
+    type?: SortOrder
+    isActive?: SortOrder
+    isSubsidised?: SortOrder
+    createdAt?: SortOrder
+    updatedAt?: SortOrder
+  }
+
+  export type MenuMinOrderByAggregateInput = {
+    id?: SortOrder
+    cafeId?: SortOrder
+    type?: SortOrder
+    isActive?: SortOrder
+    isSubsidised?: SortOrder
+    createdAt?: SortOrder
+    updatedAt?: SortOrder
+  }
+
+  export type EnumMenuTypeWithAggregatesFilter<$PrismaModel = never> = {
+    equals?: $Enums.MenuType | EnumMenuTypeFieldRefInput<$PrismaModel>
+    in?: $Enums.MenuType[] | ListEnumMenuTypeFieldRefInput<$PrismaModel>
+    notIn?: $Enums.MenuType[] | ListEnumMenuTypeFieldRefInput<$PrismaModel>
+    not?: NestedEnumMenuTypeWithAggregatesFilter<$PrismaModel> | $Enums.MenuType
+    _count?: NestedIntFilter<$PrismaModel>
+    _min?: NestedEnumMenuTypeFilter<$PrismaModel>
+    _max?: NestedEnumMenuTypeFilter<$PrismaModel>
+  }
+
+  export type IntFilter<$PrismaModel = never> = {
+    equals?: number | IntFieldRefInput<$PrismaModel>
+    in?: number[] | ListIntFieldRefInput<$PrismaModel>
+    notIn?: number[] | ListIntFieldRefInput<$PrismaModel>
+    lt?: number | IntFieldRefInput<$PrismaModel>
+    lte?: number | IntFieldRefInput<$PrismaModel>
+    gt?: number | IntFieldRefInput<$PrismaModel>
+    gte?: number | IntFieldRefInput<$PrismaModel>
+    not?: NestedIntFilter<$PrismaModel> | number
+  }
+
+  export type FeedbackCountOrderByAggregateInput = {
+    id?: SortOrder
+    cafeId?: SortOrder
+    rating?: SortOrder
+    comment?: SortOrder
+    createdAt?: SortOrder
+  }
+
+  export type FeedbackAvgOrderByAggregateInput = {
+    rating?: SortOrder
+  }
+
+  export type FeedbackMaxOrderByAggregateInput = {
+    id?: SortOrder
+    cafeId?: SortOrder
+    rating?: SortOrder
+    comment?: SortOrder
+    createdAt?: SortOrder
+  }
+
+  export type FeedbackMinOrderByAggregateInput = {
+    id?: SortOrder
+    cafeId?: SortOrder
+    rating?: SortOrder
+    comment?: SortOrder
+    createdAt?: SortOrder
+  }
+
+  export type FeedbackSumOrderByAggregateInput = {
+    rating?: SortOrder
+  }
+
+  export type IntWithAggregatesFilter<$PrismaModel = never> = {
+    equals?: number | IntFieldRefInput<$PrismaModel>
+    in?: number[] | ListIntFieldRefInput<$PrismaModel>
+    notIn?: number[] | ListIntFieldRefInput<$PrismaModel>
+    lt?: number | IntFieldRefInput<$PrismaModel>
+    lte?: number | IntFieldRefInput<$PrismaModel>
+    gt?: number | IntFieldRefInput<$PrismaModel>
+    gte?: number | IntFieldRefInput<$PrismaModel>
+    not?: NestedIntWithAggregatesFilter<$PrismaModel> | number
+    _count?: NestedIntFilter<$PrismaModel>
+    _avg?: NestedFloatFilter<$PrismaModel>
+    _sum?: NestedIntFilter<$PrismaModel>
+    _min?: NestedIntFilter<$PrismaModel>
+    _max?: NestedIntFilter<$PrismaModel>
+  }
+
   export type EnumUserRoleFilter<$PrismaModel = never> = {
     equals?: $Enums.UserRole | EnumUserRoleFieldRefInput<$PrismaModel>
     in?: $Enums.UserRole[] | ListEnumUserRoleFieldRefInput<$PrismaModel>
@@ -19250,20 +22569,15 @@ export namespace Prisma {
     _max?: NestedEnumUserRoleFilter<$PrismaModel>
   }
 
-  export type IntFilter<$PrismaModel = never> = {
-    equals?: number | IntFieldRefInput<$PrismaModel>
-    in?: number[] | ListIntFieldRefInput<$PrismaModel>
-    notIn?: number[] | ListIntFieldRefInput<$PrismaModel>
-    lt?: number | IntFieldRefInput<$PrismaModel>
-    lte?: number | IntFieldRefInput<$PrismaModel>
-    gt?: number | IntFieldRefInput<$PrismaModel>
-    gte?: number | IntFieldRefInput<$PrismaModel>
-    not?: NestedIntFilter<$PrismaModel> | number
+  export type MenuNullableScalarRelationFilter = {
+    is?: MenuWhereInput | null
+    isNot?: MenuWhereInput | null
   }
 
   export type MenuCategoryCountOrderByAggregateInput = {
     id?: SortOrder
     cafeId?: SortOrder
+    menuId?: SortOrder
     name?: SortOrder
     sortOrder?: SortOrder
     isActive?: SortOrder
@@ -19277,6 +22591,7 @@ export namespace Prisma {
   export type MenuCategoryMaxOrderByAggregateInput = {
     id?: SortOrder
     cafeId?: SortOrder
+    menuId?: SortOrder
     name?: SortOrder
     sortOrder?: SortOrder
     isActive?: SortOrder
@@ -19286,6 +22601,7 @@ export namespace Prisma {
   export type MenuCategoryMinOrderByAggregateInput = {
     id?: SortOrder
     cafeId?: SortOrder
+    menuId?: SortOrder
     name?: SortOrder
     sortOrder?: SortOrder
     isActive?: SortOrder
@@ -19296,20 +22612,11 @@ export namespace Prisma {
     sortOrder?: SortOrder
   }
 
-  export type IntWithAggregatesFilter<$PrismaModel = never> = {
-    equals?: number | IntFieldRefInput<$PrismaModel>
-    in?: number[] | ListIntFieldRefInput<$PrismaModel>
-    notIn?: number[] | ListIntFieldRefInput<$PrismaModel>
-    lt?: number | IntFieldRefInput<$PrismaModel>
-    lte?: number | IntFieldRefInput<$PrismaModel>
-    gt?: number | IntFieldRefInput<$PrismaModel>
-    gte?: number | IntFieldRefInput<$PrismaModel>
-    not?: NestedIntWithAggregatesFilter<$PrismaModel> | number
-    _count?: NestedIntFilter<$PrismaModel>
-    _avg?: NestedFloatFilter<$PrismaModel>
-    _sum?: NestedIntFilter<$PrismaModel>
-    _min?: NestedIntFilter<$PrismaModel>
-    _max?: NestedIntFilter<$PrismaModel>
+  export type EnumMenuTypeNullableFilter<$PrismaModel = never> = {
+    equals?: $Enums.MenuType | EnumMenuTypeFieldRefInput<$PrismaModel> | null
+    in?: $Enums.MenuType[] | ListEnumMenuTypeFieldRefInput<$PrismaModel> | null
+    notIn?: $Enums.MenuType[] | ListEnumMenuTypeFieldRefInput<$PrismaModel> | null
+    not?: NestedEnumMenuTypeNullableFilter<$PrismaModel> | $Enums.MenuType | null
   }
 
   export type MenuCategoryNullableScalarRelationFilter = {
@@ -19323,6 +22630,11 @@ export namespace Prisma {
     none?: OrderItemWhereInput
   }
 
+  export type MenuItemNullableScalarRelationFilter = {
+    is?: MenuItemWhereInput | null
+    isNot?: MenuItemWhereInput | null
+  }
+
   export type OrderItemOrderByRelationAggregateInput = {
     _count?: SortOrder
   }
@@ -19330,6 +22642,7 @@ export namespace Prisma {
   export type MenuItemCountOrderByAggregateInput = {
     id?: SortOrder
     cafeId?: SortOrder
+    menuId?: SortOrder
     categoryId?: SortOrder
     name?: SortOrder
     description?: SortOrder
@@ -19337,7 +22650,10 @@ export namespace Prisma {
     imageUrl?: SortOrder
     isAvailable?: SortOrder
     isVeg?: SortOrder
+    isSubsidised?: SortOrder
     sortOrder?: SortOrder
+    menuType?: SortOrder
+    overriddenFromId?: SortOrder
     createdAt?: SortOrder
     updatedAt?: SortOrder
   }
@@ -19350,6 +22666,7 @@ export namespace Prisma {
   export type MenuItemMaxOrderByAggregateInput = {
     id?: SortOrder
     cafeId?: SortOrder
+    menuId?: SortOrder
     categoryId?: SortOrder
     name?: SortOrder
     description?: SortOrder
@@ -19357,7 +22674,10 @@ export namespace Prisma {
     imageUrl?: SortOrder
     isAvailable?: SortOrder
     isVeg?: SortOrder
+    isSubsidised?: SortOrder
     sortOrder?: SortOrder
+    menuType?: SortOrder
+    overriddenFromId?: SortOrder
     createdAt?: SortOrder
     updatedAt?: SortOrder
   }
@@ -19365,6 +22685,7 @@ export namespace Prisma {
   export type MenuItemMinOrderByAggregateInput = {
     id?: SortOrder
     cafeId?: SortOrder
+    menuId?: SortOrder
     categoryId?: SortOrder
     name?: SortOrder
     description?: SortOrder
@@ -19372,7 +22693,10 @@ export namespace Prisma {
     imageUrl?: SortOrder
     isAvailable?: SortOrder
     isVeg?: SortOrder
+    isSubsidised?: SortOrder
     sortOrder?: SortOrder
+    menuType?: SortOrder
+    overriddenFromId?: SortOrder
     createdAt?: SortOrder
     updatedAt?: SortOrder
   }
@@ -19380,6 +22704,16 @@ export namespace Prisma {
   export type MenuItemSumOrderByAggregateInput = {
     pricePaise?: SortOrder
     sortOrder?: SortOrder
+  }
+
+  export type EnumMenuTypeNullableWithAggregatesFilter<$PrismaModel = never> = {
+    equals?: $Enums.MenuType | EnumMenuTypeFieldRefInput<$PrismaModel> | null
+    in?: $Enums.MenuType[] | ListEnumMenuTypeFieldRefInput<$PrismaModel> | null
+    notIn?: $Enums.MenuType[] | ListEnumMenuTypeFieldRefInput<$PrismaModel> | null
+    not?: NestedEnumMenuTypeNullableWithAggregatesFilter<$PrismaModel> | $Enums.MenuType | null
+    _count?: NestedIntNullableFilter<$PrismaModel>
+    _min?: NestedEnumMenuTypeNullableFilter<$PrismaModel>
+    _max?: NestedEnumMenuTypeNullableFilter<$PrismaModel>
   }
 
   export type EnumOrderStatusFilter<$PrismaModel = never> = {
@@ -19398,11 +22732,6 @@ export namespace Prisma {
     gt?: number | IntFieldRefInput<$PrismaModel>
     gte?: number | IntFieldRefInput<$PrismaModel>
     not?: NestedIntNullableFilter<$PrismaModel> | number | null
-  }
-
-  export type CafeScalarRelationFilter = {
-    is?: CafeWhereInput
-    isNot?: CafeWhereInput
   }
 
   export type TableNullableScalarRelationFilter = {
@@ -19525,6 +22854,7 @@ export namespace Prisma {
     itemPricePaise?: SortOrder
     quantity?: SortOrder
     subtotalPaise?: SortOrder
+    isSubsidised?: SortOrder
   }
 
   export type OrderItemAvgOrderByAggregateInput = {
@@ -19541,6 +22871,7 @@ export namespace Prisma {
     itemPricePaise?: SortOrder
     quantity?: SortOrder
     subtotalPaise?: SortOrder
+    isSubsidised?: SortOrder
   }
 
   export type OrderItemMinOrderByAggregateInput = {
@@ -19551,6 +22882,7 @@ export namespace Prisma {
     itemPricePaise?: SortOrder
     quantity?: SortOrder
     subtotalPaise?: SortOrder
+    isSubsidised?: SortOrder
   }
 
   export type OrderItemSumOrderByAggregateInput = {
@@ -19905,6 +23237,20 @@ export namespace Prisma {
     connect?: MenuItemWhereUniqueInput | MenuItemWhereUniqueInput[]
   }
 
+  export type MenuCreateNestedManyWithoutCafeInput = {
+    create?: XOR<MenuCreateWithoutCafeInput, MenuUncheckedCreateWithoutCafeInput> | MenuCreateWithoutCafeInput[] | MenuUncheckedCreateWithoutCafeInput[]
+    connectOrCreate?: MenuCreateOrConnectWithoutCafeInput | MenuCreateOrConnectWithoutCafeInput[]
+    createMany?: MenuCreateManyCafeInputEnvelope
+    connect?: MenuWhereUniqueInput | MenuWhereUniqueInput[]
+  }
+
+  export type FeedbackCreateNestedManyWithoutCafeInput = {
+    create?: XOR<FeedbackCreateWithoutCafeInput, FeedbackUncheckedCreateWithoutCafeInput> | FeedbackCreateWithoutCafeInput[] | FeedbackUncheckedCreateWithoutCafeInput[]
+    connectOrCreate?: FeedbackCreateOrConnectWithoutCafeInput | FeedbackCreateOrConnectWithoutCafeInput[]
+    createMany?: FeedbackCreateManyCafeInputEnvelope
+    connect?: FeedbackWhereUniqueInput | FeedbackWhereUniqueInput[]
+  }
+
   export type OrderCreateNestedManyWithoutCafeInput = {
     create?: XOR<OrderCreateWithoutCafeInput, OrderUncheckedCreateWithoutCafeInput> | OrderCreateWithoutCafeInput[] | OrderUncheckedCreateWithoutCafeInput[]
     connectOrCreate?: OrderCreateOrConnectWithoutCafeInput | OrderCreateOrConnectWithoutCafeInput[]
@@ -19959,6 +23305,20 @@ export namespace Prisma {
     connectOrCreate?: MenuItemCreateOrConnectWithoutCafeInput | MenuItemCreateOrConnectWithoutCafeInput[]
     createMany?: MenuItemCreateManyCafeInputEnvelope
     connect?: MenuItemWhereUniqueInput | MenuItemWhereUniqueInput[]
+  }
+
+  export type MenuUncheckedCreateNestedManyWithoutCafeInput = {
+    create?: XOR<MenuCreateWithoutCafeInput, MenuUncheckedCreateWithoutCafeInput> | MenuCreateWithoutCafeInput[] | MenuUncheckedCreateWithoutCafeInput[]
+    connectOrCreate?: MenuCreateOrConnectWithoutCafeInput | MenuCreateOrConnectWithoutCafeInput[]
+    createMany?: MenuCreateManyCafeInputEnvelope
+    connect?: MenuWhereUniqueInput | MenuWhereUniqueInput[]
+  }
+
+  export type FeedbackUncheckedCreateNestedManyWithoutCafeInput = {
+    create?: XOR<FeedbackCreateWithoutCafeInput, FeedbackUncheckedCreateWithoutCafeInput> | FeedbackCreateWithoutCafeInput[] | FeedbackUncheckedCreateWithoutCafeInput[]
+    connectOrCreate?: FeedbackCreateOrConnectWithoutCafeInput | FeedbackCreateOrConnectWithoutCafeInput[]
+    createMany?: FeedbackCreateManyCafeInputEnvelope
+    connect?: FeedbackWhereUniqueInput | FeedbackWhereUniqueInput[]
   }
 
   export type OrderUncheckedCreateNestedManyWithoutCafeInput = {
@@ -20056,6 +23416,34 @@ export namespace Prisma {
     update?: MenuItemUpdateWithWhereUniqueWithoutCafeInput | MenuItemUpdateWithWhereUniqueWithoutCafeInput[]
     updateMany?: MenuItemUpdateManyWithWhereWithoutCafeInput | MenuItemUpdateManyWithWhereWithoutCafeInput[]
     deleteMany?: MenuItemScalarWhereInput | MenuItemScalarWhereInput[]
+  }
+
+  export type MenuUpdateManyWithoutCafeNestedInput = {
+    create?: XOR<MenuCreateWithoutCafeInput, MenuUncheckedCreateWithoutCafeInput> | MenuCreateWithoutCafeInput[] | MenuUncheckedCreateWithoutCafeInput[]
+    connectOrCreate?: MenuCreateOrConnectWithoutCafeInput | MenuCreateOrConnectWithoutCafeInput[]
+    upsert?: MenuUpsertWithWhereUniqueWithoutCafeInput | MenuUpsertWithWhereUniqueWithoutCafeInput[]
+    createMany?: MenuCreateManyCafeInputEnvelope
+    set?: MenuWhereUniqueInput | MenuWhereUniqueInput[]
+    disconnect?: MenuWhereUniqueInput | MenuWhereUniqueInput[]
+    delete?: MenuWhereUniqueInput | MenuWhereUniqueInput[]
+    connect?: MenuWhereUniqueInput | MenuWhereUniqueInput[]
+    update?: MenuUpdateWithWhereUniqueWithoutCafeInput | MenuUpdateWithWhereUniqueWithoutCafeInput[]
+    updateMany?: MenuUpdateManyWithWhereWithoutCafeInput | MenuUpdateManyWithWhereWithoutCafeInput[]
+    deleteMany?: MenuScalarWhereInput | MenuScalarWhereInput[]
+  }
+
+  export type FeedbackUpdateManyWithoutCafeNestedInput = {
+    create?: XOR<FeedbackCreateWithoutCafeInput, FeedbackUncheckedCreateWithoutCafeInput> | FeedbackCreateWithoutCafeInput[] | FeedbackUncheckedCreateWithoutCafeInput[]
+    connectOrCreate?: FeedbackCreateOrConnectWithoutCafeInput | FeedbackCreateOrConnectWithoutCafeInput[]
+    upsert?: FeedbackUpsertWithWhereUniqueWithoutCafeInput | FeedbackUpsertWithWhereUniqueWithoutCafeInput[]
+    createMany?: FeedbackCreateManyCafeInputEnvelope
+    set?: FeedbackWhereUniqueInput | FeedbackWhereUniqueInput[]
+    disconnect?: FeedbackWhereUniqueInput | FeedbackWhereUniqueInput[]
+    delete?: FeedbackWhereUniqueInput | FeedbackWhereUniqueInput[]
+    connect?: FeedbackWhereUniqueInput | FeedbackWhereUniqueInput[]
+    update?: FeedbackUpdateWithWhereUniqueWithoutCafeInput | FeedbackUpdateWithWhereUniqueWithoutCafeInput[]
+    updateMany?: FeedbackUpdateManyWithWhereWithoutCafeInput | FeedbackUpdateManyWithWhereWithoutCafeInput[]
+    deleteMany?: FeedbackScalarWhereInput | FeedbackScalarWhereInput[]
   }
 
   export type OrderUpdateManyWithoutCafeNestedInput = {
@@ -20170,6 +23558,34 @@ export namespace Prisma {
     deleteMany?: MenuItemScalarWhereInput | MenuItemScalarWhereInput[]
   }
 
+  export type MenuUncheckedUpdateManyWithoutCafeNestedInput = {
+    create?: XOR<MenuCreateWithoutCafeInput, MenuUncheckedCreateWithoutCafeInput> | MenuCreateWithoutCafeInput[] | MenuUncheckedCreateWithoutCafeInput[]
+    connectOrCreate?: MenuCreateOrConnectWithoutCafeInput | MenuCreateOrConnectWithoutCafeInput[]
+    upsert?: MenuUpsertWithWhereUniqueWithoutCafeInput | MenuUpsertWithWhereUniqueWithoutCafeInput[]
+    createMany?: MenuCreateManyCafeInputEnvelope
+    set?: MenuWhereUniqueInput | MenuWhereUniqueInput[]
+    disconnect?: MenuWhereUniqueInput | MenuWhereUniqueInput[]
+    delete?: MenuWhereUniqueInput | MenuWhereUniqueInput[]
+    connect?: MenuWhereUniqueInput | MenuWhereUniqueInput[]
+    update?: MenuUpdateWithWhereUniqueWithoutCafeInput | MenuUpdateWithWhereUniqueWithoutCafeInput[]
+    updateMany?: MenuUpdateManyWithWhereWithoutCafeInput | MenuUpdateManyWithWhereWithoutCafeInput[]
+    deleteMany?: MenuScalarWhereInput | MenuScalarWhereInput[]
+  }
+
+  export type FeedbackUncheckedUpdateManyWithoutCafeNestedInput = {
+    create?: XOR<FeedbackCreateWithoutCafeInput, FeedbackUncheckedCreateWithoutCafeInput> | FeedbackCreateWithoutCafeInput[] | FeedbackUncheckedCreateWithoutCafeInput[]
+    connectOrCreate?: FeedbackCreateOrConnectWithoutCafeInput | FeedbackCreateOrConnectWithoutCafeInput[]
+    upsert?: FeedbackUpsertWithWhereUniqueWithoutCafeInput | FeedbackUpsertWithWhereUniqueWithoutCafeInput[]
+    createMany?: FeedbackCreateManyCafeInputEnvelope
+    set?: FeedbackWhereUniqueInput | FeedbackWhereUniqueInput[]
+    disconnect?: FeedbackWhereUniqueInput | FeedbackWhereUniqueInput[]
+    delete?: FeedbackWhereUniqueInput | FeedbackWhereUniqueInput[]
+    connect?: FeedbackWhereUniqueInput | FeedbackWhereUniqueInput[]
+    update?: FeedbackUpdateWithWhereUniqueWithoutCafeInput | FeedbackUpdateWithWhereUniqueWithoutCafeInput[]
+    updateMany?: FeedbackUpdateManyWithWhereWithoutCafeInput | FeedbackUpdateManyWithWhereWithoutCafeInput[]
+    deleteMany?: FeedbackScalarWhereInput | FeedbackScalarWhereInput[]
+  }
+
   export type OrderUncheckedUpdateManyWithoutCafeNestedInput = {
     create?: XOR<OrderCreateWithoutCafeInput, OrderUncheckedCreateWithoutCafeInput> | OrderCreateWithoutCafeInput[] | OrderUncheckedCreateWithoutCafeInput[]
     connectOrCreate?: OrderCreateOrConnectWithoutCafeInput | OrderCreateOrConnectWithoutCafeInput[]
@@ -20240,6 +23656,130 @@ export namespace Prisma {
     deleteMany?: OrderCounterScalarWhereInput | OrderCounterScalarWhereInput[]
   }
 
+  export type CafeCreateNestedOneWithoutMenusInput = {
+    create?: XOR<CafeCreateWithoutMenusInput, CafeUncheckedCreateWithoutMenusInput>
+    connectOrCreate?: CafeCreateOrConnectWithoutMenusInput
+    connect?: CafeWhereUniqueInput
+  }
+
+  export type MenuCategoryCreateNestedManyWithoutMenuInput = {
+    create?: XOR<MenuCategoryCreateWithoutMenuInput, MenuCategoryUncheckedCreateWithoutMenuInput> | MenuCategoryCreateWithoutMenuInput[] | MenuCategoryUncheckedCreateWithoutMenuInput[]
+    connectOrCreate?: MenuCategoryCreateOrConnectWithoutMenuInput | MenuCategoryCreateOrConnectWithoutMenuInput[]
+    createMany?: MenuCategoryCreateManyMenuInputEnvelope
+    connect?: MenuCategoryWhereUniqueInput | MenuCategoryWhereUniqueInput[]
+  }
+
+  export type MenuItemCreateNestedManyWithoutMenuInput = {
+    create?: XOR<MenuItemCreateWithoutMenuInput, MenuItemUncheckedCreateWithoutMenuInput> | MenuItemCreateWithoutMenuInput[] | MenuItemUncheckedCreateWithoutMenuInput[]
+    connectOrCreate?: MenuItemCreateOrConnectWithoutMenuInput | MenuItemCreateOrConnectWithoutMenuInput[]
+    createMany?: MenuItemCreateManyMenuInputEnvelope
+    connect?: MenuItemWhereUniqueInput | MenuItemWhereUniqueInput[]
+  }
+
+  export type MenuCategoryUncheckedCreateNestedManyWithoutMenuInput = {
+    create?: XOR<MenuCategoryCreateWithoutMenuInput, MenuCategoryUncheckedCreateWithoutMenuInput> | MenuCategoryCreateWithoutMenuInput[] | MenuCategoryUncheckedCreateWithoutMenuInput[]
+    connectOrCreate?: MenuCategoryCreateOrConnectWithoutMenuInput | MenuCategoryCreateOrConnectWithoutMenuInput[]
+    createMany?: MenuCategoryCreateManyMenuInputEnvelope
+    connect?: MenuCategoryWhereUniqueInput | MenuCategoryWhereUniqueInput[]
+  }
+
+  export type MenuItemUncheckedCreateNestedManyWithoutMenuInput = {
+    create?: XOR<MenuItemCreateWithoutMenuInput, MenuItemUncheckedCreateWithoutMenuInput> | MenuItemCreateWithoutMenuInput[] | MenuItemUncheckedCreateWithoutMenuInput[]
+    connectOrCreate?: MenuItemCreateOrConnectWithoutMenuInput | MenuItemCreateOrConnectWithoutMenuInput[]
+    createMany?: MenuItemCreateManyMenuInputEnvelope
+    connect?: MenuItemWhereUniqueInput | MenuItemWhereUniqueInput[]
+  }
+
+  export type EnumMenuTypeFieldUpdateOperationsInput = {
+    set?: $Enums.MenuType
+  }
+
+  export type CafeUpdateOneRequiredWithoutMenusNestedInput = {
+    create?: XOR<CafeCreateWithoutMenusInput, CafeUncheckedCreateWithoutMenusInput>
+    connectOrCreate?: CafeCreateOrConnectWithoutMenusInput
+    upsert?: CafeUpsertWithoutMenusInput
+    connect?: CafeWhereUniqueInput
+    update?: XOR<XOR<CafeUpdateToOneWithWhereWithoutMenusInput, CafeUpdateWithoutMenusInput>, CafeUncheckedUpdateWithoutMenusInput>
+  }
+
+  export type MenuCategoryUpdateManyWithoutMenuNestedInput = {
+    create?: XOR<MenuCategoryCreateWithoutMenuInput, MenuCategoryUncheckedCreateWithoutMenuInput> | MenuCategoryCreateWithoutMenuInput[] | MenuCategoryUncheckedCreateWithoutMenuInput[]
+    connectOrCreate?: MenuCategoryCreateOrConnectWithoutMenuInput | MenuCategoryCreateOrConnectWithoutMenuInput[]
+    upsert?: MenuCategoryUpsertWithWhereUniqueWithoutMenuInput | MenuCategoryUpsertWithWhereUniqueWithoutMenuInput[]
+    createMany?: MenuCategoryCreateManyMenuInputEnvelope
+    set?: MenuCategoryWhereUniqueInput | MenuCategoryWhereUniqueInput[]
+    disconnect?: MenuCategoryWhereUniqueInput | MenuCategoryWhereUniqueInput[]
+    delete?: MenuCategoryWhereUniqueInput | MenuCategoryWhereUniqueInput[]
+    connect?: MenuCategoryWhereUniqueInput | MenuCategoryWhereUniqueInput[]
+    update?: MenuCategoryUpdateWithWhereUniqueWithoutMenuInput | MenuCategoryUpdateWithWhereUniqueWithoutMenuInput[]
+    updateMany?: MenuCategoryUpdateManyWithWhereWithoutMenuInput | MenuCategoryUpdateManyWithWhereWithoutMenuInput[]
+    deleteMany?: MenuCategoryScalarWhereInput | MenuCategoryScalarWhereInput[]
+  }
+
+  export type MenuItemUpdateManyWithoutMenuNestedInput = {
+    create?: XOR<MenuItemCreateWithoutMenuInput, MenuItemUncheckedCreateWithoutMenuInput> | MenuItemCreateWithoutMenuInput[] | MenuItemUncheckedCreateWithoutMenuInput[]
+    connectOrCreate?: MenuItemCreateOrConnectWithoutMenuInput | MenuItemCreateOrConnectWithoutMenuInput[]
+    upsert?: MenuItemUpsertWithWhereUniqueWithoutMenuInput | MenuItemUpsertWithWhereUniqueWithoutMenuInput[]
+    createMany?: MenuItemCreateManyMenuInputEnvelope
+    set?: MenuItemWhereUniqueInput | MenuItemWhereUniqueInput[]
+    disconnect?: MenuItemWhereUniqueInput | MenuItemWhereUniqueInput[]
+    delete?: MenuItemWhereUniqueInput | MenuItemWhereUniqueInput[]
+    connect?: MenuItemWhereUniqueInput | MenuItemWhereUniqueInput[]
+    update?: MenuItemUpdateWithWhereUniqueWithoutMenuInput | MenuItemUpdateWithWhereUniqueWithoutMenuInput[]
+    updateMany?: MenuItemUpdateManyWithWhereWithoutMenuInput | MenuItemUpdateManyWithWhereWithoutMenuInput[]
+    deleteMany?: MenuItemScalarWhereInput | MenuItemScalarWhereInput[]
+  }
+
+  export type MenuCategoryUncheckedUpdateManyWithoutMenuNestedInput = {
+    create?: XOR<MenuCategoryCreateWithoutMenuInput, MenuCategoryUncheckedCreateWithoutMenuInput> | MenuCategoryCreateWithoutMenuInput[] | MenuCategoryUncheckedCreateWithoutMenuInput[]
+    connectOrCreate?: MenuCategoryCreateOrConnectWithoutMenuInput | MenuCategoryCreateOrConnectWithoutMenuInput[]
+    upsert?: MenuCategoryUpsertWithWhereUniqueWithoutMenuInput | MenuCategoryUpsertWithWhereUniqueWithoutMenuInput[]
+    createMany?: MenuCategoryCreateManyMenuInputEnvelope
+    set?: MenuCategoryWhereUniqueInput | MenuCategoryWhereUniqueInput[]
+    disconnect?: MenuCategoryWhereUniqueInput | MenuCategoryWhereUniqueInput[]
+    delete?: MenuCategoryWhereUniqueInput | MenuCategoryWhereUniqueInput[]
+    connect?: MenuCategoryWhereUniqueInput | MenuCategoryWhereUniqueInput[]
+    update?: MenuCategoryUpdateWithWhereUniqueWithoutMenuInput | MenuCategoryUpdateWithWhereUniqueWithoutMenuInput[]
+    updateMany?: MenuCategoryUpdateManyWithWhereWithoutMenuInput | MenuCategoryUpdateManyWithWhereWithoutMenuInput[]
+    deleteMany?: MenuCategoryScalarWhereInput | MenuCategoryScalarWhereInput[]
+  }
+
+  export type MenuItemUncheckedUpdateManyWithoutMenuNestedInput = {
+    create?: XOR<MenuItemCreateWithoutMenuInput, MenuItemUncheckedCreateWithoutMenuInput> | MenuItemCreateWithoutMenuInput[] | MenuItemUncheckedCreateWithoutMenuInput[]
+    connectOrCreate?: MenuItemCreateOrConnectWithoutMenuInput | MenuItemCreateOrConnectWithoutMenuInput[]
+    upsert?: MenuItemUpsertWithWhereUniqueWithoutMenuInput | MenuItemUpsertWithWhereUniqueWithoutMenuInput[]
+    createMany?: MenuItemCreateManyMenuInputEnvelope
+    set?: MenuItemWhereUniqueInput | MenuItemWhereUniqueInput[]
+    disconnect?: MenuItemWhereUniqueInput | MenuItemWhereUniqueInput[]
+    delete?: MenuItemWhereUniqueInput | MenuItemWhereUniqueInput[]
+    connect?: MenuItemWhereUniqueInput | MenuItemWhereUniqueInput[]
+    update?: MenuItemUpdateWithWhereUniqueWithoutMenuInput | MenuItemUpdateWithWhereUniqueWithoutMenuInput[]
+    updateMany?: MenuItemUpdateManyWithWhereWithoutMenuInput | MenuItemUpdateManyWithWhereWithoutMenuInput[]
+    deleteMany?: MenuItemScalarWhereInput | MenuItemScalarWhereInput[]
+  }
+
+  export type CafeCreateNestedOneWithoutFeedbackInput = {
+    create?: XOR<CafeCreateWithoutFeedbackInput, CafeUncheckedCreateWithoutFeedbackInput>
+    connectOrCreate?: CafeCreateOrConnectWithoutFeedbackInput
+    connect?: CafeWhereUniqueInput
+  }
+
+  export type IntFieldUpdateOperationsInput = {
+    set?: number
+    increment?: number
+    decrement?: number
+    multiply?: number
+    divide?: number
+  }
+
+  export type CafeUpdateOneRequiredWithoutFeedbackNestedInput = {
+    create?: XOR<CafeCreateWithoutFeedbackInput, CafeUncheckedCreateWithoutFeedbackInput>
+    connectOrCreate?: CafeCreateOrConnectWithoutFeedbackInput
+    upsert?: CafeUpsertWithoutFeedbackInput
+    connect?: CafeWhereUniqueInput
+    update?: XOR<XOR<CafeUpdateToOneWithWhereWithoutFeedbackInput, CafeUpdateWithoutFeedbackInput>, CafeUncheckedUpdateWithoutFeedbackInput>
+  }
+
   export type CafeCreateNestedOneWithoutUsersInput = {
     create?: XOR<CafeCreateWithoutUsersInput, CafeUncheckedCreateWithoutUsersInput>
     connectOrCreate?: CafeCreateOrConnectWithoutUsersInput
@@ -20308,6 +23848,12 @@ export namespace Prisma {
     connect?: CafeWhereUniqueInput
   }
 
+  export type MenuCreateNestedOneWithoutCategoriesInput = {
+    create?: XOR<MenuCreateWithoutCategoriesInput, MenuUncheckedCreateWithoutCategoriesInput>
+    connectOrCreate?: MenuCreateOrConnectWithoutCategoriesInput
+    connect?: MenuWhereUniqueInput
+  }
+
   export type MenuItemCreateNestedManyWithoutCategoryInput = {
     create?: XOR<MenuItemCreateWithoutCategoryInput, MenuItemUncheckedCreateWithoutCategoryInput> | MenuItemCreateWithoutCategoryInput[] | MenuItemUncheckedCreateWithoutCategoryInput[]
     connectOrCreate?: MenuItemCreateOrConnectWithoutCategoryInput | MenuItemCreateOrConnectWithoutCategoryInput[]
@@ -20322,14 +23868,6 @@ export namespace Prisma {
     connect?: MenuItemWhereUniqueInput | MenuItemWhereUniqueInput[]
   }
 
-  export type IntFieldUpdateOperationsInput = {
-    set?: number
-    increment?: number
-    decrement?: number
-    multiply?: number
-    divide?: number
-  }
-
   export type CafeUpdateOneWithoutCategoriesNestedInput = {
     create?: XOR<CafeCreateWithoutCategoriesInput, CafeUncheckedCreateWithoutCategoriesInput>
     connectOrCreate?: CafeCreateOrConnectWithoutCategoriesInput
@@ -20338,6 +23876,16 @@ export namespace Prisma {
     delete?: CafeWhereInput | boolean
     connect?: CafeWhereUniqueInput
     update?: XOR<XOR<CafeUpdateToOneWithWhereWithoutCategoriesInput, CafeUpdateWithoutCategoriesInput>, CafeUncheckedUpdateWithoutCategoriesInput>
+  }
+
+  export type MenuUpdateOneWithoutCategoriesNestedInput = {
+    create?: XOR<MenuCreateWithoutCategoriesInput, MenuUncheckedCreateWithoutCategoriesInput>
+    connectOrCreate?: MenuCreateOrConnectWithoutCategoriesInput
+    upsert?: MenuUpsertWithoutCategoriesInput
+    disconnect?: MenuWhereInput | boolean
+    delete?: MenuWhereInput | boolean
+    connect?: MenuWhereUniqueInput
+    update?: XOR<XOR<MenuUpdateToOneWithWhereWithoutCategoriesInput, MenuUpdateWithoutCategoriesInput>, MenuUncheckedUpdateWithoutCategoriesInput>
   }
 
   export type MenuItemUpdateManyWithoutCategoryNestedInput = {
@@ -20374,6 +23922,12 @@ export namespace Prisma {
     connect?: CafeWhereUniqueInput
   }
 
+  export type MenuCreateNestedOneWithoutItemsInput = {
+    create?: XOR<MenuCreateWithoutItemsInput, MenuUncheckedCreateWithoutItemsInput>
+    connectOrCreate?: MenuCreateOrConnectWithoutItemsInput
+    connect?: MenuWhereUniqueInput
+  }
+
   export type MenuCategoryCreateNestedOneWithoutItemsInput = {
     create?: XOR<MenuCategoryCreateWithoutItemsInput, MenuCategoryUncheckedCreateWithoutItemsInput>
     connectOrCreate?: MenuCategoryCreateOrConnectWithoutItemsInput
@@ -20387,11 +23941,35 @@ export namespace Prisma {
     connect?: OrderItemWhereUniqueInput | OrderItemWhereUniqueInput[]
   }
 
+  export type MenuItemCreateNestedOneWithoutOverridesInput = {
+    create?: XOR<MenuItemCreateWithoutOverridesInput, MenuItemUncheckedCreateWithoutOverridesInput>
+    connectOrCreate?: MenuItemCreateOrConnectWithoutOverridesInput
+    connect?: MenuItemWhereUniqueInput
+  }
+
+  export type MenuItemCreateNestedManyWithoutOverriddenFromInput = {
+    create?: XOR<MenuItemCreateWithoutOverriddenFromInput, MenuItemUncheckedCreateWithoutOverriddenFromInput> | MenuItemCreateWithoutOverriddenFromInput[] | MenuItemUncheckedCreateWithoutOverriddenFromInput[]
+    connectOrCreate?: MenuItemCreateOrConnectWithoutOverriddenFromInput | MenuItemCreateOrConnectWithoutOverriddenFromInput[]
+    createMany?: MenuItemCreateManyOverriddenFromInputEnvelope
+    connect?: MenuItemWhereUniqueInput | MenuItemWhereUniqueInput[]
+  }
+
   export type OrderItemUncheckedCreateNestedManyWithoutMenuItemInput = {
     create?: XOR<OrderItemCreateWithoutMenuItemInput, OrderItemUncheckedCreateWithoutMenuItemInput> | OrderItemCreateWithoutMenuItemInput[] | OrderItemUncheckedCreateWithoutMenuItemInput[]
     connectOrCreate?: OrderItemCreateOrConnectWithoutMenuItemInput | OrderItemCreateOrConnectWithoutMenuItemInput[]
     createMany?: OrderItemCreateManyMenuItemInputEnvelope
     connect?: OrderItemWhereUniqueInput | OrderItemWhereUniqueInput[]
+  }
+
+  export type MenuItemUncheckedCreateNestedManyWithoutOverriddenFromInput = {
+    create?: XOR<MenuItemCreateWithoutOverriddenFromInput, MenuItemUncheckedCreateWithoutOverriddenFromInput> | MenuItemCreateWithoutOverriddenFromInput[] | MenuItemUncheckedCreateWithoutOverriddenFromInput[]
+    connectOrCreate?: MenuItemCreateOrConnectWithoutOverriddenFromInput | MenuItemCreateOrConnectWithoutOverriddenFromInput[]
+    createMany?: MenuItemCreateManyOverriddenFromInputEnvelope
+    connect?: MenuItemWhereUniqueInput | MenuItemWhereUniqueInput[]
+  }
+
+  export type NullableEnumMenuTypeFieldUpdateOperationsInput = {
+    set?: $Enums.MenuType | null
   }
 
   export type CafeUpdateOneWithoutMenuItemsNestedInput = {
@@ -20402,6 +23980,16 @@ export namespace Prisma {
     delete?: CafeWhereInput | boolean
     connect?: CafeWhereUniqueInput
     update?: XOR<XOR<CafeUpdateToOneWithWhereWithoutMenuItemsInput, CafeUpdateWithoutMenuItemsInput>, CafeUncheckedUpdateWithoutMenuItemsInput>
+  }
+
+  export type MenuUpdateOneWithoutItemsNestedInput = {
+    create?: XOR<MenuCreateWithoutItemsInput, MenuUncheckedCreateWithoutItemsInput>
+    connectOrCreate?: MenuCreateOrConnectWithoutItemsInput
+    upsert?: MenuUpsertWithoutItemsInput
+    disconnect?: MenuWhereInput | boolean
+    delete?: MenuWhereInput | boolean
+    connect?: MenuWhereUniqueInput
+    update?: XOR<XOR<MenuUpdateToOneWithWhereWithoutItemsInput, MenuUpdateWithoutItemsInput>, MenuUncheckedUpdateWithoutItemsInput>
   }
 
   export type MenuCategoryUpdateOneWithoutItemsNestedInput = {
@@ -20428,6 +24016,30 @@ export namespace Prisma {
     deleteMany?: OrderItemScalarWhereInput | OrderItemScalarWhereInput[]
   }
 
+  export type MenuItemUpdateOneWithoutOverridesNestedInput = {
+    create?: XOR<MenuItemCreateWithoutOverridesInput, MenuItemUncheckedCreateWithoutOverridesInput>
+    connectOrCreate?: MenuItemCreateOrConnectWithoutOverridesInput
+    upsert?: MenuItemUpsertWithoutOverridesInput
+    disconnect?: MenuItemWhereInput | boolean
+    delete?: MenuItemWhereInput | boolean
+    connect?: MenuItemWhereUniqueInput
+    update?: XOR<XOR<MenuItemUpdateToOneWithWhereWithoutOverridesInput, MenuItemUpdateWithoutOverridesInput>, MenuItemUncheckedUpdateWithoutOverridesInput>
+  }
+
+  export type MenuItemUpdateManyWithoutOverriddenFromNestedInput = {
+    create?: XOR<MenuItemCreateWithoutOverriddenFromInput, MenuItemUncheckedCreateWithoutOverriddenFromInput> | MenuItemCreateWithoutOverriddenFromInput[] | MenuItemUncheckedCreateWithoutOverriddenFromInput[]
+    connectOrCreate?: MenuItemCreateOrConnectWithoutOverriddenFromInput | MenuItemCreateOrConnectWithoutOverriddenFromInput[]
+    upsert?: MenuItemUpsertWithWhereUniqueWithoutOverriddenFromInput | MenuItemUpsertWithWhereUniqueWithoutOverriddenFromInput[]
+    createMany?: MenuItemCreateManyOverriddenFromInputEnvelope
+    set?: MenuItemWhereUniqueInput | MenuItemWhereUniqueInput[]
+    disconnect?: MenuItemWhereUniqueInput | MenuItemWhereUniqueInput[]
+    delete?: MenuItemWhereUniqueInput | MenuItemWhereUniqueInput[]
+    connect?: MenuItemWhereUniqueInput | MenuItemWhereUniqueInput[]
+    update?: MenuItemUpdateWithWhereUniqueWithoutOverriddenFromInput | MenuItemUpdateWithWhereUniqueWithoutOverriddenFromInput[]
+    updateMany?: MenuItemUpdateManyWithWhereWithoutOverriddenFromInput | MenuItemUpdateManyWithWhereWithoutOverriddenFromInput[]
+    deleteMany?: MenuItemScalarWhereInput | MenuItemScalarWhereInput[]
+  }
+
   export type OrderItemUncheckedUpdateManyWithoutMenuItemNestedInput = {
     create?: XOR<OrderItemCreateWithoutMenuItemInput, OrderItemUncheckedCreateWithoutMenuItemInput> | OrderItemCreateWithoutMenuItemInput[] | OrderItemUncheckedCreateWithoutMenuItemInput[]
     connectOrCreate?: OrderItemCreateOrConnectWithoutMenuItemInput | OrderItemCreateOrConnectWithoutMenuItemInput[]
@@ -20440,6 +24052,20 @@ export namespace Prisma {
     update?: OrderItemUpdateWithWhereUniqueWithoutMenuItemInput | OrderItemUpdateWithWhereUniqueWithoutMenuItemInput[]
     updateMany?: OrderItemUpdateManyWithWhereWithoutMenuItemInput | OrderItemUpdateManyWithWhereWithoutMenuItemInput[]
     deleteMany?: OrderItemScalarWhereInput | OrderItemScalarWhereInput[]
+  }
+
+  export type MenuItemUncheckedUpdateManyWithoutOverriddenFromNestedInput = {
+    create?: XOR<MenuItemCreateWithoutOverriddenFromInput, MenuItemUncheckedCreateWithoutOverriddenFromInput> | MenuItemCreateWithoutOverriddenFromInput[] | MenuItemUncheckedCreateWithoutOverriddenFromInput[]
+    connectOrCreate?: MenuItemCreateOrConnectWithoutOverriddenFromInput | MenuItemCreateOrConnectWithoutOverriddenFromInput[]
+    upsert?: MenuItemUpsertWithWhereUniqueWithoutOverriddenFromInput | MenuItemUpsertWithWhereUniqueWithoutOverriddenFromInput[]
+    createMany?: MenuItemCreateManyOverriddenFromInputEnvelope
+    set?: MenuItemWhereUniqueInput | MenuItemWhereUniqueInput[]
+    disconnect?: MenuItemWhereUniqueInput | MenuItemWhereUniqueInput[]
+    delete?: MenuItemWhereUniqueInput | MenuItemWhereUniqueInput[]
+    connect?: MenuItemWhereUniqueInput | MenuItemWhereUniqueInput[]
+    update?: MenuItemUpdateWithWhereUniqueWithoutOverriddenFromInput | MenuItemUpdateWithWhereUniqueWithoutOverriddenFromInput[]
+    updateMany?: MenuItemUpdateManyWithWhereWithoutOverriddenFromInput | MenuItemUpdateManyWithWhereWithoutOverriddenFromInput[]
+    deleteMany?: MenuItemScalarWhereInput | MenuItemScalarWhereInput[]
   }
 
   export type CafeCreateNestedOneWithoutOrdersInput = {
@@ -20871,21 +24497,21 @@ export namespace Prisma {
     _max?: NestedDateTimeFilter<$PrismaModel>
   }
 
-  export type NestedEnumUserRoleFilter<$PrismaModel = never> = {
-    equals?: $Enums.UserRole | EnumUserRoleFieldRefInput<$PrismaModel>
-    in?: $Enums.UserRole[] | ListEnumUserRoleFieldRefInput<$PrismaModel>
-    notIn?: $Enums.UserRole[] | ListEnumUserRoleFieldRefInput<$PrismaModel>
-    not?: NestedEnumUserRoleFilter<$PrismaModel> | $Enums.UserRole
+  export type NestedEnumMenuTypeFilter<$PrismaModel = never> = {
+    equals?: $Enums.MenuType | EnumMenuTypeFieldRefInput<$PrismaModel>
+    in?: $Enums.MenuType[] | ListEnumMenuTypeFieldRefInput<$PrismaModel>
+    notIn?: $Enums.MenuType[] | ListEnumMenuTypeFieldRefInput<$PrismaModel>
+    not?: NestedEnumMenuTypeFilter<$PrismaModel> | $Enums.MenuType
   }
 
-  export type NestedEnumUserRoleWithAggregatesFilter<$PrismaModel = never> = {
-    equals?: $Enums.UserRole | EnumUserRoleFieldRefInput<$PrismaModel>
-    in?: $Enums.UserRole[] | ListEnumUserRoleFieldRefInput<$PrismaModel>
-    notIn?: $Enums.UserRole[] | ListEnumUserRoleFieldRefInput<$PrismaModel>
-    not?: NestedEnumUserRoleWithAggregatesFilter<$PrismaModel> | $Enums.UserRole
+  export type NestedEnumMenuTypeWithAggregatesFilter<$PrismaModel = never> = {
+    equals?: $Enums.MenuType | EnumMenuTypeFieldRefInput<$PrismaModel>
+    in?: $Enums.MenuType[] | ListEnumMenuTypeFieldRefInput<$PrismaModel>
+    notIn?: $Enums.MenuType[] | ListEnumMenuTypeFieldRefInput<$PrismaModel>
+    not?: NestedEnumMenuTypeWithAggregatesFilter<$PrismaModel> | $Enums.MenuType
     _count?: NestedIntFilter<$PrismaModel>
-    _min?: NestedEnumUserRoleFilter<$PrismaModel>
-    _max?: NestedEnumUserRoleFilter<$PrismaModel>
+    _min?: NestedEnumMenuTypeFilter<$PrismaModel>
+    _max?: NestedEnumMenuTypeFilter<$PrismaModel>
   }
 
   export type NestedIntWithAggregatesFilter<$PrismaModel = never> = {
@@ -20913,6 +24539,40 @@ export namespace Prisma {
     gt?: number | FloatFieldRefInput<$PrismaModel>
     gte?: number | FloatFieldRefInput<$PrismaModel>
     not?: NestedFloatFilter<$PrismaModel> | number
+  }
+
+  export type NestedEnumUserRoleFilter<$PrismaModel = never> = {
+    equals?: $Enums.UserRole | EnumUserRoleFieldRefInput<$PrismaModel>
+    in?: $Enums.UserRole[] | ListEnumUserRoleFieldRefInput<$PrismaModel>
+    notIn?: $Enums.UserRole[] | ListEnumUserRoleFieldRefInput<$PrismaModel>
+    not?: NestedEnumUserRoleFilter<$PrismaModel> | $Enums.UserRole
+  }
+
+  export type NestedEnumUserRoleWithAggregatesFilter<$PrismaModel = never> = {
+    equals?: $Enums.UserRole | EnumUserRoleFieldRefInput<$PrismaModel>
+    in?: $Enums.UserRole[] | ListEnumUserRoleFieldRefInput<$PrismaModel>
+    notIn?: $Enums.UserRole[] | ListEnumUserRoleFieldRefInput<$PrismaModel>
+    not?: NestedEnumUserRoleWithAggregatesFilter<$PrismaModel> | $Enums.UserRole
+    _count?: NestedIntFilter<$PrismaModel>
+    _min?: NestedEnumUserRoleFilter<$PrismaModel>
+    _max?: NestedEnumUserRoleFilter<$PrismaModel>
+  }
+
+  export type NestedEnumMenuTypeNullableFilter<$PrismaModel = never> = {
+    equals?: $Enums.MenuType | EnumMenuTypeFieldRefInput<$PrismaModel> | null
+    in?: $Enums.MenuType[] | ListEnumMenuTypeFieldRefInput<$PrismaModel> | null
+    notIn?: $Enums.MenuType[] | ListEnumMenuTypeFieldRefInput<$PrismaModel> | null
+    not?: NestedEnumMenuTypeNullableFilter<$PrismaModel> | $Enums.MenuType | null
+  }
+
+  export type NestedEnumMenuTypeNullableWithAggregatesFilter<$PrismaModel = never> = {
+    equals?: $Enums.MenuType | EnumMenuTypeFieldRefInput<$PrismaModel> | null
+    in?: $Enums.MenuType[] | ListEnumMenuTypeFieldRefInput<$PrismaModel> | null
+    notIn?: $Enums.MenuType[] | ListEnumMenuTypeFieldRefInput<$PrismaModel> | null
+    not?: NestedEnumMenuTypeNullableWithAggregatesFilter<$PrismaModel> | $Enums.MenuType | null
+    _count?: NestedIntNullableFilter<$PrismaModel>
+    _min?: NestedEnumMenuTypeNullableFilter<$PrismaModel>
+    _max?: NestedEnumMenuTypeNullableFilter<$PrismaModel>
   }
 
   export type NestedEnumOrderStatusFilter<$PrismaModel = never> = {
@@ -21064,11 +24724,13 @@ export namespace Prisma {
     sortOrder?: number
     isActive?: boolean
     createdAt?: Date | string
+    menu?: MenuCreateNestedOneWithoutCategoriesInput
     items?: MenuItemCreateNestedManyWithoutCategoryInput
   }
 
   export type MenuCategoryUncheckedCreateWithoutCafeInput = {
     id?: string
+    menuId?: string | null
     name: string
     sortOrder?: number
     isActive?: boolean
@@ -21094,15 +24756,21 @@ export namespace Prisma {
     imageUrl?: string | null
     isAvailable?: boolean
     isVeg?: boolean
+    isSubsidised?: boolean
     sortOrder?: number
+    menuType?: $Enums.MenuType | null
     createdAt?: Date | string
     updatedAt?: Date | string
+    menu?: MenuCreateNestedOneWithoutItemsInput
     category?: MenuCategoryCreateNestedOneWithoutItemsInput
     orderItems?: OrderItemCreateNestedManyWithoutMenuItemInput
+    overriddenFrom?: MenuItemCreateNestedOneWithoutOverridesInput
+    overrides?: MenuItemCreateNestedManyWithoutOverriddenFromInput
   }
 
   export type MenuItemUncheckedCreateWithoutCafeInput = {
     id?: string
+    menuId?: string | null
     categoryId?: string | null
     name: string
     description?: string | null
@@ -21110,10 +24778,14 @@ export namespace Prisma {
     imageUrl?: string | null
     isAvailable?: boolean
     isVeg?: boolean
+    isSubsidised?: boolean
     sortOrder?: number
+    menuType?: $Enums.MenuType | null
+    overriddenFromId?: string | null
     createdAt?: Date | string
     updatedAt?: Date | string
     orderItems?: OrderItemUncheckedCreateNestedManyWithoutMenuItemInput
+    overrides?: MenuItemUncheckedCreateNestedManyWithoutOverriddenFromInput
   }
 
   export type MenuItemCreateOrConnectWithoutCafeInput = {
@@ -21123,6 +24795,62 @@ export namespace Prisma {
 
   export type MenuItemCreateManyCafeInputEnvelope = {
     data: MenuItemCreateManyCafeInput | MenuItemCreateManyCafeInput[]
+    skipDuplicates?: boolean
+  }
+
+  export type MenuCreateWithoutCafeInput = {
+    id?: string
+    type: $Enums.MenuType
+    isActive?: boolean
+    isSubsidised?: boolean
+    createdAt?: Date | string
+    updatedAt?: Date | string
+    categories?: MenuCategoryCreateNestedManyWithoutMenuInput
+    items?: MenuItemCreateNestedManyWithoutMenuInput
+  }
+
+  export type MenuUncheckedCreateWithoutCafeInput = {
+    id?: string
+    type: $Enums.MenuType
+    isActive?: boolean
+    isSubsidised?: boolean
+    createdAt?: Date | string
+    updatedAt?: Date | string
+    categories?: MenuCategoryUncheckedCreateNestedManyWithoutMenuInput
+    items?: MenuItemUncheckedCreateNestedManyWithoutMenuInput
+  }
+
+  export type MenuCreateOrConnectWithoutCafeInput = {
+    where: MenuWhereUniqueInput
+    create: XOR<MenuCreateWithoutCafeInput, MenuUncheckedCreateWithoutCafeInput>
+  }
+
+  export type MenuCreateManyCafeInputEnvelope = {
+    data: MenuCreateManyCafeInput | MenuCreateManyCafeInput[]
+    skipDuplicates?: boolean
+  }
+
+  export type FeedbackCreateWithoutCafeInput = {
+    id?: string
+    rating: number
+    comment?: string | null
+    createdAt?: Date | string
+  }
+
+  export type FeedbackUncheckedCreateWithoutCafeInput = {
+    id?: string
+    rating: number
+    comment?: string | null
+    createdAt?: Date | string
+  }
+
+  export type FeedbackCreateOrConnectWithoutCafeInput = {
+    where: FeedbackWhereUniqueInput
+    create: XOR<FeedbackCreateWithoutCafeInput, FeedbackUncheckedCreateWithoutCafeInput>
+  }
+
+  export type FeedbackCreateManyCafeInputEnvelope = {
+    data: FeedbackCreateManyCafeInput | FeedbackCreateManyCafeInput[]
     skipDuplicates?: boolean
   }
 
@@ -21333,6 +25061,7 @@ export namespace Prisma {
     NOT?: MenuCategoryScalarWhereInput | MenuCategoryScalarWhereInput[]
     id?: StringFilter<"MenuCategory"> | string
     cafeId?: StringNullableFilter<"MenuCategory"> | string | null
+    menuId?: StringNullableFilter<"MenuCategory"> | string | null
     name?: StringFilter<"MenuCategory"> | string
     sortOrder?: IntFilter<"MenuCategory"> | number
     isActive?: BoolFilter<"MenuCategory"> | boolean
@@ -21361,6 +25090,7 @@ export namespace Prisma {
     NOT?: MenuItemScalarWhereInput | MenuItemScalarWhereInput[]
     id?: StringFilter<"MenuItem"> | string
     cafeId?: StringNullableFilter<"MenuItem"> | string | null
+    menuId?: StringNullableFilter<"MenuItem"> | string | null
     categoryId?: StringNullableFilter<"MenuItem"> | string | null
     name?: StringFilter<"MenuItem"> | string
     description?: StringNullableFilter<"MenuItem"> | string | null
@@ -21368,9 +25098,68 @@ export namespace Prisma {
     imageUrl?: StringNullableFilter<"MenuItem"> | string | null
     isAvailable?: BoolFilter<"MenuItem"> | boolean
     isVeg?: BoolFilter<"MenuItem"> | boolean
+    isSubsidised?: BoolFilter<"MenuItem"> | boolean
     sortOrder?: IntFilter<"MenuItem"> | number
+    menuType?: EnumMenuTypeNullableFilter<"MenuItem"> | $Enums.MenuType | null
+    overriddenFromId?: StringNullableFilter<"MenuItem"> | string | null
     createdAt?: DateTimeFilter<"MenuItem"> | Date | string
     updatedAt?: DateTimeFilter<"MenuItem"> | Date | string
+  }
+
+  export type MenuUpsertWithWhereUniqueWithoutCafeInput = {
+    where: MenuWhereUniqueInput
+    update: XOR<MenuUpdateWithoutCafeInput, MenuUncheckedUpdateWithoutCafeInput>
+    create: XOR<MenuCreateWithoutCafeInput, MenuUncheckedCreateWithoutCafeInput>
+  }
+
+  export type MenuUpdateWithWhereUniqueWithoutCafeInput = {
+    where: MenuWhereUniqueInput
+    data: XOR<MenuUpdateWithoutCafeInput, MenuUncheckedUpdateWithoutCafeInput>
+  }
+
+  export type MenuUpdateManyWithWhereWithoutCafeInput = {
+    where: MenuScalarWhereInput
+    data: XOR<MenuUpdateManyMutationInput, MenuUncheckedUpdateManyWithoutCafeInput>
+  }
+
+  export type MenuScalarWhereInput = {
+    AND?: MenuScalarWhereInput | MenuScalarWhereInput[]
+    OR?: MenuScalarWhereInput[]
+    NOT?: MenuScalarWhereInput | MenuScalarWhereInput[]
+    id?: StringFilter<"Menu"> | string
+    cafeId?: StringFilter<"Menu"> | string
+    type?: EnumMenuTypeFilter<"Menu"> | $Enums.MenuType
+    isActive?: BoolFilter<"Menu"> | boolean
+    isSubsidised?: BoolFilter<"Menu"> | boolean
+    createdAt?: DateTimeFilter<"Menu"> | Date | string
+    updatedAt?: DateTimeFilter<"Menu"> | Date | string
+  }
+
+  export type FeedbackUpsertWithWhereUniqueWithoutCafeInput = {
+    where: FeedbackWhereUniqueInput
+    update: XOR<FeedbackUpdateWithoutCafeInput, FeedbackUncheckedUpdateWithoutCafeInput>
+    create: XOR<FeedbackCreateWithoutCafeInput, FeedbackUncheckedCreateWithoutCafeInput>
+  }
+
+  export type FeedbackUpdateWithWhereUniqueWithoutCafeInput = {
+    where: FeedbackWhereUniqueInput
+    data: XOR<FeedbackUpdateWithoutCafeInput, FeedbackUncheckedUpdateWithoutCafeInput>
+  }
+
+  export type FeedbackUpdateManyWithWhereWithoutCafeInput = {
+    where: FeedbackScalarWhereInput
+    data: XOR<FeedbackUpdateManyMutationInput, FeedbackUncheckedUpdateManyWithoutCafeInput>
+  }
+
+  export type FeedbackScalarWhereInput = {
+    AND?: FeedbackScalarWhereInput | FeedbackScalarWhereInput[]
+    OR?: FeedbackScalarWhereInput[]
+    NOT?: FeedbackScalarWhereInput | FeedbackScalarWhereInput[]
+    id?: StringFilter<"Feedback"> | string
+    cafeId?: StringFilter<"Feedback"> | string
+    rating?: IntFilter<"Feedback"> | number
+    comment?: StringNullableFilter<"Feedback"> | string | null
+    createdAt?: DateTimeFilter<"Feedback"> | Date | string
   }
 
   export type OrderUpsertWithWhereUniqueWithoutCafeInput = {
@@ -21522,6 +25311,398 @@ export namespace Prisma {
     count?: IntFilter<"OrderCounter"> | number
   }
 
+  export type CafeCreateWithoutMenusInput = {
+    id?: string
+    name: string
+    slug: string
+    address?: string | null
+    phone?: string | null
+    imageUrl?: string | null
+    isActive?: boolean
+    openingTime?: string | null
+    closingTime?: string | null
+    phonepeMerchantId?: string | null
+    phonepeSaltKey?: string | null
+    phonepeSaltIndex?: string | null
+    paymentProvider?: $Enums.PaymentProvider
+    razorpayKeyId?: string | null
+    razorpayKeySecret?: string | null
+    razorpayWebhookSecret?: string | null
+    autoScheduleMenus?: boolean
+    createdAt?: Date | string
+    updatedAt?: Date | string
+    users?: UserCreateNestedManyWithoutCafeInput
+    categories?: MenuCategoryCreateNestedManyWithoutCafeInput
+    menuItems?: MenuItemCreateNestedManyWithoutCafeInput
+    feedback?: FeedbackCreateNestedManyWithoutCafeInput
+    orders?: OrderCreateNestedManyWithoutCafeInput
+    tables?: TableCreateNestedManyWithoutCafeInput
+    staff?: StaffCreateNestedManyWithoutCafeInput
+    expenses?: ExpenseCreateNestedManyWithoutCafeInput
+    orderCounters?: OrderCounterCreateNestedManyWithoutCafeInput
+  }
+
+  export type CafeUncheckedCreateWithoutMenusInput = {
+    id?: string
+    name: string
+    slug: string
+    address?: string | null
+    phone?: string | null
+    imageUrl?: string | null
+    isActive?: boolean
+    openingTime?: string | null
+    closingTime?: string | null
+    phonepeMerchantId?: string | null
+    phonepeSaltKey?: string | null
+    phonepeSaltIndex?: string | null
+    paymentProvider?: $Enums.PaymentProvider
+    razorpayKeyId?: string | null
+    razorpayKeySecret?: string | null
+    razorpayWebhookSecret?: string | null
+    autoScheduleMenus?: boolean
+    createdAt?: Date | string
+    updatedAt?: Date | string
+    users?: UserUncheckedCreateNestedManyWithoutCafeInput
+    categories?: MenuCategoryUncheckedCreateNestedManyWithoutCafeInput
+    menuItems?: MenuItemUncheckedCreateNestedManyWithoutCafeInput
+    feedback?: FeedbackUncheckedCreateNestedManyWithoutCafeInput
+    orders?: OrderUncheckedCreateNestedManyWithoutCafeInput
+    tables?: TableUncheckedCreateNestedManyWithoutCafeInput
+    staff?: StaffUncheckedCreateNestedManyWithoutCafeInput
+    expenses?: ExpenseUncheckedCreateNestedManyWithoutCafeInput
+    orderCounters?: OrderCounterUncheckedCreateNestedManyWithoutCafeInput
+  }
+
+  export type CafeCreateOrConnectWithoutMenusInput = {
+    where: CafeWhereUniqueInput
+    create: XOR<CafeCreateWithoutMenusInput, CafeUncheckedCreateWithoutMenusInput>
+  }
+
+  export type MenuCategoryCreateWithoutMenuInput = {
+    id?: string
+    name: string
+    sortOrder?: number
+    isActive?: boolean
+    createdAt?: Date | string
+    cafe?: CafeCreateNestedOneWithoutCategoriesInput
+    items?: MenuItemCreateNestedManyWithoutCategoryInput
+  }
+
+  export type MenuCategoryUncheckedCreateWithoutMenuInput = {
+    id?: string
+    cafeId?: string | null
+    name: string
+    sortOrder?: number
+    isActive?: boolean
+    createdAt?: Date | string
+    items?: MenuItemUncheckedCreateNestedManyWithoutCategoryInput
+  }
+
+  export type MenuCategoryCreateOrConnectWithoutMenuInput = {
+    where: MenuCategoryWhereUniqueInput
+    create: XOR<MenuCategoryCreateWithoutMenuInput, MenuCategoryUncheckedCreateWithoutMenuInput>
+  }
+
+  export type MenuCategoryCreateManyMenuInputEnvelope = {
+    data: MenuCategoryCreateManyMenuInput | MenuCategoryCreateManyMenuInput[]
+    skipDuplicates?: boolean
+  }
+
+  export type MenuItemCreateWithoutMenuInput = {
+    id?: string
+    name: string
+    description?: string | null
+    pricePaise: number
+    imageUrl?: string | null
+    isAvailable?: boolean
+    isVeg?: boolean
+    isSubsidised?: boolean
+    sortOrder?: number
+    menuType?: $Enums.MenuType | null
+    createdAt?: Date | string
+    updatedAt?: Date | string
+    cafe?: CafeCreateNestedOneWithoutMenuItemsInput
+    category?: MenuCategoryCreateNestedOneWithoutItemsInput
+    orderItems?: OrderItemCreateNestedManyWithoutMenuItemInput
+    overriddenFrom?: MenuItemCreateNestedOneWithoutOverridesInput
+    overrides?: MenuItemCreateNestedManyWithoutOverriddenFromInput
+  }
+
+  export type MenuItemUncheckedCreateWithoutMenuInput = {
+    id?: string
+    cafeId?: string | null
+    categoryId?: string | null
+    name: string
+    description?: string | null
+    pricePaise: number
+    imageUrl?: string | null
+    isAvailable?: boolean
+    isVeg?: boolean
+    isSubsidised?: boolean
+    sortOrder?: number
+    menuType?: $Enums.MenuType | null
+    overriddenFromId?: string | null
+    createdAt?: Date | string
+    updatedAt?: Date | string
+    orderItems?: OrderItemUncheckedCreateNestedManyWithoutMenuItemInput
+    overrides?: MenuItemUncheckedCreateNestedManyWithoutOverriddenFromInput
+  }
+
+  export type MenuItemCreateOrConnectWithoutMenuInput = {
+    where: MenuItemWhereUniqueInput
+    create: XOR<MenuItemCreateWithoutMenuInput, MenuItemUncheckedCreateWithoutMenuInput>
+  }
+
+  export type MenuItemCreateManyMenuInputEnvelope = {
+    data: MenuItemCreateManyMenuInput | MenuItemCreateManyMenuInput[]
+    skipDuplicates?: boolean
+  }
+
+  export type CafeUpsertWithoutMenusInput = {
+    update: XOR<CafeUpdateWithoutMenusInput, CafeUncheckedUpdateWithoutMenusInput>
+    create: XOR<CafeCreateWithoutMenusInput, CafeUncheckedCreateWithoutMenusInput>
+    where?: CafeWhereInput
+  }
+
+  export type CafeUpdateToOneWithWhereWithoutMenusInput = {
+    where?: CafeWhereInput
+    data: XOR<CafeUpdateWithoutMenusInput, CafeUncheckedUpdateWithoutMenusInput>
+  }
+
+  export type CafeUpdateWithoutMenusInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    name?: StringFieldUpdateOperationsInput | string
+    slug?: StringFieldUpdateOperationsInput | string
+    address?: NullableStringFieldUpdateOperationsInput | string | null
+    phone?: NullableStringFieldUpdateOperationsInput | string | null
+    imageUrl?: NullableStringFieldUpdateOperationsInput | string | null
+    isActive?: BoolFieldUpdateOperationsInput | boolean
+    openingTime?: NullableStringFieldUpdateOperationsInput | string | null
+    closingTime?: NullableStringFieldUpdateOperationsInput | string | null
+    phonepeMerchantId?: NullableStringFieldUpdateOperationsInput | string | null
+    phonepeSaltKey?: NullableStringFieldUpdateOperationsInput | string | null
+    phonepeSaltIndex?: NullableStringFieldUpdateOperationsInput | string | null
+    paymentProvider?: EnumPaymentProviderFieldUpdateOperationsInput | $Enums.PaymentProvider
+    razorpayKeyId?: NullableStringFieldUpdateOperationsInput | string | null
+    razorpayKeySecret?: NullableStringFieldUpdateOperationsInput | string | null
+    razorpayWebhookSecret?: NullableStringFieldUpdateOperationsInput | string | null
+    autoScheduleMenus?: BoolFieldUpdateOperationsInput | boolean
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    users?: UserUpdateManyWithoutCafeNestedInput
+    categories?: MenuCategoryUpdateManyWithoutCafeNestedInput
+    menuItems?: MenuItemUpdateManyWithoutCafeNestedInput
+    feedback?: FeedbackUpdateManyWithoutCafeNestedInput
+    orders?: OrderUpdateManyWithoutCafeNestedInput
+    tables?: TableUpdateManyWithoutCafeNestedInput
+    staff?: StaffUpdateManyWithoutCafeNestedInput
+    expenses?: ExpenseUpdateManyWithoutCafeNestedInput
+    orderCounters?: OrderCounterUpdateManyWithoutCafeNestedInput
+  }
+
+  export type CafeUncheckedUpdateWithoutMenusInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    name?: StringFieldUpdateOperationsInput | string
+    slug?: StringFieldUpdateOperationsInput | string
+    address?: NullableStringFieldUpdateOperationsInput | string | null
+    phone?: NullableStringFieldUpdateOperationsInput | string | null
+    imageUrl?: NullableStringFieldUpdateOperationsInput | string | null
+    isActive?: BoolFieldUpdateOperationsInput | boolean
+    openingTime?: NullableStringFieldUpdateOperationsInput | string | null
+    closingTime?: NullableStringFieldUpdateOperationsInput | string | null
+    phonepeMerchantId?: NullableStringFieldUpdateOperationsInput | string | null
+    phonepeSaltKey?: NullableStringFieldUpdateOperationsInput | string | null
+    phonepeSaltIndex?: NullableStringFieldUpdateOperationsInput | string | null
+    paymentProvider?: EnumPaymentProviderFieldUpdateOperationsInput | $Enums.PaymentProvider
+    razorpayKeyId?: NullableStringFieldUpdateOperationsInput | string | null
+    razorpayKeySecret?: NullableStringFieldUpdateOperationsInput | string | null
+    razorpayWebhookSecret?: NullableStringFieldUpdateOperationsInput | string | null
+    autoScheduleMenus?: BoolFieldUpdateOperationsInput | boolean
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    users?: UserUncheckedUpdateManyWithoutCafeNestedInput
+    categories?: MenuCategoryUncheckedUpdateManyWithoutCafeNestedInput
+    menuItems?: MenuItemUncheckedUpdateManyWithoutCafeNestedInput
+    feedback?: FeedbackUncheckedUpdateManyWithoutCafeNestedInput
+    orders?: OrderUncheckedUpdateManyWithoutCafeNestedInput
+    tables?: TableUncheckedUpdateManyWithoutCafeNestedInput
+    staff?: StaffUncheckedUpdateManyWithoutCafeNestedInput
+    expenses?: ExpenseUncheckedUpdateManyWithoutCafeNestedInput
+    orderCounters?: OrderCounterUncheckedUpdateManyWithoutCafeNestedInput
+  }
+
+  export type MenuCategoryUpsertWithWhereUniqueWithoutMenuInput = {
+    where: MenuCategoryWhereUniqueInput
+    update: XOR<MenuCategoryUpdateWithoutMenuInput, MenuCategoryUncheckedUpdateWithoutMenuInput>
+    create: XOR<MenuCategoryCreateWithoutMenuInput, MenuCategoryUncheckedCreateWithoutMenuInput>
+  }
+
+  export type MenuCategoryUpdateWithWhereUniqueWithoutMenuInput = {
+    where: MenuCategoryWhereUniqueInput
+    data: XOR<MenuCategoryUpdateWithoutMenuInput, MenuCategoryUncheckedUpdateWithoutMenuInput>
+  }
+
+  export type MenuCategoryUpdateManyWithWhereWithoutMenuInput = {
+    where: MenuCategoryScalarWhereInput
+    data: XOR<MenuCategoryUpdateManyMutationInput, MenuCategoryUncheckedUpdateManyWithoutMenuInput>
+  }
+
+  export type MenuItemUpsertWithWhereUniqueWithoutMenuInput = {
+    where: MenuItemWhereUniqueInput
+    update: XOR<MenuItemUpdateWithoutMenuInput, MenuItemUncheckedUpdateWithoutMenuInput>
+    create: XOR<MenuItemCreateWithoutMenuInput, MenuItemUncheckedCreateWithoutMenuInput>
+  }
+
+  export type MenuItemUpdateWithWhereUniqueWithoutMenuInput = {
+    where: MenuItemWhereUniqueInput
+    data: XOR<MenuItemUpdateWithoutMenuInput, MenuItemUncheckedUpdateWithoutMenuInput>
+  }
+
+  export type MenuItemUpdateManyWithWhereWithoutMenuInput = {
+    where: MenuItemScalarWhereInput
+    data: XOR<MenuItemUpdateManyMutationInput, MenuItemUncheckedUpdateManyWithoutMenuInput>
+  }
+
+  export type CafeCreateWithoutFeedbackInput = {
+    id?: string
+    name: string
+    slug: string
+    address?: string | null
+    phone?: string | null
+    imageUrl?: string | null
+    isActive?: boolean
+    openingTime?: string | null
+    closingTime?: string | null
+    phonepeMerchantId?: string | null
+    phonepeSaltKey?: string | null
+    phonepeSaltIndex?: string | null
+    paymentProvider?: $Enums.PaymentProvider
+    razorpayKeyId?: string | null
+    razorpayKeySecret?: string | null
+    razorpayWebhookSecret?: string | null
+    autoScheduleMenus?: boolean
+    createdAt?: Date | string
+    updatedAt?: Date | string
+    users?: UserCreateNestedManyWithoutCafeInput
+    categories?: MenuCategoryCreateNestedManyWithoutCafeInput
+    menuItems?: MenuItemCreateNestedManyWithoutCafeInput
+    menus?: MenuCreateNestedManyWithoutCafeInput
+    orders?: OrderCreateNestedManyWithoutCafeInput
+    tables?: TableCreateNestedManyWithoutCafeInput
+    staff?: StaffCreateNestedManyWithoutCafeInput
+    expenses?: ExpenseCreateNestedManyWithoutCafeInput
+    orderCounters?: OrderCounterCreateNestedManyWithoutCafeInput
+  }
+
+  export type CafeUncheckedCreateWithoutFeedbackInput = {
+    id?: string
+    name: string
+    slug: string
+    address?: string | null
+    phone?: string | null
+    imageUrl?: string | null
+    isActive?: boolean
+    openingTime?: string | null
+    closingTime?: string | null
+    phonepeMerchantId?: string | null
+    phonepeSaltKey?: string | null
+    phonepeSaltIndex?: string | null
+    paymentProvider?: $Enums.PaymentProvider
+    razorpayKeyId?: string | null
+    razorpayKeySecret?: string | null
+    razorpayWebhookSecret?: string | null
+    autoScheduleMenus?: boolean
+    createdAt?: Date | string
+    updatedAt?: Date | string
+    users?: UserUncheckedCreateNestedManyWithoutCafeInput
+    categories?: MenuCategoryUncheckedCreateNestedManyWithoutCafeInput
+    menuItems?: MenuItemUncheckedCreateNestedManyWithoutCafeInput
+    menus?: MenuUncheckedCreateNestedManyWithoutCafeInput
+    orders?: OrderUncheckedCreateNestedManyWithoutCafeInput
+    tables?: TableUncheckedCreateNestedManyWithoutCafeInput
+    staff?: StaffUncheckedCreateNestedManyWithoutCafeInput
+    expenses?: ExpenseUncheckedCreateNestedManyWithoutCafeInput
+    orderCounters?: OrderCounterUncheckedCreateNestedManyWithoutCafeInput
+  }
+
+  export type CafeCreateOrConnectWithoutFeedbackInput = {
+    where: CafeWhereUniqueInput
+    create: XOR<CafeCreateWithoutFeedbackInput, CafeUncheckedCreateWithoutFeedbackInput>
+  }
+
+  export type CafeUpsertWithoutFeedbackInput = {
+    update: XOR<CafeUpdateWithoutFeedbackInput, CafeUncheckedUpdateWithoutFeedbackInput>
+    create: XOR<CafeCreateWithoutFeedbackInput, CafeUncheckedCreateWithoutFeedbackInput>
+    where?: CafeWhereInput
+  }
+
+  export type CafeUpdateToOneWithWhereWithoutFeedbackInput = {
+    where?: CafeWhereInput
+    data: XOR<CafeUpdateWithoutFeedbackInput, CafeUncheckedUpdateWithoutFeedbackInput>
+  }
+
+  export type CafeUpdateWithoutFeedbackInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    name?: StringFieldUpdateOperationsInput | string
+    slug?: StringFieldUpdateOperationsInput | string
+    address?: NullableStringFieldUpdateOperationsInput | string | null
+    phone?: NullableStringFieldUpdateOperationsInput | string | null
+    imageUrl?: NullableStringFieldUpdateOperationsInput | string | null
+    isActive?: BoolFieldUpdateOperationsInput | boolean
+    openingTime?: NullableStringFieldUpdateOperationsInput | string | null
+    closingTime?: NullableStringFieldUpdateOperationsInput | string | null
+    phonepeMerchantId?: NullableStringFieldUpdateOperationsInput | string | null
+    phonepeSaltKey?: NullableStringFieldUpdateOperationsInput | string | null
+    phonepeSaltIndex?: NullableStringFieldUpdateOperationsInput | string | null
+    paymentProvider?: EnumPaymentProviderFieldUpdateOperationsInput | $Enums.PaymentProvider
+    razorpayKeyId?: NullableStringFieldUpdateOperationsInput | string | null
+    razorpayKeySecret?: NullableStringFieldUpdateOperationsInput | string | null
+    razorpayWebhookSecret?: NullableStringFieldUpdateOperationsInput | string | null
+    autoScheduleMenus?: BoolFieldUpdateOperationsInput | boolean
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    users?: UserUpdateManyWithoutCafeNestedInput
+    categories?: MenuCategoryUpdateManyWithoutCafeNestedInput
+    menuItems?: MenuItemUpdateManyWithoutCafeNestedInput
+    menus?: MenuUpdateManyWithoutCafeNestedInput
+    orders?: OrderUpdateManyWithoutCafeNestedInput
+    tables?: TableUpdateManyWithoutCafeNestedInput
+    staff?: StaffUpdateManyWithoutCafeNestedInput
+    expenses?: ExpenseUpdateManyWithoutCafeNestedInput
+    orderCounters?: OrderCounterUpdateManyWithoutCafeNestedInput
+  }
+
+  export type CafeUncheckedUpdateWithoutFeedbackInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    name?: StringFieldUpdateOperationsInput | string
+    slug?: StringFieldUpdateOperationsInput | string
+    address?: NullableStringFieldUpdateOperationsInput | string | null
+    phone?: NullableStringFieldUpdateOperationsInput | string | null
+    imageUrl?: NullableStringFieldUpdateOperationsInput | string | null
+    isActive?: BoolFieldUpdateOperationsInput | boolean
+    openingTime?: NullableStringFieldUpdateOperationsInput | string | null
+    closingTime?: NullableStringFieldUpdateOperationsInput | string | null
+    phonepeMerchantId?: NullableStringFieldUpdateOperationsInput | string | null
+    phonepeSaltKey?: NullableStringFieldUpdateOperationsInput | string | null
+    phonepeSaltIndex?: NullableStringFieldUpdateOperationsInput | string | null
+    paymentProvider?: EnumPaymentProviderFieldUpdateOperationsInput | $Enums.PaymentProvider
+    razorpayKeyId?: NullableStringFieldUpdateOperationsInput | string | null
+    razorpayKeySecret?: NullableStringFieldUpdateOperationsInput | string | null
+    razorpayWebhookSecret?: NullableStringFieldUpdateOperationsInput | string | null
+    autoScheduleMenus?: BoolFieldUpdateOperationsInput | boolean
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    users?: UserUncheckedUpdateManyWithoutCafeNestedInput
+    categories?: MenuCategoryUncheckedUpdateManyWithoutCafeNestedInput
+    menuItems?: MenuItemUncheckedUpdateManyWithoutCafeNestedInput
+    menus?: MenuUncheckedUpdateManyWithoutCafeNestedInput
+    orders?: OrderUncheckedUpdateManyWithoutCafeNestedInput
+    tables?: TableUncheckedUpdateManyWithoutCafeNestedInput
+    staff?: StaffUncheckedUpdateManyWithoutCafeNestedInput
+    expenses?: ExpenseUncheckedUpdateManyWithoutCafeNestedInput
+    orderCounters?: OrderCounterUncheckedUpdateManyWithoutCafeNestedInput
+  }
+
   export type CafeCreateWithoutUsersInput = {
     id?: string
     name: string
@@ -21539,10 +25720,13 @@ export namespace Prisma {
     razorpayKeyId?: string | null
     razorpayKeySecret?: string | null
     razorpayWebhookSecret?: string | null
+    autoScheduleMenus?: boolean
     createdAt?: Date | string
     updatedAt?: Date | string
     categories?: MenuCategoryCreateNestedManyWithoutCafeInput
     menuItems?: MenuItemCreateNestedManyWithoutCafeInput
+    menus?: MenuCreateNestedManyWithoutCafeInput
+    feedback?: FeedbackCreateNestedManyWithoutCafeInput
     orders?: OrderCreateNestedManyWithoutCafeInput
     tables?: TableCreateNestedManyWithoutCafeInput
     staff?: StaffCreateNestedManyWithoutCafeInput
@@ -21567,10 +25751,13 @@ export namespace Prisma {
     razorpayKeyId?: string | null
     razorpayKeySecret?: string | null
     razorpayWebhookSecret?: string | null
+    autoScheduleMenus?: boolean
     createdAt?: Date | string
     updatedAt?: Date | string
     categories?: MenuCategoryUncheckedCreateNestedManyWithoutCafeInput
     menuItems?: MenuItemUncheckedCreateNestedManyWithoutCafeInput
+    menus?: MenuUncheckedCreateNestedManyWithoutCafeInput
+    feedback?: FeedbackUncheckedCreateNestedManyWithoutCafeInput
     orders?: OrderUncheckedCreateNestedManyWithoutCafeInput
     tables?: TableUncheckedCreateNestedManyWithoutCafeInput
     staff?: StaffUncheckedCreateNestedManyWithoutCafeInput
@@ -21641,10 +25828,13 @@ export namespace Prisma {
     razorpayKeyId?: NullableStringFieldUpdateOperationsInput | string | null
     razorpayKeySecret?: NullableStringFieldUpdateOperationsInput | string | null
     razorpayWebhookSecret?: NullableStringFieldUpdateOperationsInput | string | null
+    autoScheduleMenus?: BoolFieldUpdateOperationsInput | boolean
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     categories?: MenuCategoryUpdateManyWithoutCafeNestedInput
     menuItems?: MenuItemUpdateManyWithoutCafeNestedInput
+    menus?: MenuUpdateManyWithoutCafeNestedInput
+    feedback?: FeedbackUpdateManyWithoutCafeNestedInput
     orders?: OrderUpdateManyWithoutCafeNestedInput
     tables?: TableUpdateManyWithoutCafeNestedInput
     staff?: StaffUpdateManyWithoutCafeNestedInput
@@ -21669,10 +25859,13 @@ export namespace Prisma {
     razorpayKeyId?: NullableStringFieldUpdateOperationsInput | string | null
     razorpayKeySecret?: NullableStringFieldUpdateOperationsInput | string | null
     razorpayWebhookSecret?: NullableStringFieldUpdateOperationsInput | string | null
+    autoScheduleMenus?: BoolFieldUpdateOperationsInput | boolean
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     categories?: MenuCategoryUncheckedUpdateManyWithoutCafeNestedInput
     menuItems?: MenuItemUncheckedUpdateManyWithoutCafeNestedInput
+    menus?: MenuUncheckedUpdateManyWithoutCafeNestedInput
+    feedback?: FeedbackUncheckedUpdateManyWithoutCafeNestedInput
     orders?: OrderUncheckedUpdateManyWithoutCafeNestedInput
     tables?: TableUncheckedUpdateManyWithoutCafeNestedInput
     staff?: StaffUncheckedUpdateManyWithoutCafeNestedInput
@@ -21727,10 +25920,13 @@ export namespace Prisma {
     razorpayKeyId?: string | null
     razorpayKeySecret?: string | null
     razorpayWebhookSecret?: string | null
+    autoScheduleMenus?: boolean
     createdAt?: Date | string
     updatedAt?: Date | string
     users?: UserCreateNestedManyWithoutCafeInput
     menuItems?: MenuItemCreateNestedManyWithoutCafeInput
+    menus?: MenuCreateNestedManyWithoutCafeInput
+    feedback?: FeedbackCreateNestedManyWithoutCafeInput
     orders?: OrderCreateNestedManyWithoutCafeInput
     tables?: TableCreateNestedManyWithoutCafeInput
     staff?: StaffCreateNestedManyWithoutCafeInput
@@ -21755,10 +25951,13 @@ export namespace Prisma {
     razorpayKeyId?: string | null
     razorpayKeySecret?: string | null
     razorpayWebhookSecret?: string | null
+    autoScheduleMenus?: boolean
     createdAt?: Date | string
     updatedAt?: Date | string
     users?: UserUncheckedCreateNestedManyWithoutCafeInput
     menuItems?: MenuItemUncheckedCreateNestedManyWithoutCafeInput
+    menus?: MenuUncheckedCreateNestedManyWithoutCafeInput
+    feedback?: FeedbackUncheckedCreateNestedManyWithoutCafeInput
     orders?: OrderUncheckedCreateNestedManyWithoutCafeInput
     tables?: TableUncheckedCreateNestedManyWithoutCafeInput
     staff?: StaffUncheckedCreateNestedManyWithoutCafeInput
@@ -21771,6 +25970,33 @@ export namespace Prisma {
     create: XOR<CafeCreateWithoutCategoriesInput, CafeUncheckedCreateWithoutCategoriesInput>
   }
 
+  export type MenuCreateWithoutCategoriesInput = {
+    id?: string
+    type: $Enums.MenuType
+    isActive?: boolean
+    isSubsidised?: boolean
+    createdAt?: Date | string
+    updatedAt?: Date | string
+    cafe: CafeCreateNestedOneWithoutMenusInput
+    items?: MenuItemCreateNestedManyWithoutMenuInput
+  }
+
+  export type MenuUncheckedCreateWithoutCategoriesInput = {
+    id?: string
+    cafeId: string
+    type: $Enums.MenuType
+    isActive?: boolean
+    isSubsidised?: boolean
+    createdAt?: Date | string
+    updatedAt?: Date | string
+    items?: MenuItemUncheckedCreateNestedManyWithoutMenuInput
+  }
+
+  export type MenuCreateOrConnectWithoutCategoriesInput = {
+    where: MenuWhereUniqueInput
+    create: XOR<MenuCreateWithoutCategoriesInput, MenuUncheckedCreateWithoutCategoriesInput>
+  }
+
   export type MenuItemCreateWithoutCategoryInput = {
     id?: string
     name: string
@@ -21779,26 +26005,36 @@ export namespace Prisma {
     imageUrl?: string | null
     isAvailable?: boolean
     isVeg?: boolean
+    isSubsidised?: boolean
     sortOrder?: number
+    menuType?: $Enums.MenuType | null
     createdAt?: Date | string
     updatedAt?: Date | string
     cafe?: CafeCreateNestedOneWithoutMenuItemsInput
+    menu?: MenuCreateNestedOneWithoutItemsInput
     orderItems?: OrderItemCreateNestedManyWithoutMenuItemInput
+    overriddenFrom?: MenuItemCreateNestedOneWithoutOverridesInput
+    overrides?: MenuItemCreateNestedManyWithoutOverriddenFromInput
   }
 
   export type MenuItemUncheckedCreateWithoutCategoryInput = {
     id?: string
     cafeId?: string | null
+    menuId?: string | null
     name: string
     description?: string | null
     pricePaise: number
     imageUrl?: string | null
     isAvailable?: boolean
     isVeg?: boolean
+    isSubsidised?: boolean
     sortOrder?: number
+    menuType?: $Enums.MenuType | null
+    overriddenFromId?: string | null
     createdAt?: Date | string
     updatedAt?: Date | string
     orderItems?: OrderItemUncheckedCreateNestedManyWithoutMenuItemInput
+    overrides?: MenuItemUncheckedCreateNestedManyWithoutOverriddenFromInput
   }
 
   export type MenuItemCreateOrConnectWithoutCategoryInput = {
@@ -21839,10 +26075,13 @@ export namespace Prisma {
     razorpayKeyId?: NullableStringFieldUpdateOperationsInput | string | null
     razorpayKeySecret?: NullableStringFieldUpdateOperationsInput | string | null
     razorpayWebhookSecret?: NullableStringFieldUpdateOperationsInput | string | null
+    autoScheduleMenus?: BoolFieldUpdateOperationsInput | boolean
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     users?: UserUpdateManyWithoutCafeNestedInput
     menuItems?: MenuItemUpdateManyWithoutCafeNestedInput
+    menus?: MenuUpdateManyWithoutCafeNestedInput
+    feedback?: FeedbackUpdateManyWithoutCafeNestedInput
     orders?: OrderUpdateManyWithoutCafeNestedInput
     tables?: TableUpdateManyWithoutCafeNestedInput
     staff?: StaffUpdateManyWithoutCafeNestedInput
@@ -21867,15 +26106,51 @@ export namespace Prisma {
     razorpayKeyId?: NullableStringFieldUpdateOperationsInput | string | null
     razorpayKeySecret?: NullableStringFieldUpdateOperationsInput | string | null
     razorpayWebhookSecret?: NullableStringFieldUpdateOperationsInput | string | null
+    autoScheduleMenus?: BoolFieldUpdateOperationsInput | boolean
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     users?: UserUncheckedUpdateManyWithoutCafeNestedInput
     menuItems?: MenuItemUncheckedUpdateManyWithoutCafeNestedInput
+    menus?: MenuUncheckedUpdateManyWithoutCafeNestedInput
+    feedback?: FeedbackUncheckedUpdateManyWithoutCafeNestedInput
     orders?: OrderUncheckedUpdateManyWithoutCafeNestedInput
     tables?: TableUncheckedUpdateManyWithoutCafeNestedInput
     staff?: StaffUncheckedUpdateManyWithoutCafeNestedInput
     expenses?: ExpenseUncheckedUpdateManyWithoutCafeNestedInput
     orderCounters?: OrderCounterUncheckedUpdateManyWithoutCafeNestedInput
+  }
+
+  export type MenuUpsertWithoutCategoriesInput = {
+    update: XOR<MenuUpdateWithoutCategoriesInput, MenuUncheckedUpdateWithoutCategoriesInput>
+    create: XOR<MenuCreateWithoutCategoriesInput, MenuUncheckedCreateWithoutCategoriesInput>
+    where?: MenuWhereInput
+  }
+
+  export type MenuUpdateToOneWithWhereWithoutCategoriesInput = {
+    where?: MenuWhereInput
+    data: XOR<MenuUpdateWithoutCategoriesInput, MenuUncheckedUpdateWithoutCategoriesInput>
+  }
+
+  export type MenuUpdateWithoutCategoriesInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    type?: EnumMenuTypeFieldUpdateOperationsInput | $Enums.MenuType
+    isActive?: BoolFieldUpdateOperationsInput | boolean
+    isSubsidised?: BoolFieldUpdateOperationsInput | boolean
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    cafe?: CafeUpdateOneRequiredWithoutMenusNestedInput
+    items?: MenuItemUpdateManyWithoutMenuNestedInput
+  }
+
+  export type MenuUncheckedUpdateWithoutCategoriesInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    cafeId?: StringFieldUpdateOperationsInput | string
+    type?: EnumMenuTypeFieldUpdateOperationsInput | $Enums.MenuType
+    isActive?: BoolFieldUpdateOperationsInput | boolean
+    isSubsidised?: BoolFieldUpdateOperationsInput | boolean
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    items?: MenuItemUncheckedUpdateManyWithoutMenuNestedInput
   }
 
   export type MenuItemUpsertWithWhereUniqueWithoutCategoryInput = {
@@ -21911,10 +26186,13 @@ export namespace Prisma {
     razorpayKeyId?: string | null
     razorpayKeySecret?: string | null
     razorpayWebhookSecret?: string | null
+    autoScheduleMenus?: boolean
     createdAt?: Date | string
     updatedAt?: Date | string
     users?: UserCreateNestedManyWithoutCafeInput
     categories?: MenuCategoryCreateNestedManyWithoutCafeInput
+    menus?: MenuCreateNestedManyWithoutCafeInput
+    feedback?: FeedbackCreateNestedManyWithoutCafeInput
     orders?: OrderCreateNestedManyWithoutCafeInput
     tables?: TableCreateNestedManyWithoutCafeInput
     staff?: StaffCreateNestedManyWithoutCafeInput
@@ -21939,10 +26217,13 @@ export namespace Prisma {
     razorpayKeyId?: string | null
     razorpayKeySecret?: string | null
     razorpayWebhookSecret?: string | null
+    autoScheduleMenus?: boolean
     createdAt?: Date | string
     updatedAt?: Date | string
     users?: UserUncheckedCreateNestedManyWithoutCafeInput
     categories?: MenuCategoryUncheckedCreateNestedManyWithoutCafeInput
+    menus?: MenuUncheckedCreateNestedManyWithoutCafeInput
+    feedback?: FeedbackUncheckedCreateNestedManyWithoutCafeInput
     orders?: OrderUncheckedCreateNestedManyWithoutCafeInput
     tables?: TableUncheckedCreateNestedManyWithoutCafeInput
     staff?: StaffUncheckedCreateNestedManyWithoutCafeInput
@@ -21955,6 +26236,33 @@ export namespace Prisma {
     create: XOR<CafeCreateWithoutMenuItemsInput, CafeUncheckedCreateWithoutMenuItemsInput>
   }
 
+  export type MenuCreateWithoutItemsInput = {
+    id?: string
+    type: $Enums.MenuType
+    isActive?: boolean
+    isSubsidised?: boolean
+    createdAt?: Date | string
+    updatedAt?: Date | string
+    cafe: CafeCreateNestedOneWithoutMenusInput
+    categories?: MenuCategoryCreateNestedManyWithoutMenuInput
+  }
+
+  export type MenuUncheckedCreateWithoutItemsInput = {
+    id?: string
+    cafeId: string
+    type: $Enums.MenuType
+    isActive?: boolean
+    isSubsidised?: boolean
+    createdAt?: Date | string
+    updatedAt?: Date | string
+    categories?: MenuCategoryUncheckedCreateNestedManyWithoutMenuInput
+  }
+
+  export type MenuCreateOrConnectWithoutItemsInput = {
+    where: MenuWhereUniqueInput
+    create: XOR<MenuCreateWithoutItemsInput, MenuUncheckedCreateWithoutItemsInput>
+  }
+
   export type MenuCategoryCreateWithoutItemsInput = {
     id?: string
     name: string
@@ -21962,11 +26270,13 @@ export namespace Prisma {
     isActive?: boolean
     createdAt?: Date | string
     cafe?: CafeCreateNestedOneWithoutCategoriesInput
+    menu?: MenuCreateNestedOneWithoutCategoriesInput
   }
 
   export type MenuCategoryUncheckedCreateWithoutItemsInput = {
     id?: string
     cafeId?: string | null
+    menuId?: string | null
     name: string
     sortOrder?: number
     isActive?: boolean
@@ -21984,6 +26294,7 @@ export namespace Prisma {
     itemPricePaise: number
     quantity: number
     subtotalPaise: number
+    isSubsidised?: boolean
     order: OrderCreateNestedOneWithoutItemsInput
   }
 
@@ -21994,6 +26305,7 @@ export namespace Prisma {
     itemPricePaise: number
     quantity: number
     subtotalPaise: number
+    isSubsidised?: boolean
   }
 
   export type OrderItemCreateOrConnectWithoutMenuItemInput = {
@@ -22003,6 +26315,101 @@ export namespace Prisma {
 
   export type OrderItemCreateManyMenuItemInputEnvelope = {
     data: OrderItemCreateManyMenuItemInput | OrderItemCreateManyMenuItemInput[]
+    skipDuplicates?: boolean
+  }
+
+  export type MenuItemCreateWithoutOverridesInput = {
+    id?: string
+    name: string
+    description?: string | null
+    pricePaise: number
+    imageUrl?: string | null
+    isAvailable?: boolean
+    isVeg?: boolean
+    isSubsidised?: boolean
+    sortOrder?: number
+    menuType?: $Enums.MenuType | null
+    createdAt?: Date | string
+    updatedAt?: Date | string
+    cafe?: CafeCreateNestedOneWithoutMenuItemsInput
+    menu?: MenuCreateNestedOneWithoutItemsInput
+    category?: MenuCategoryCreateNestedOneWithoutItemsInput
+    orderItems?: OrderItemCreateNestedManyWithoutMenuItemInput
+    overriddenFrom?: MenuItemCreateNestedOneWithoutOverridesInput
+  }
+
+  export type MenuItemUncheckedCreateWithoutOverridesInput = {
+    id?: string
+    cafeId?: string | null
+    menuId?: string | null
+    categoryId?: string | null
+    name: string
+    description?: string | null
+    pricePaise: number
+    imageUrl?: string | null
+    isAvailable?: boolean
+    isVeg?: boolean
+    isSubsidised?: boolean
+    sortOrder?: number
+    menuType?: $Enums.MenuType | null
+    overriddenFromId?: string | null
+    createdAt?: Date | string
+    updatedAt?: Date | string
+    orderItems?: OrderItemUncheckedCreateNestedManyWithoutMenuItemInput
+  }
+
+  export type MenuItemCreateOrConnectWithoutOverridesInput = {
+    where: MenuItemWhereUniqueInput
+    create: XOR<MenuItemCreateWithoutOverridesInput, MenuItemUncheckedCreateWithoutOverridesInput>
+  }
+
+  export type MenuItemCreateWithoutOverriddenFromInput = {
+    id?: string
+    name: string
+    description?: string | null
+    pricePaise: number
+    imageUrl?: string | null
+    isAvailable?: boolean
+    isVeg?: boolean
+    isSubsidised?: boolean
+    sortOrder?: number
+    menuType?: $Enums.MenuType | null
+    createdAt?: Date | string
+    updatedAt?: Date | string
+    cafe?: CafeCreateNestedOneWithoutMenuItemsInput
+    menu?: MenuCreateNestedOneWithoutItemsInput
+    category?: MenuCategoryCreateNestedOneWithoutItemsInput
+    orderItems?: OrderItemCreateNestedManyWithoutMenuItemInput
+    overrides?: MenuItemCreateNestedManyWithoutOverriddenFromInput
+  }
+
+  export type MenuItemUncheckedCreateWithoutOverriddenFromInput = {
+    id?: string
+    cafeId?: string | null
+    menuId?: string | null
+    categoryId?: string | null
+    name: string
+    description?: string | null
+    pricePaise: number
+    imageUrl?: string | null
+    isAvailable?: boolean
+    isVeg?: boolean
+    isSubsidised?: boolean
+    sortOrder?: number
+    menuType?: $Enums.MenuType | null
+    createdAt?: Date | string
+    updatedAt?: Date | string
+    orderItems?: OrderItemUncheckedCreateNestedManyWithoutMenuItemInput
+    overrides?: MenuItemUncheckedCreateNestedManyWithoutOverriddenFromInput
+  }
+
+  export type MenuItemCreateOrConnectWithoutOverriddenFromInput = {
+    where: MenuItemWhereUniqueInput
+    create: XOR<MenuItemCreateWithoutOverriddenFromInput, MenuItemUncheckedCreateWithoutOverriddenFromInput>
+  }
+
+  export type MenuItemCreateManyOverriddenFromInputEnvelope = {
+    data: MenuItemCreateManyOverriddenFromInput | MenuItemCreateManyOverriddenFromInput[]
     skipDuplicates?: boolean
   }
 
@@ -22034,10 +26441,13 @@ export namespace Prisma {
     razorpayKeyId?: NullableStringFieldUpdateOperationsInput | string | null
     razorpayKeySecret?: NullableStringFieldUpdateOperationsInput | string | null
     razorpayWebhookSecret?: NullableStringFieldUpdateOperationsInput | string | null
+    autoScheduleMenus?: BoolFieldUpdateOperationsInput | boolean
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     users?: UserUpdateManyWithoutCafeNestedInput
     categories?: MenuCategoryUpdateManyWithoutCafeNestedInput
+    menus?: MenuUpdateManyWithoutCafeNestedInput
+    feedback?: FeedbackUpdateManyWithoutCafeNestedInput
     orders?: OrderUpdateManyWithoutCafeNestedInput
     tables?: TableUpdateManyWithoutCafeNestedInput
     staff?: StaffUpdateManyWithoutCafeNestedInput
@@ -22062,15 +26472,51 @@ export namespace Prisma {
     razorpayKeyId?: NullableStringFieldUpdateOperationsInput | string | null
     razorpayKeySecret?: NullableStringFieldUpdateOperationsInput | string | null
     razorpayWebhookSecret?: NullableStringFieldUpdateOperationsInput | string | null
+    autoScheduleMenus?: BoolFieldUpdateOperationsInput | boolean
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     users?: UserUncheckedUpdateManyWithoutCafeNestedInput
     categories?: MenuCategoryUncheckedUpdateManyWithoutCafeNestedInput
+    menus?: MenuUncheckedUpdateManyWithoutCafeNestedInput
+    feedback?: FeedbackUncheckedUpdateManyWithoutCafeNestedInput
     orders?: OrderUncheckedUpdateManyWithoutCafeNestedInput
     tables?: TableUncheckedUpdateManyWithoutCafeNestedInput
     staff?: StaffUncheckedUpdateManyWithoutCafeNestedInput
     expenses?: ExpenseUncheckedUpdateManyWithoutCafeNestedInput
     orderCounters?: OrderCounterUncheckedUpdateManyWithoutCafeNestedInput
+  }
+
+  export type MenuUpsertWithoutItemsInput = {
+    update: XOR<MenuUpdateWithoutItemsInput, MenuUncheckedUpdateWithoutItemsInput>
+    create: XOR<MenuCreateWithoutItemsInput, MenuUncheckedCreateWithoutItemsInput>
+    where?: MenuWhereInput
+  }
+
+  export type MenuUpdateToOneWithWhereWithoutItemsInput = {
+    where?: MenuWhereInput
+    data: XOR<MenuUpdateWithoutItemsInput, MenuUncheckedUpdateWithoutItemsInput>
+  }
+
+  export type MenuUpdateWithoutItemsInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    type?: EnumMenuTypeFieldUpdateOperationsInput | $Enums.MenuType
+    isActive?: BoolFieldUpdateOperationsInput | boolean
+    isSubsidised?: BoolFieldUpdateOperationsInput | boolean
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    cafe?: CafeUpdateOneRequiredWithoutMenusNestedInput
+    categories?: MenuCategoryUpdateManyWithoutMenuNestedInput
+  }
+
+  export type MenuUncheckedUpdateWithoutItemsInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    cafeId?: StringFieldUpdateOperationsInput | string
+    type?: EnumMenuTypeFieldUpdateOperationsInput | $Enums.MenuType
+    isActive?: BoolFieldUpdateOperationsInput | boolean
+    isSubsidised?: BoolFieldUpdateOperationsInput | boolean
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    categories?: MenuCategoryUncheckedUpdateManyWithoutMenuNestedInput
   }
 
   export type MenuCategoryUpsertWithoutItemsInput = {
@@ -22091,11 +26537,13 @@ export namespace Prisma {
     isActive?: BoolFieldUpdateOperationsInput | boolean
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     cafe?: CafeUpdateOneWithoutCategoriesNestedInput
+    menu?: MenuUpdateOneWithoutCategoriesNestedInput
   }
 
   export type MenuCategoryUncheckedUpdateWithoutItemsInput = {
     id?: StringFieldUpdateOperationsInput | string
     cafeId?: NullableStringFieldUpdateOperationsInput | string | null
+    menuId?: NullableStringFieldUpdateOperationsInput | string | null
     name?: StringFieldUpdateOperationsInput | string
     sortOrder?: IntFieldUpdateOperationsInput | number
     isActive?: BoolFieldUpdateOperationsInput | boolean
@@ -22129,6 +26577,74 @@ export namespace Prisma {
     itemPricePaise?: IntFilter<"OrderItem"> | number
     quantity?: IntFilter<"OrderItem"> | number
     subtotalPaise?: IntFilter<"OrderItem"> | number
+    isSubsidised?: BoolFilter<"OrderItem"> | boolean
+  }
+
+  export type MenuItemUpsertWithoutOverridesInput = {
+    update: XOR<MenuItemUpdateWithoutOverridesInput, MenuItemUncheckedUpdateWithoutOverridesInput>
+    create: XOR<MenuItemCreateWithoutOverridesInput, MenuItemUncheckedCreateWithoutOverridesInput>
+    where?: MenuItemWhereInput
+  }
+
+  export type MenuItemUpdateToOneWithWhereWithoutOverridesInput = {
+    where?: MenuItemWhereInput
+    data: XOR<MenuItemUpdateWithoutOverridesInput, MenuItemUncheckedUpdateWithoutOverridesInput>
+  }
+
+  export type MenuItemUpdateWithoutOverridesInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    name?: StringFieldUpdateOperationsInput | string
+    description?: NullableStringFieldUpdateOperationsInput | string | null
+    pricePaise?: IntFieldUpdateOperationsInput | number
+    imageUrl?: NullableStringFieldUpdateOperationsInput | string | null
+    isAvailable?: BoolFieldUpdateOperationsInput | boolean
+    isVeg?: BoolFieldUpdateOperationsInput | boolean
+    isSubsidised?: BoolFieldUpdateOperationsInput | boolean
+    sortOrder?: IntFieldUpdateOperationsInput | number
+    menuType?: NullableEnumMenuTypeFieldUpdateOperationsInput | $Enums.MenuType | null
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    cafe?: CafeUpdateOneWithoutMenuItemsNestedInput
+    menu?: MenuUpdateOneWithoutItemsNestedInput
+    category?: MenuCategoryUpdateOneWithoutItemsNestedInput
+    orderItems?: OrderItemUpdateManyWithoutMenuItemNestedInput
+    overriddenFrom?: MenuItemUpdateOneWithoutOverridesNestedInput
+  }
+
+  export type MenuItemUncheckedUpdateWithoutOverridesInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    cafeId?: NullableStringFieldUpdateOperationsInput | string | null
+    menuId?: NullableStringFieldUpdateOperationsInput | string | null
+    categoryId?: NullableStringFieldUpdateOperationsInput | string | null
+    name?: StringFieldUpdateOperationsInput | string
+    description?: NullableStringFieldUpdateOperationsInput | string | null
+    pricePaise?: IntFieldUpdateOperationsInput | number
+    imageUrl?: NullableStringFieldUpdateOperationsInput | string | null
+    isAvailable?: BoolFieldUpdateOperationsInput | boolean
+    isVeg?: BoolFieldUpdateOperationsInput | boolean
+    isSubsidised?: BoolFieldUpdateOperationsInput | boolean
+    sortOrder?: IntFieldUpdateOperationsInput | number
+    menuType?: NullableEnumMenuTypeFieldUpdateOperationsInput | $Enums.MenuType | null
+    overriddenFromId?: NullableStringFieldUpdateOperationsInput | string | null
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    orderItems?: OrderItemUncheckedUpdateManyWithoutMenuItemNestedInput
+  }
+
+  export type MenuItemUpsertWithWhereUniqueWithoutOverriddenFromInput = {
+    where: MenuItemWhereUniqueInput
+    update: XOR<MenuItemUpdateWithoutOverriddenFromInput, MenuItemUncheckedUpdateWithoutOverriddenFromInput>
+    create: XOR<MenuItemCreateWithoutOverriddenFromInput, MenuItemUncheckedCreateWithoutOverriddenFromInput>
+  }
+
+  export type MenuItemUpdateWithWhereUniqueWithoutOverriddenFromInput = {
+    where: MenuItemWhereUniqueInput
+    data: XOR<MenuItemUpdateWithoutOverriddenFromInput, MenuItemUncheckedUpdateWithoutOverriddenFromInput>
+  }
+
+  export type MenuItemUpdateManyWithWhereWithoutOverriddenFromInput = {
+    where: MenuItemScalarWhereInput
+    data: XOR<MenuItemUpdateManyMutationInput, MenuItemUncheckedUpdateManyWithoutOverriddenFromInput>
   }
 
   export type CafeCreateWithoutOrdersInput = {
@@ -22148,11 +26664,14 @@ export namespace Prisma {
     razorpayKeyId?: string | null
     razorpayKeySecret?: string | null
     razorpayWebhookSecret?: string | null
+    autoScheduleMenus?: boolean
     createdAt?: Date | string
     updatedAt?: Date | string
     users?: UserCreateNestedManyWithoutCafeInput
     categories?: MenuCategoryCreateNestedManyWithoutCafeInput
     menuItems?: MenuItemCreateNestedManyWithoutCafeInput
+    menus?: MenuCreateNestedManyWithoutCafeInput
+    feedback?: FeedbackCreateNestedManyWithoutCafeInput
     tables?: TableCreateNestedManyWithoutCafeInput
     staff?: StaffCreateNestedManyWithoutCafeInput
     expenses?: ExpenseCreateNestedManyWithoutCafeInput
@@ -22176,11 +26695,14 @@ export namespace Prisma {
     razorpayKeyId?: string | null
     razorpayKeySecret?: string | null
     razorpayWebhookSecret?: string | null
+    autoScheduleMenus?: boolean
     createdAt?: Date | string
     updatedAt?: Date | string
     users?: UserUncheckedCreateNestedManyWithoutCafeInput
     categories?: MenuCategoryUncheckedCreateNestedManyWithoutCafeInput
     menuItems?: MenuItemUncheckedCreateNestedManyWithoutCafeInput
+    menus?: MenuUncheckedCreateNestedManyWithoutCafeInput
+    feedback?: FeedbackUncheckedCreateNestedManyWithoutCafeInput
     tables?: TableUncheckedCreateNestedManyWithoutCafeInput
     staff?: StaffUncheckedCreateNestedManyWithoutCafeInput
     expenses?: ExpenseUncheckedCreateNestedManyWithoutCafeInput
@@ -22219,6 +26741,7 @@ export namespace Prisma {
     itemPricePaise: number
     quantity: number
     subtotalPaise: number
+    isSubsidised?: boolean
     menuItem: MenuItemCreateNestedOneWithoutOrderItemsInput
   }
 
@@ -22229,6 +26752,7 @@ export namespace Prisma {
     itemPricePaise: number
     quantity: number
     subtotalPaise: number
+    isSubsidised?: boolean
   }
 
   export type OrderItemCreateOrConnectWithoutOrderInput = {
@@ -22313,11 +26837,14 @@ export namespace Prisma {
     razorpayKeyId?: NullableStringFieldUpdateOperationsInput | string | null
     razorpayKeySecret?: NullableStringFieldUpdateOperationsInput | string | null
     razorpayWebhookSecret?: NullableStringFieldUpdateOperationsInput | string | null
+    autoScheduleMenus?: BoolFieldUpdateOperationsInput | boolean
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     users?: UserUpdateManyWithoutCafeNestedInput
     categories?: MenuCategoryUpdateManyWithoutCafeNestedInput
     menuItems?: MenuItemUpdateManyWithoutCafeNestedInput
+    menus?: MenuUpdateManyWithoutCafeNestedInput
+    feedback?: FeedbackUpdateManyWithoutCafeNestedInput
     tables?: TableUpdateManyWithoutCafeNestedInput
     staff?: StaffUpdateManyWithoutCafeNestedInput
     expenses?: ExpenseUpdateManyWithoutCafeNestedInput
@@ -22341,11 +26868,14 @@ export namespace Prisma {
     razorpayKeyId?: NullableStringFieldUpdateOperationsInput | string | null
     razorpayKeySecret?: NullableStringFieldUpdateOperationsInput | string | null
     razorpayWebhookSecret?: NullableStringFieldUpdateOperationsInput | string | null
+    autoScheduleMenus?: BoolFieldUpdateOperationsInput | boolean
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     users?: UserUncheckedUpdateManyWithoutCafeNestedInput
     categories?: MenuCategoryUncheckedUpdateManyWithoutCafeNestedInput
     menuItems?: MenuItemUncheckedUpdateManyWithoutCafeNestedInput
+    menus?: MenuUncheckedUpdateManyWithoutCafeNestedInput
+    feedback?: FeedbackUncheckedUpdateManyWithoutCafeNestedInput
     tables?: TableUncheckedUpdateManyWithoutCafeNestedInput
     staff?: StaffUncheckedUpdateManyWithoutCafeNestedInput
     expenses?: ExpenseUncheckedUpdateManyWithoutCafeNestedInput
@@ -22481,16 +27011,22 @@ export namespace Prisma {
     imageUrl?: string | null
     isAvailable?: boolean
     isVeg?: boolean
+    isSubsidised?: boolean
     sortOrder?: number
+    menuType?: $Enums.MenuType | null
     createdAt?: Date | string
     updatedAt?: Date | string
     cafe?: CafeCreateNestedOneWithoutMenuItemsInput
+    menu?: MenuCreateNestedOneWithoutItemsInput
     category?: MenuCategoryCreateNestedOneWithoutItemsInput
+    overriddenFrom?: MenuItemCreateNestedOneWithoutOverridesInput
+    overrides?: MenuItemCreateNestedManyWithoutOverriddenFromInput
   }
 
   export type MenuItemUncheckedCreateWithoutOrderItemsInput = {
     id?: string
     cafeId?: string | null
+    menuId?: string | null
     categoryId?: string | null
     name: string
     description?: string | null
@@ -22498,9 +27034,13 @@ export namespace Prisma {
     imageUrl?: string | null
     isAvailable?: boolean
     isVeg?: boolean
+    isSubsidised?: boolean
     sortOrder?: number
+    menuType?: $Enums.MenuType | null
+    overriddenFromId?: string | null
     createdAt?: Date | string
     updatedAt?: Date | string
+    overrides?: MenuItemUncheckedCreateNestedManyWithoutOverriddenFromInput
   }
 
   export type MenuItemCreateOrConnectWithoutOrderItemsInput = {
@@ -22574,16 +27114,22 @@ export namespace Prisma {
     imageUrl?: NullableStringFieldUpdateOperationsInput | string | null
     isAvailable?: BoolFieldUpdateOperationsInput | boolean
     isVeg?: BoolFieldUpdateOperationsInput | boolean
+    isSubsidised?: BoolFieldUpdateOperationsInput | boolean
     sortOrder?: IntFieldUpdateOperationsInput | number
+    menuType?: NullableEnumMenuTypeFieldUpdateOperationsInput | $Enums.MenuType | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     cafe?: CafeUpdateOneWithoutMenuItemsNestedInput
+    menu?: MenuUpdateOneWithoutItemsNestedInput
     category?: MenuCategoryUpdateOneWithoutItemsNestedInput
+    overriddenFrom?: MenuItemUpdateOneWithoutOverridesNestedInput
+    overrides?: MenuItemUpdateManyWithoutOverriddenFromNestedInput
   }
 
   export type MenuItemUncheckedUpdateWithoutOrderItemsInput = {
     id?: StringFieldUpdateOperationsInput | string
     cafeId?: NullableStringFieldUpdateOperationsInput | string | null
+    menuId?: NullableStringFieldUpdateOperationsInput | string | null
     categoryId?: NullableStringFieldUpdateOperationsInput | string | null
     name?: StringFieldUpdateOperationsInput | string
     description?: NullableStringFieldUpdateOperationsInput | string | null
@@ -22591,9 +27137,13 @@ export namespace Prisma {
     imageUrl?: NullableStringFieldUpdateOperationsInput | string | null
     isAvailable?: BoolFieldUpdateOperationsInput | boolean
     isVeg?: BoolFieldUpdateOperationsInput | boolean
+    isSubsidised?: BoolFieldUpdateOperationsInput | boolean
     sortOrder?: IntFieldUpdateOperationsInput | number
+    menuType?: NullableEnumMenuTypeFieldUpdateOperationsInput | $Enums.MenuType | null
+    overriddenFromId?: NullableStringFieldUpdateOperationsInput | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    overrides?: MenuItemUncheckedUpdateManyWithoutOverriddenFromNestedInput
   }
 
   export type CafeCreateWithoutOrderCountersInput = {
@@ -22613,11 +27163,14 @@ export namespace Prisma {
     razorpayKeyId?: string | null
     razorpayKeySecret?: string | null
     razorpayWebhookSecret?: string | null
+    autoScheduleMenus?: boolean
     createdAt?: Date | string
     updatedAt?: Date | string
     users?: UserCreateNestedManyWithoutCafeInput
     categories?: MenuCategoryCreateNestedManyWithoutCafeInput
     menuItems?: MenuItemCreateNestedManyWithoutCafeInput
+    menus?: MenuCreateNestedManyWithoutCafeInput
+    feedback?: FeedbackCreateNestedManyWithoutCafeInput
     orders?: OrderCreateNestedManyWithoutCafeInput
     tables?: TableCreateNestedManyWithoutCafeInput
     staff?: StaffCreateNestedManyWithoutCafeInput
@@ -22641,11 +27194,14 @@ export namespace Prisma {
     razorpayKeyId?: string | null
     razorpayKeySecret?: string | null
     razorpayWebhookSecret?: string | null
+    autoScheduleMenus?: boolean
     createdAt?: Date | string
     updatedAt?: Date | string
     users?: UserUncheckedCreateNestedManyWithoutCafeInput
     categories?: MenuCategoryUncheckedCreateNestedManyWithoutCafeInput
     menuItems?: MenuItemUncheckedCreateNestedManyWithoutCafeInput
+    menus?: MenuUncheckedCreateNestedManyWithoutCafeInput
+    feedback?: FeedbackUncheckedCreateNestedManyWithoutCafeInput
     orders?: OrderUncheckedCreateNestedManyWithoutCafeInput
     tables?: TableUncheckedCreateNestedManyWithoutCafeInput
     staff?: StaffUncheckedCreateNestedManyWithoutCafeInput
@@ -22685,11 +27241,14 @@ export namespace Prisma {
     razorpayKeyId?: NullableStringFieldUpdateOperationsInput | string | null
     razorpayKeySecret?: NullableStringFieldUpdateOperationsInput | string | null
     razorpayWebhookSecret?: NullableStringFieldUpdateOperationsInput | string | null
+    autoScheduleMenus?: BoolFieldUpdateOperationsInput | boolean
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     users?: UserUpdateManyWithoutCafeNestedInput
     categories?: MenuCategoryUpdateManyWithoutCafeNestedInput
     menuItems?: MenuItemUpdateManyWithoutCafeNestedInput
+    menus?: MenuUpdateManyWithoutCafeNestedInput
+    feedback?: FeedbackUpdateManyWithoutCafeNestedInput
     orders?: OrderUpdateManyWithoutCafeNestedInput
     tables?: TableUpdateManyWithoutCafeNestedInput
     staff?: StaffUpdateManyWithoutCafeNestedInput
@@ -22713,11 +27272,14 @@ export namespace Prisma {
     razorpayKeyId?: NullableStringFieldUpdateOperationsInput | string | null
     razorpayKeySecret?: NullableStringFieldUpdateOperationsInput | string | null
     razorpayWebhookSecret?: NullableStringFieldUpdateOperationsInput | string | null
+    autoScheduleMenus?: BoolFieldUpdateOperationsInput | boolean
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     users?: UserUncheckedUpdateManyWithoutCafeNestedInput
     categories?: MenuCategoryUncheckedUpdateManyWithoutCafeNestedInput
     menuItems?: MenuItemUncheckedUpdateManyWithoutCafeNestedInput
+    menus?: MenuUncheckedUpdateManyWithoutCafeNestedInput
+    feedback?: FeedbackUncheckedUpdateManyWithoutCafeNestedInput
     orders?: OrderUncheckedUpdateManyWithoutCafeNestedInput
     tables?: TableUncheckedUpdateManyWithoutCafeNestedInput
     staff?: StaffUncheckedUpdateManyWithoutCafeNestedInput
@@ -22829,11 +27391,14 @@ export namespace Prisma {
     razorpayKeyId?: string | null
     razorpayKeySecret?: string | null
     razorpayWebhookSecret?: string | null
+    autoScheduleMenus?: boolean
     createdAt?: Date | string
     updatedAt?: Date | string
     users?: UserCreateNestedManyWithoutCafeInput
     categories?: MenuCategoryCreateNestedManyWithoutCafeInput
     menuItems?: MenuItemCreateNestedManyWithoutCafeInput
+    menus?: MenuCreateNestedManyWithoutCafeInput
+    feedback?: FeedbackCreateNestedManyWithoutCafeInput
     orders?: OrderCreateNestedManyWithoutCafeInput
     staff?: StaffCreateNestedManyWithoutCafeInput
     expenses?: ExpenseCreateNestedManyWithoutCafeInput
@@ -22857,11 +27422,14 @@ export namespace Prisma {
     razorpayKeyId?: string | null
     razorpayKeySecret?: string | null
     razorpayWebhookSecret?: string | null
+    autoScheduleMenus?: boolean
     createdAt?: Date | string
     updatedAt?: Date | string
     users?: UserUncheckedCreateNestedManyWithoutCafeInput
     categories?: MenuCategoryUncheckedCreateNestedManyWithoutCafeInput
     menuItems?: MenuItemUncheckedCreateNestedManyWithoutCafeInput
+    menus?: MenuUncheckedCreateNestedManyWithoutCafeInput
+    feedback?: FeedbackUncheckedCreateNestedManyWithoutCafeInput
     orders?: OrderUncheckedCreateNestedManyWithoutCafeInput
     staff?: StaffUncheckedCreateNestedManyWithoutCafeInput
     expenses?: ExpenseUncheckedCreateNestedManyWithoutCafeInput
@@ -22947,11 +27515,14 @@ export namespace Prisma {
     razorpayKeyId?: NullableStringFieldUpdateOperationsInput | string | null
     razorpayKeySecret?: NullableStringFieldUpdateOperationsInput | string | null
     razorpayWebhookSecret?: NullableStringFieldUpdateOperationsInput | string | null
+    autoScheduleMenus?: BoolFieldUpdateOperationsInput | boolean
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     users?: UserUpdateManyWithoutCafeNestedInput
     categories?: MenuCategoryUpdateManyWithoutCafeNestedInput
     menuItems?: MenuItemUpdateManyWithoutCafeNestedInput
+    menus?: MenuUpdateManyWithoutCafeNestedInput
+    feedback?: FeedbackUpdateManyWithoutCafeNestedInput
     orders?: OrderUpdateManyWithoutCafeNestedInput
     staff?: StaffUpdateManyWithoutCafeNestedInput
     expenses?: ExpenseUpdateManyWithoutCafeNestedInput
@@ -22975,11 +27546,14 @@ export namespace Prisma {
     razorpayKeyId?: NullableStringFieldUpdateOperationsInput | string | null
     razorpayKeySecret?: NullableStringFieldUpdateOperationsInput | string | null
     razorpayWebhookSecret?: NullableStringFieldUpdateOperationsInput | string | null
+    autoScheduleMenus?: BoolFieldUpdateOperationsInput | boolean
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     users?: UserUncheckedUpdateManyWithoutCafeNestedInput
     categories?: MenuCategoryUncheckedUpdateManyWithoutCafeNestedInput
     menuItems?: MenuItemUncheckedUpdateManyWithoutCafeNestedInput
+    menus?: MenuUncheckedUpdateManyWithoutCafeNestedInput
+    feedback?: FeedbackUncheckedUpdateManyWithoutCafeNestedInput
     orders?: OrderUncheckedUpdateManyWithoutCafeNestedInput
     staff?: StaffUncheckedUpdateManyWithoutCafeNestedInput
     expenses?: ExpenseUncheckedUpdateManyWithoutCafeNestedInput
@@ -23019,11 +27593,14 @@ export namespace Prisma {
     razorpayKeyId?: string | null
     razorpayKeySecret?: string | null
     razorpayWebhookSecret?: string | null
+    autoScheduleMenus?: boolean
     createdAt?: Date | string
     updatedAt?: Date | string
     users?: UserCreateNestedManyWithoutCafeInput
     categories?: MenuCategoryCreateNestedManyWithoutCafeInput
     menuItems?: MenuItemCreateNestedManyWithoutCafeInput
+    menus?: MenuCreateNestedManyWithoutCafeInput
+    feedback?: FeedbackCreateNestedManyWithoutCafeInput
     orders?: OrderCreateNestedManyWithoutCafeInput
     tables?: TableCreateNestedManyWithoutCafeInput
     expenses?: ExpenseCreateNestedManyWithoutCafeInput
@@ -23047,11 +27624,14 @@ export namespace Prisma {
     razorpayKeyId?: string | null
     razorpayKeySecret?: string | null
     razorpayWebhookSecret?: string | null
+    autoScheduleMenus?: boolean
     createdAt?: Date | string
     updatedAt?: Date | string
     users?: UserUncheckedCreateNestedManyWithoutCafeInput
     categories?: MenuCategoryUncheckedCreateNestedManyWithoutCafeInput
     menuItems?: MenuItemUncheckedCreateNestedManyWithoutCafeInput
+    menus?: MenuUncheckedCreateNestedManyWithoutCafeInput
+    feedback?: FeedbackUncheckedCreateNestedManyWithoutCafeInput
     orders?: OrderUncheckedCreateNestedManyWithoutCafeInput
     tables?: TableUncheckedCreateNestedManyWithoutCafeInput
     expenses?: ExpenseUncheckedCreateNestedManyWithoutCafeInput
@@ -23091,11 +27671,14 @@ export namespace Prisma {
     razorpayKeyId?: NullableStringFieldUpdateOperationsInput | string | null
     razorpayKeySecret?: NullableStringFieldUpdateOperationsInput | string | null
     razorpayWebhookSecret?: NullableStringFieldUpdateOperationsInput | string | null
+    autoScheduleMenus?: BoolFieldUpdateOperationsInput | boolean
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     users?: UserUpdateManyWithoutCafeNestedInput
     categories?: MenuCategoryUpdateManyWithoutCafeNestedInput
     menuItems?: MenuItemUpdateManyWithoutCafeNestedInput
+    menus?: MenuUpdateManyWithoutCafeNestedInput
+    feedback?: FeedbackUpdateManyWithoutCafeNestedInput
     orders?: OrderUpdateManyWithoutCafeNestedInput
     tables?: TableUpdateManyWithoutCafeNestedInput
     expenses?: ExpenseUpdateManyWithoutCafeNestedInput
@@ -23119,11 +27702,14 @@ export namespace Prisma {
     razorpayKeyId?: NullableStringFieldUpdateOperationsInput | string | null
     razorpayKeySecret?: NullableStringFieldUpdateOperationsInput | string | null
     razorpayWebhookSecret?: NullableStringFieldUpdateOperationsInput | string | null
+    autoScheduleMenus?: BoolFieldUpdateOperationsInput | boolean
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     users?: UserUncheckedUpdateManyWithoutCafeNestedInput
     categories?: MenuCategoryUncheckedUpdateManyWithoutCafeNestedInput
     menuItems?: MenuItemUncheckedUpdateManyWithoutCafeNestedInput
+    menus?: MenuUncheckedUpdateManyWithoutCafeNestedInput
+    feedback?: FeedbackUncheckedUpdateManyWithoutCafeNestedInput
     orders?: OrderUncheckedUpdateManyWithoutCafeNestedInput
     tables?: TableUncheckedUpdateManyWithoutCafeNestedInput
     expenses?: ExpenseUncheckedUpdateManyWithoutCafeNestedInput
@@ -23147,11 +27733,14 @@ export namespace Prisma {
     razorpayKeyId?: string | null
     razorpayKeySecret?: string | null
     razorpayWebhookSecret?: string | null
+    autoScheduleMenus?: boolean
     createdAt?: Date | string
     updatedAt?: Date | string
     users?: UserCreateNestedManyWithoutCafeInput
     categories?: MenuCategoryCreateNestedManyWithoutCafeInput
     menuItems?: MenuItemCreateNestedManyWithoutCafeInput
+    menus?: MenuCreateNestedManyWithoutCafeInput
+    feedback?: FeedbackCreateNestedManyWithoutCafeInput
     orders?: OrderCreateNestedManyWithoutCafeInput
     tables?: TableCreateNestedManyWithoutCafeInput
     staff?: StaffCreateNestedManyWithoutCafeInput
@@ -23175,11 +27764,14 @@ export namespace Prisma {
     razorpayKeyId?: string | null
     razorpayKeySecret?: string | null
     razorpayWebhookSecret?: string | null
+    autoScheduleMenus?: boolean
     createdAt?: Date | string
     updatedAt?: Date | string
     users?: UserUncheckedCreateNestedManyWithoutCafeInput
     categories?: MenuCategoryUncheckedCreateNestedManyWithoutCafeInput
     menuItems?: MenuItemUncheckedCreateNestedManyWithoutCafeInput
+    menus?: MenuUncheckedCreateNestedManyWithoutCafeInput
+    feedback?: FeedbackUncheckedCreateNestedManyWithoutCafeInput
     orders?: OrderUncheckedCreateNestedManyWithoutCafeInput
     tables?: TableUncheckedCreateNestedManyWithoutCafeInput
     staff?: StaffUncheckedCreateNestedManyWithoutCafeInput
@@ -23219,11 +27811,14 @@ export namespace Prisma {
     razorpayKeyId?: NullableStringFieldUpdateOperationsInput | string | null
     razorpayKeySecret?: NullableStringFieldUpdateOperationsInput | string | null
     razorpayWebhookSecret?: NullableStringFieldUpdateOperationsInput | string | null
+    autoScheduleMenus?: BoolFieldUpdateOperationsInput | boolean
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     users?: UserUpdateManyWithoutCafeNestedInput
     categories?: MenuCategoryUpdateManyWithoutCafeNestedInput
     menuItems?: MenuItemUpdateManyWithoutCafeNestedInput
+    menus?: MenuUpdateManyWithoutCafeNestedInput
+    feedback?: FeedbackUpdateManyWithoutCafeNestedInput
     orders?: OrderUpdateManyWithoutCafeNestedInput
     tables?: TableUpdateManyWithoutCafeNestedInput
     staff?: StaffUpdateManyWithoutCafeNestedInput
@@ -23247,11 +27842,14 @@ export namespace Prisma {
     razorpayKeyId?: NullableStringFieldUpdateOperationsInput | string | null
     razorpayKeySecret?: NullableStringFieldUpdateOperationsInput | string | null
     razorpayWebhookSecret?: NullableStringFieldUpdateOperationsInput | string | null
+    autoScheduleMenus?: BoolFieldUpdateOperationsInput | boolean
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     users?: UserUncheckedUpdateManyWithoutCafeNestedInput
     categories?: MenuCategoryUncheckedUpdateManyWithoutCafeNestedInput
     menuItems?: MenuItemUncheckedUpdateManyWithoutCafeNestedInput
+    menus?: MenuUncheckedUpdateManyWithoutCafeNestedInput
+    feedback?: FeedbackUncheckedUpdateManyWithoutCafeNestedInput
     orders?: OrderUncheckedUpdateManyWithoutCafeNestedInput
     tables?: TableUncheckedUpdateManyWithoutCafeNestedInput
     staff?: StaffUncheckedUpdateManyWithoutCafeNestedInput
@@ -23335,6 +27933,7 @@ export namespace Prisma {
 
   export type MenuCategoryCreateManyCafeInput = {
     id?: string
+    menuId?: string | null
     name: string
     sortOrder?: number
     isActive?: boolean
@@ -23343,6 +27942,7 @@ export namespace Prisma {
 
   export type MenuItemCreateManyCafeInput = {
     id?: string
+    menuId?: string | null
     categoryId?: string | null
     name: string
     description?: string | null
@@ -23350,9 +27950,28 @@ export namespace Prisma {
     imageUrl?: string | null
     isAvailable?: boolean
     isVeg?: boolean
+    isSubsidised?: boolean
     sortOrder?: number
+    menuType?: $Enums.MenuType | null
+    overriddenFromId?: string | null
     createdAt?: Date | string
     updatedAt?: Date | string
+  }
+
+  export type MenuCreateManyCafeInput = {
+    id?: string
+    type: $Enums.MenuType
+    isActive?: boolean
+    isSubsidised?: boolean
+    createdAt?: Date | string
+    updatedAt?: Date | string
+  }
+
+  export type FeedbackCreateManyCafeInput = {
+    id?: string
+    rating: number
+    comment?: string | null
+    createdAt?: Date | string
   }
 
   export type OrderCreateManyCafeInput = {
@@ -23445,11 +28064,13 @@ export namespace Prisma {
     sortOrder?: IntFieldUpdateOperationsInput | number
     isActive?: BoolFieldUpdateOperationsInput | boolean
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    menu?: MenuUpdateOneWithoutCategoriesNestedInput
     items?: MenuItemUpdateManyWithoutCategoryNestedInput
   }
 
   export type MenuCategoryUncheckedUpdateWithoutCafeInput = {
     id?: StringFieldUpdateOperationsInput | string
+    menuId?: NullableStringFieldUpdateOperationsInput | string | null
     name?: StringFieldUpdateOperationsInput | string
     sortOrder?: IntFieldUpdateOperationsInput | number
     isActive?: BoolFieldUpdateOperationsInput | boolean
@@ -23459,6 +28080,7 @@ export namespace Prisma {
 
   export type MenuCategoryUncheckedUpdateManyWithoutCafeInput = {
     id?: StringFieldUpdateOperationsInput | string
+    menuId?: NullableStringFieldUpdateOperationsInput | string | null
     name?: StringFieldUpdateOperationsInput | string
     sortOrder?: IntFieldUpdateOperationsInput | number
     isActive?: BoolFieldUpdateOperationsInput | boolean
@@ -23473,15 +28095,21 @@ export namespace Prisma {
     imageUrl?: NullableStringFieldUpdateOperationsInput | string | null
     isAvailable?: BoolFieldUpdateOperationsInput | boolean
     isVeg?: BoolFieldUpdateOperationsInput | boolean
+    isSubsidised?: BoolFieldUpdateOperationsInput | boolean
     sortOrder?: IntFieldUpdateOperationsInput | number
+    menuType?: NullableEnumMenuTypeFieldUpdateOperationsInput | $Enums.MenuType | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    menu?: MenuUpdateOneWithoutItemsNestedInput
     category?: MenuCategoryUpdateOneWithoutItemsNestedInput
     orderItems?: OrderItemUpdateManyWithoutMenuItemNestedInput
+    overriddenFrom?: MenuItemUpdateOneWithoutOverridesNestedInput
+    overrides?: MenuItemUpdateManyWithoutOverriddenFromNestedInput
   }
 
   export type MenuItemUncheckedUpdateWithoutCafeInput = {
     id?: StringFieldUpdateOperationsInput | string
+    menuId?: NullableStringFieldUpdateOperationsInput | string | null
     categoryId?: NullableStringFieldUpdateOperationsInput | string | null
     name?: StringFieldUpdateOperationsInput | string
     description?: NullableStringFieldUpdateOperationsInput | string | null
@@ -23489,14 +28117,19 @@ export namespace Prisma {
     imageUrl?: NullableStringFieldUpdateOperationsInput | string | null
     isAvailable?: BoolFieldUpdateOperationsInput | boolean
     isVeg?: BoolFieldUpdateOperationsInput | boolean
+    isSubsidised?: BoolFieldUpdateOperationsInput | boolean
     sortOrder?: IntFieldUpdateOperationsInput | number
+    menuType?: NullableEnumMenuTypeFieldUpdateOperationsInput | $Enums.MenuType | null
+    overriddenFromId?: NullableStringFieldUpdateOperationsInput | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     orderItems?: OrderItemUncheckedUpdateManyWithoutMenuItemNestedInput
+    overrides?: MenuItemUncheckedUpdateManyWithoutOverriddenFromNestedInput
   }
 
   export type MenuItemUncheckedUpdateManyWithoutCafeInput = {
     id?: StringFieldUpdateOperationsInput | string
+    menuId?: NullableStringFieldUpdateOperationsInput | string | null
     categoryId?: NullableStringFieldUpdateOperationsInput | string | null
     name?: StringFieldUpdateOperationsInput | string
     description?: NullableStringFieldUpdateOperationsInput | string | null
@@ -23504,9 +28137,64 @@ export namespace Prisma {
     imageUrl?: NullableStringFieldUpdateOperationsInput | string | null
     isAvailable?: BoolFieldUpdateOperationsInput | boolean
     isVeg?: BoolFieldUpdateOperationsInput | boolean
+    isSubsidised?: BoolFieldUpdateOperationsInput | boolean
     sortOrder?: IntFieldUpdateOperationsInput | number
+    menuType?: NullableEnumMenuTypeFieldUpdateOperationsInput | $Enums.MenuType | null
+    overriddenFromId?: NullableStringFieldUpdateOperationsInput | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
+  export type MenuUpdateWithoutCafeInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    type?: EnumMenuTypeFieldUpdateOperationsInput | $Enums.MenuType
+    isActive?: BoolFieldUpdateOperationsInput | boolean
+    isSubsidised?: BoolFieldUpdateOperationsInput | boolean
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    categories?: MenuCategoryUpdateManyWithoutMenuNestedInput
+    items?: MenuItemUpdateManyWithoutMenuNestedInput
+  }
+
+  export type MenuUncheckedUpdateWithoutCafeInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    type?: EnumMenuTypeFieldUpdateOperationsInput | $Enums.MenuType
+    isActive?: BoolFieldUpdateOperationsInput | boolean
+    isSubsidised?: BoolFieldUpdateOperationsInput | boolean
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    categories?: MenuCategoryUncheckedUpdateManyWithoutMenuNestedInput
+    items?: MenuItemUncheckedUpdateManyWithoutMenuNestedInput
+  }
+
+  export type MenuUncheckedUpdateManyWithoutCafeInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    type?: EnumMenuTypeFieldUpdateOperationsInput | $Enums.MenuType
+    isActive?: BoolFieldUpdateOperationsInput | boolean
+    isSubsidised?: BoolFieldUpdateOperationsInput | boolean
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
+  export type FeedbackUpdateWithoutCafeInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    rating?: IntFieldUpdateOperationsInput | number
+    comment?: NullableStringFieldUpdateOperationsInput | string | null
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
+  export type FeedbackUncheckedUpdateWithoutCafeInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    rating?: IntFieldUpdateOperationsInput | number
+    comment?: NullableStringFieldUpdateOperationsInput | string | null
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
+  export type FeedbackUncheckedUpdateManyWithoutCafeInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    rating?: IntFieldUpdateOperationsInput | number
+    comment?: NullableStringFieldUpdateOperationsInput | string | null
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
   }
 
   export type OrderUpdateWithoutCafeInput = {
@@ -23662,6 +28350,120 @@ export namespace Prisma {
     count?: IntFieldUpdateOperationsInput | number
   }
 
+  export type MenuCategoryCreateManyMenuInput = {
+    id?: string
+    cafeId?: string | null
+    name: string
+    sortOrder?: number
+    isActive?: boolean
+    createdAt?: Date | string
+  }
+
+  export type MenuItemCreateManyMenuInput = {
+    id?: string
+    cafeId?: string | null
+    categoryId?: string | null
+    name: string
+    description?: string | null
+    pricePaise: number
+    imageUrl?: string | null
+    isAvailable?: boolean
+    isVeg?: boolean
+    isSubsidised?: boolean
+    sortOrder?: number
+    menuType?: $Enums.MenuType | null
+    overriddenFromId?: string | null
+    createdAt?: Date | string
+    updatedAt?: Date | string
+  }
+
+  export type MenuCategoryUpdateWithoutMenuInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    name?: StringFieldUpdateOperationsInput | string
+    sortOrder?: IntFieldUpdateOperationsInput | number
+    isActive?: BoolFieldUpdateOperationsInput | boolean
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    cafe?: CafeUpdateOneWithoutCategoriesNestedInput
+    items?: MenuItemUpdateManyWithoutCategoryNestedInput
+  }
+
+  export type MenuCategoryUncheckedUpdateWithoutMenuInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    cafeId?: NullableStringFieldUpdateOperationsInput | string | null
+    name?: StringFieldUpdateOperationsInput | string
+    sortOrder?: IntFieldUpdateOperationsInput | number
+    isActive?: BoolFieldUpdateOperationsInput | boolean
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    items?: MenuItemUncheckedUpdateManyWithoutCategoryNestedInput
+  }
+
+  export type MenuCategoryUncheckedUpdateManyWithoutMenuInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    cafeId?: NullableStringFieldUpdateOperationsInput | string | null
+    name?: StringFieldUpdateOperationsInput | string
+    sortOrder?: IntFieldUpdateOperationsInput | number
+    isActive?: BoolFieldUpdateOperationsInput | boolean
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
+  export type MenuItemUpdateWithoutMenuInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    name?: StringFieldUpdateOperationsInput | string
+    description?: NullableStringFieldUpdateOperationsInput | string | null
+    pricePaise?: IntFieldUpdateOperationsInput | number
+    imageUrl?: NullableStringFieldUpdateOperationsInput | string | null
+    isAvailable?: BoolFieldUpdateOperationsInput | boolean
+    isVeg?: BoolFieldUpdateOperationsInput | boolean
+    isSubsidised?: BoolFieldUpdateOperationsInput | boolean
+    sortOrder?: IntFieldUpdateOperationsInput | number
+    menuType?: NullableEnumMenuTypeFieldUpdateOperationsInput | $Enums.MenuType | null
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    cafe?: CafeUpdateOneWithoutMenuItemsNestedInput
+    category?: MenuCategoryUpdateOneWithoutItemsNestedInput
+    orderItems?: OrderItemUpdateManyWithoutMenuItemNestedInput
+    overriddenFrom?: MenuItemUpdateOneWithoutOverridesNestedInput
+    overrides?: MenuItemUpdateManyWithoutOverriddenFromNestedInput
+  }
+
+  export type MenuItemUncheckedUpdateWithoutMenuInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    cafeId?: NullableStringFieldUpdateOperationsInput | string | null
+    categoryId?: NullableStringFieldUpdateOperationsInput | string | null
+    name?: StringFieldUpdateOperationsInput | string
+    description?: NullableStringFieldUpdateOperationsInput | string | null
+    pricePaise?: IntFieldUpdateOperationsInput | number
+    imageUrl?: NullableStringFieldUpdateOperationsInput | string | null
+    isAvailable?: BoolFieldUpdateOperationsInput | boolean
+    isVeg?: BoolFieldUpdateOperationsInput | boolean
+    isSubsidised?: BoolFieldUpdateOperationsInput | boolean
+    sortOrder?: IntFieldUpdateOperationsInput | number
+    menuType?: NullableEnumMenuTypeFieldUpdateOperationsInput | $Enums.MenuType | null
+    overriddenFromId?: NullableStringFieldUpdateOperationsInput | string | null
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    orderItems?: OrderItemUncheckedUpdateManyWithoutMenuItemNestedInput
+    overrides?: MenuItemUncheckedUpdateManyWithoutOverriddenFromNestedInput
+  }
+
+  export type MenuItemUncheckedUpdateManyWithoutMenuInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    cafeId?: NullableStringFieldUpdateOperationsInput | string | null
+    categoryId?: NullableStringFieldUpdateOperationsInput | string | null
+    name?: StringFieldUpdateOperationsInput | string
+    description?: NullableStringFieldUpdateOperationsInput | string | null
+    pricePaise?: IntFieldUpdateOperationsInput | number
+    imageUrl?: NullableStringFieldUpdateOperationsInput | string | null
+    isAvailable?: BoolFieldUpdateOperationsInput | boolean
+    isVeg?: BoolFieldUpdateOperationsInput | boolean
+    isSubsidised?: BoolFieldUpdateOperationsInput | boolean
+    sortOrder?: IntFieldUpdateOperationsInput | number
+    menuType?: NullableEnumMenuTypeFieldUpdateOperationsInput | $Enums.MenuType | null
+    overriddenFromId?: NullableStringFieldUpdateOperationsInput | string | null
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
   export type AuditLogCreateManyActorInput = {
     id?: string
     entityType: string
@@ -23705,13 +28507,17 @@ export namespace Prisma {
   export type MenuItemCreateManyCategoryInput = {
     id?: string
     cafeId?: string | null
+    menuId?: string | null
     name: string
     description?: string | null
     pricePaise: number
     imageUrl?: string | null
     isAvailable?: boolean
     isVeg?: boolean
+    isSubsidised?: boolean
     sortOrder?: number
+    menuType?: $Enums.MenuType | null
+    overriddenFromId?: string | null
     createdAt?: Date | string
     updatedAt?: Date | string
   }
@@ -23724,38 +28530,52 @@ export namespace Prisma {
     imageUrl?: NullableStringFieldUpdateOperationsInput | string | null
     isAvailable?: BoolFieldUpdateOperationsInput | boolean
     isVeg?: BoolFieldUpdateOperationsInput | boolean
+    isSubsidised?: BoolFieldUpdateOperationsInput | boolean
     sortOrder?: IntFieldUpdateOperationsInput | number
+    menuType?: NullableEnumMenuTypeFieldUpdateOperationsInput | $Enums.MenuType | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     cafe?: CafeUpdateOneWithoutMenuItemsNestedInput
+    menu?: MenuUpdateOneWithoutItemsNestedInput
     orderItems?: OrderItemUpdateManyWithoutMenuItemNestedInput
+    overriddenFrom?: MenuItemUpdateOneWithoutOverridesNestedInput
+    overrides?: MenuItemUpdateManyWithoutOverriddenFromNestedInput
   }
 
   export type MenuItemUncheckedUpdateWithoutCategoryInput = {
     id?: StringFieldUpdateOperationsInput | string
     cafeId?: NullableStringFieldUpdateOperationsInput | string | null
+    menuId?: NullableStringFieldUpdateOperationsInput | string | null
     name?: StringFieldUpdateOperationsInput | string
     description?: NullableStringFieldUpdateOperationsInput | string | null
     pricePaise?: IntFieldUpdateOperationsInput | number
     imageUrl?: NullableStringFieldUpdateOperationsInput | string | null
     isAvailable?: BoolFieldUpdateOperationsInput | boolean
     isVeg?: BoolFieldUpdateOperationsInput | boolean
+    isSubsidised?: BoolFieldUpdateOperationsInput | boolean
     sortOrder?: IntFieldUpdateOperationsInput | number
+    menuType?: NullableEnumMenuTypeFieldUpdateOperationsInput | $Enums.MenuType | null
+    overriddenFromId?: NullableStringFieldUpdateOperationsInput | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     orderItems?: OrderItemUncheckedUpdateManyWithoutMenuItemNestedInput
+    overrides?: MenuItemUncheckedUpdateManyWithoutOverriddenFromNestedInput
   }
 
   export type MenuItemUncheckedUpdateManyWithoutCategoryInput = {
     id?: StringFieldUpdateOperationsInput | string
     cafeId?: NullableStringFieldUpdateOperationsInput | string | null
+    menuId?: NullableStringFieldUpdateOperationsInput | string | null
     name?: StringFieldUpdateOperationsInput | string
     description?: NullableStringFieldUpdateOperationsInput | string | null
     pricePaise?: IntFieldUpdateOperationsInput | number
     imageUrl?: NullableStringFieldUpdateOperationsInput | string | null
     isAvailable?: BoolFieldUpdateOperationsInput | boolean
     isVeg?: BoolFieldUpdateOperationsInput | boolean
+    isSubsidised?: BoolFieldUpdateOperationsInput | boolean
     sortOrder?: IntFieldUpdateOperationsInput | number
+    menuType?: NullableEnumMenuTypeFieldUpdateOperationsInput | $Enums.MenuType | null
+    overriddenFromId?: NullableStringFieldUpdateOperationsInput | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
   }
@@ -23767,6 +28587,25 @@ export namespace Prisma {
     itemPricePaise: number
     quantity: number
     subtotalPaise: number
+    isSubsidised?: boolean
+  }
+
+  export type MenuItemCreateManyOverriddenFromInput = {
+    id?: string
+    cafeId?: string | null
+    menuId?: string | null
+    categoryId?: string | null
+    name: string
+    description?: string | null
+    pricePaise: number
+    imageUrl?: string | null
+    isAvailable?: boolean
+    isVeg?: boolean
+    isSubsidised?: boolean
+    sortOrder?: number
+    menuType?: $Enums.MenuType | null
+    createdAt?: Date | string
+    updatedAt?: Date | string
   }
 
   export type OrderItemUpdateWithoutMenuItemInput = {
@@ -23775,6 +28614,7 @@ export namespace Prisma {
     itemPricePaise?: IntFieldUpdateOperationsInput | number
     quantity?: IntFieldUpdateOperationsInput | number
     subtotalPaise?: IntFieldUpdateOperationsInput | number
+    isSubsidised?: BoolFieldUpdateOperationsInput | boolean
     order?: OrderUpdateOneRequiredWithoutItemsNestedInput
   }
 
@@ -23785,6 +28625,7 @@ export namespace Prisma {
     itemPricePaise?: IntFieldUpdateOperationsInput | number
     quantity?: IntFieldUpdateOperationsInput | number
     subtotalPaise?: IntFieldUpdateOperationsInput | number
+    isSubsidised?: BoolFieldUpdateOperationsInput | boolean
   }
 
   export type OrderItemUncheckedUpdateManyWithoutMenuItemInput = {
@@ -23794,6 +28635,65 @@ export namespace Prisma {
     itemPricePaise?: IntFieldUpdateOperationsInput | number
     quantity?: IntFieldUpdateOperationsInput | number
     subtotalPaise?: IntFieldUpdateOperationsInput | number
+    isSubsidised?: BoolFieldUpdateOperationsInput | boolean
+  }
+
+  export type MenuItemUpdateWithoutOverriddenFromInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    name?: StringFieldUpdateOperationsInput | string
+    description?: NullableStringFieldUpdateOperationsInput | string | null
+    pricePaise?: IntFieldUpdateOperationsInput | number
+    imageUrl?: NullableStringFieldUpdateOperationsInput | string | null
+    isAvailable?: BoolFieldUpdateOperationsInput | boolean
+    isVeg?: BoolFieldUpdateOperationsInput | boolean
+    isSubsidised?: BoolFieldUpdateOperationsInput | boolean
+    sortOrder?: IntFieldUpdateOperationsInput | number
+    menuType?: NullableEnumMenuTypeFieldUpdateOperationsInput | $Enums.MenuType | null
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    cafe?: CafeUpdateOneWithoutMenuItemsNestedInput
+    menu?: MenuUpdateOneWithoutItemsNestedInput
+    category?: MenuCategoryUpdateOneWithoutItemsNestedInput
+    orderItems?: OrderItemUpdateManyWithoutMenuItemNestedInput
+    overrides?: MenuItemUpdateManyWithoutOverriddenFromNestedInput
+  }
+
+  export type MenuItemUncheckedUpdateWithoutOverriddenFromInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    cafeId?: NullableStringFieldUpdateOperationsInput | string | null
+    menuId?: NullableStringFieldUpdateOperationsInput | string | null
+    categoryId?: NullableStringFieldUpdateOperationsInput | string | null
+    name?: StringFieldUpdateOperationsInput | string
+    description?: NullableStringFieldUpdateOperationsInput | string | null
+    pricePaise?: IntFieldUpdateOperationsInput | number
+    imageUrl?: NullableStringFieldUpdateOperationsInput | string | null
+    isAvailable?: BoolFieldUpdateOperationsInput | boolean
+    isVeg?: BoolFieldUpdateOperationsInput | boolean
+    isSubsidised?: BoolFieldUpdateOperationsInput | boolean
+    sortOrder?: IntFieldUpdateOperationsInput | number
+    menuType?: NullableEnumMenuTypeFieldUpdateOperationsInput | $Enums.MenuType | null
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    orderItems?: OrderItemUncheckedUpdateManyWithoutMenuItemNestedInput
+    overrides?: MenuItemUncheckedUpdateManyWithoutOverriddenFromNestedInput
+  }
+
+  export type MenuItemUncheckedUpdateManyWithoutOverriddenFromInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    cafeId?: NullableStringFieldUpdateOperationsInput | string | null
+    menuId?: NullableStringFieldUpdateOperationsInput | string | null
+    categoryId?: NullableStringFieldUpdateOperationsInput | string | null
+    name?: StringFieldUpdateOperationsInput | string
+    description?: NullableStringFieldUpdateOperationsInput | string | null
+    pricePaise?: IntFieldUpdateOperationsInput | number
+    imageUrl?: NullableStringFieldUpdateOperationsInput | string | null
+    isAvailable?: BoolFieldUpdateOperationsInput | boolean
+    isVeg?: BoolFieldUpdateOperationsInput | boolean
+    isSubsidised?: BoolFieldUpdateOperationsInput | boolean
+    sortOrder?: IntFieldUpdateOperationsInput | number
+    menuType?: NullableEnumMenuTypeFieldUpdateOperationsInput | $Enums.MenuType | null
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
   }
 
   export type OrderItemCreateManyOrderInput = {
@@ -23803,6 +28703,7 @@ export namespace Prisma {
     itemPricePaise: number
     quantity: number
     subtotalPaise: number
+    isSubsidised?: boolean
   }
 
   export type PaymentCreateManyOrderInput = {
@@ -23828,6 +28729,7 @@ export namespace Prisma {
     itemPricePaise?: IntFieldUpdateOperationsInput | number
     quantity?: IntFieldUpdateOperationsInput | number
     subtotalPaise?: IntFieldUpdateOperationsInput | number
+    isSubsidised?: BoolFieldUpdateOperationsInput | boolean
     menuItem?: MenuItemUpdateOneRequiredWithoutOrderItemsNestedInput
   }
 
@@ -23838,6 +28740,7 @@ export namespace Prisma {
     itemPricePaise?: IntFieldUpdateOperationsInput | number
     quantity?: IntFieldUpdateOperationsInput | number
     subtotalPaise?: IntFieldUpdateOperationsInput | number
+    isSubsidised?: BoolFieldUpdateOperationsInput | boolean
   }
 
   export type OrderItemUncheckedUpdateManyWithoutOrderInput = {
@@ -23847,6 +28750,7 @@ export namespace Prisma {
     itemPricePaise?: IntFieldUpdateOperationsInput | number
     quantity?: IntFieldUpdateOperationsInput | number
     subtotalPaise?: IntFieldUpdateOperationsInput | number
+    isSubsidised?: BoolFieldUpdateOperationsInput | boolean
   }
 
   export type PaymentUpdateWithoutOrderInput = {

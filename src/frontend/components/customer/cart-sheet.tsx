@@ -14,6 +14,7 @@ interface CartSheetProps {
 export function CartSheet({ isOpen, onClose, onCheckout }: CartSheetProps) {
   const { items, updateQuantity, removeItem, getTotalPaise, clearCart } = useCartStore();
   const total = getTotalPaise();
+  const isSubsidised = items.length > 0 && items.every((i) => i.pricePaise === null);
 
   return (
     <>
@@ -129,7 +130,7 @@ export function CartSheet({ isOpen, onClose, onCheckout }: CartSheetProps) {
                       className="text-xs text-[#cbc3d7] pl-5"
                       style={{ fontFamily: "var(--font-jb-mono), monospace" }}
                     >
-                      {paiseToCurrencyShort(item.pricePaise)} each
+                      {item.pricePaise === null ? "Subsidised" : `${paiseToCurrencyShort(item.pricePaise)} each`}
                     </p>
                   </div>
 
@@ -167,7 +168,7 @@ export function CartSheet({ isOpen, onClose, onCheckout }: CartSheetProps) {
                     className="text-sm font-bold w-16 text-right text-[#cdf200]"
                     style={{ fontFamily: "var(--font-jb-mono), monospace" }}
                   >
-                    {paiseToCurrencyShort(item.pricePaise * item.quantity)}
+                    {item.pricePaise === null ? "—" : paiseToCurrencyShort(item.pricePaise * item.quantity)}
                   </p>
                 </div>
               ))}
@@ -183,14 +184,16 @@ export function CartSheet({ isOpen, onClose, onCheckout }: CartSheetProps) {
                 className="text-[#cbc3d7] text-sm uppercase tracking-wider"
                 style={{ fontFamily: "var(--font-jb-mono), monospace" }}
               >
-                Total Amount
+                {isSubsidised ? "No payment required" : "Total Amount"}
               </span>
-              <span
-                className="text-2xl font-extrabold text-[#cdf200]"
-                style={{ fontFamily: "var(--font-display), sans-serif" }}
-              >
-                {paiseToCurrencyShort(total)}
-              </span>
+              {!isSubsidised && (
+                <span
+                  className="text-2xl font-extrabold text-[#cdf200]"
+                  style={{ fontFamily: "var(--font-display), sans-serif" }}
+                >
+                  {paiseToCurrencyShort(total)}
+                </span>
+              )}
             </div>
             <button
               onClick={onCheckout}

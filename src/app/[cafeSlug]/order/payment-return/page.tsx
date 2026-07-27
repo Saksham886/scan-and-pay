@@ -84,9 +84,9 @@ export default function PaymentReturnPage({
           sessionStorage.removeItem("checkout_idempotency_key");
           // Clear cart using the store action (key is "cafe-cart" not "cart-storage")
           try { useCartStore.getState().clearCart(); } catch {}
-          // Redirect to order status tracker
+          // Redirect to the order confirmation screen
           setTimeout(() => {
-            window.location.href = `/${cafeSlug}/order/${oid}/status`;
+            window.location.href = `/${cafeSlug}/order/${oid}/confirmation`;
           }, 1500);
           return;
         }

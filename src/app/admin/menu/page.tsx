@@ -23,6 +23,8 @@ interface Cafe {
   _count: { menuItems: number };
 }
 
+type MenuType = "BREAKFAST" | "LUNCH" | "EVENING_SNACKS" | "DINNER";
+
 interface MenuItem {
   id: string;
   cafeId: string | null;
@@ -33,12 +35,21 @@ interface MenuItem {
   isAvailable: boolean;
   isVeg: boolean;
   categoryId: string | null;
+  menuType: MenuType | null;
   category?: { id: string; name: string } | null;
   cafe?: { id: string; name: string; slug: string } | null;
 }
 
 const GLOBAL = "__global__";
 const ALL = "__all__";
+const ANY_MEAL_PERIOD = "__any__";
+
+const MEAL_PERIOD_LABELS: Record<MenuType, string> = {
+  BREAKFAST: "Breakfast",
+  LUNCH: "Lunch",
+  EVENING_SNACKS: "Evening Snacks",
+  DINNER: "Dinner",
+};
 
 function VegDot({ isVeg }: { isVeg: boolean }) {
   return (
@@ -64,6 +75,7 @@ export default function AdminMenuPage() {
   const [formIsVeg, setFormIsVeg] = useState(true);
   const [formCafeId, setFormCafeId] = useState<string>(GLOBAL); // GLOBAL or actual cafeId
   const [formCategoryId, setFormCategoryId] = useState<string>("");
+  const [formMenuType, setFormMenuType] = useState<string>(ANY_MEAL_PERIOD); // only used when formCafeId === GLOBAL
   const [formImageUrl, setFormImageUrl] = useState<string | null>(null);
   const [imageUploading, setImageUploading] = useState(false);
   const [formSaving, setFormSaving] = useState(false);
@@ -188,6 +200,7 @@ export default function AdminMenuPage() {
     setFormIsVeg(true); setFormImageUrl(null);
     setFormCategoryId("");
     setFormCafeId(presetCafeId);
+    setFormMenuType(ANY_MEAL_PERIOD);
     setShowNewCat(false); setNewCatName("");
     setShowModal(true);
   }
@@ -201,6 +214,7 @@ export default function AdminMenuPage() {
     setFormImageUrl(item.imageUrl);
     setFormCategoryId(item.categoryId ?? "");
     setFormCafeId(item.cafeId ?? GLOBAL);
+    setFormMenuType(item.menuType ?? ANY_MEAL_PERIOD);
     setShowNewCat(false); setNewCatName("");
     setShowModal(true);
   }
@@ -236,6 +250,7 @@ export default function AdminMenuPage() {
       imageUrl: formImageUrl || null,
       cafeId: formCafeId === GLOBAL ? null : formCafeId,
       categoryId: formCategoryId,
+      menuType: formCafeId === GLOBAL && formMenuType !== ANY_MEAL_PERIOD ? formMenuType : null,
     };
 
     try {
@@ -432,17 +447,24 @@ export default function AdminMenuPage() {
 
                   {/* Café badge */}
                   <td className="px-4 py-3">
-                    {item.cafeId === null ? (
-                      <span className="inline-flex items-center gap-1 px-2 py-0.5 rounded-full text-xs font-medium bg-primary/10 text-primary border border-primary/20">
-                        <Globe size={10} />
-                        Global
-                      </span>
-                    ) : (
-                      <span className="inline-flex items-center gap-1 px-2 py-0.5 rounded-full text-xs font-medium bg-surface-hover text-muted border border-border">
-                        <Store size={10} />
-                        {item.cafe?.name ?? "-"}
-                      </span>
-                    )}
+                    <div className="flex flex-col gap-1 items-start">
+                      {item.cafeId === null ? (
+                        <span className="inline-flex items-center gap-1 px-2 py-0.5 rounded-full text-xs font-medium bg-primary/10 text-primary border border-primary/20">
+                          <Globe size={10} />
+                          Global
+                        </span>
+                      ) : (
+                        <span className="inline-flex items-center gap-1 px-2 py-0.5 rounded-full text-xs font-medium bg-surface-hover text-muted border border-border">
+                          <Store size={10} />
+                          {item.cafe?.name ?? "-"}
+                        </span>
+                      )}
+                      {item.cafeId === null && item.menuType && (
+                        <span className="inline-flex items-center gap-1 px-2 py-0.5 rounded-full text-[11px] font-medium bg-amber-500/10 text-amber-600 border border-amber-500/20">
+                          {MEAL_PERIOD_LABELS[item.menuType]} only
+                        </span>
+                      )}
+                    </div>
                   </td>
 
                   {/* Status */}
@@ -564,6 +586,28 @@ export default function AdminMenuPage() {
               <ChevronDown size={14} className="absolute right-3 top-1/2 -translate-y-1/2 text-muted pointer-events-none" />
             </div>
           </div>
+
+          {/* Meal period (global items only) */}
+          {formCafeId === GLOBAL && (
+            <div>
+              <label className="block text-sm font-medium mb-1.5">
+                Meal Period <span className="text-muted font-normal">(which menu this shows on, across every café)</span>
+              </label>
+              <div className="relative">
+                <select
+                  className="w-full rounded-xl border border-border bg-surface px-4 py-2.5 pr-10 focus:outline-none focus:ring-2 focus:ring-primary appearance-none"
+                  value={formMenuType}
+                  onChange={(e) => setFormMenuType(e.target.value)}
+                >
+                  <option value={ANY_MEAL_PERIOD}>All meal periods</option>
+                  {(Object.keys(MEAL_PERIOD_LABELS) as MenuType[]).map((mt) => (
+                    <option key={mt} value={mt}>{MEAL_PERIOD_LABELS[mt]} only</option>
+                  ))}
+                </select>
+                <ChevronDown size={14} className="absolute right-3 top-1/2 -translate-y-1/2 text-muted pointer-events-none" />
+              </div>
+            </div>
+          )}
 
           {/* Category selector (always required) */}
           <div>

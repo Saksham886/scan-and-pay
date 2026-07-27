@@ -59,16 +59,19 @@ function playDing() {
   } catch {}
 }
 
-const statusFilters: { label: string; value: OrderStatus | "ALL" }[] = [
-  { label: "All Active", value: "ALL" },
-  { label: "Preparing", value: "PREPARING" },
-  { label: "Ready", value: "READY" },
+// Orders land on PAID directly on receipt (either a successful gateway
+// payment, or immediately for a fully subsidised order) — that's the
+// "Incoming" queue. Staff then mark each one Completed (handed over) or
+// Cancel it; both are terminal from there.
+const statusFilters: { label: string; value: OrderStatus }[] = [
+  { label: "Incoming", value: "PAID" },
   { label: "Completed", value: "COMPLETED" },
+  { label: "Cancelled", value: "CANCELLED" },
 ];
 
 export default function DashboardOrdersPage() {
   const [orders, setOrders] = useState<DashboardOrder[]>([]);
-  const [filter, setFilter] = useState<OrderStatus | "ALL">("ALL");
+  const [filter, setFilter] = useState<OrderStatus>("PAID");
   const [loading, setLoading] = useState(true);
   const [newOrderAlert, setNewOrderAlert] = useState(false);
 
@@ -113,7 +116,7 @@ export default function DashboardOrdersPage() {
         const todayStart = new Date();
         todayStart.setHours(0, 0, 0, 0);
         const params = new URLSearchParams({
-          status: "PAID,PREPARING,READY,COMPLETED",
+          status: "PAID",
           limit: "200",
           dateFrom: todayStart.toISOString(),
         });
@@ -139,18 +142,12 @@ export default function DashboardOrdersPage() {
 
   const fetchOrders = useCallback(async () => {
     try {
-      // "All Active" shows only in-progress orders; completed/cancelled live
-      // under their own tabs.
-      const statuses = filter === "ALL"
-        ? "PAID,PREPARING,READY"
-        : filter;
-
       // Only show today's orders
       const todayStart = new Date();
       todayStart.setHours(0, 0, 0, 0);
 
       const params = new URLSearchParams({
-        status: statuses,
+        status: filter,
         limit: "200",
         dateFrom: todayStart.toISOString(),
       });
@@ -197,8 +194,10 @@ export default function DashboardOrdersPage() {
     });
 
     if (res.ok) {
-      if (status === "CANCELLED") {
-        // Remove cancelled orders from the active view immediately
+      if (status === "CANCELLED" || status === "COMPLETED") {
+        // Both leave the Incoming queue — remove from the active view
+        // immediately; the Completed/Cancelled tab picks it up on its own
+        // next fetch when the owner switches to it.
         setOrders((prev) => prev.filter((o) => o.id !== orderId));
       } else {
         setOrders((prev) =>
@@ -208,10 +207,7 @@ export default function DashboardOrdersPage() {
     }
   };
 
-  const filteredOrders =
-    filter === "ALL"
-      ? orders.filter((o) => o.status !== "COMPLETED" && o.status !== "CANCELLED")
-      : orders.filter((o) => o.status === filter);
+  const filteredOrders = orders.filter((o) => o.status === filter);
 
   return (
     <div>
@@ -296,14 +292,22 @@ function mapOrder(o: Record<string, unknown>): DashboardOrder {
     notes: o.notes as string | null,
     createdAt: o.createdAt as string,
     updatedAt: o.updatedAt as string,
-    cafeName: (o.cafeName ?? cafe?.name) as string | undefined,
+    cafeName: (o.cafeName ?? cafe?.name ?? null) as string | null,
     cafeSlug: (o.cafeSlug ?? cafe?.slug) as string | undefined,
+    // Whole-order isSubsidised needs payment presence, not selected by this
+    // list endpoint (only used on the confirmation screen) — unused here.
+    isSubsidised: false,
+    chargeablePaise: (o.items as Record<string, unknown>[]).reduce(
+      (sum, i) => sum + (i.isSubsidised ? 0 : (i.subtotalPaise as number)),
+      0
+    ),
     items: (o.items as Record<string, unknown>[]).map((i) => ({
       id: i.id as string,
       itemName: i.itemName as string,
       itemPricePaise: i.itemPricePaise as number,
       quantity: i.quantity as number,
       subtotalPaise: i.subtotalPaise as number,
+      isSubsidised: i.isSubsidised as boolean,
     })),
   };
 }

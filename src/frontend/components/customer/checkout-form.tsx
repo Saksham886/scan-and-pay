@@ -27,7 +27,7 @@ interface CheckoutFormProps {
 }
 
 export function CheckoutForm({ cafeSlug, cafeName, onBack }: CheckoutFormProps) {
-  const { items, getTotalPaise } = useCartStore();
+  const { items } = useCartStore();
   const [customerName, setCustomerName] = useState("");
   const [customerPhone, setCustomerPhone] = useState("");
   const [customerEmail, setCustomerEmail] = useState("");
@@ -37,7 +37,11 @@ export function CheckoutForm({ cafeSlug, cafeName, onBack }: CheckoutFormProps) 
   const [fieldErrors, setFieldErrors] = useState<FieldErrors>({});
   const [touched, setTouched] = useState<{ name?: boolean; phone?: boolean; email?: boolean }>({});
 
-  const total = getTotalPaise();
+  // Each cart item's pricePaise is already null when subsidised (whole-menu
+  // or per-item) — mixed carts are possible, so the chargeable total only
+  // sums the non-subsidised lines rather than trusting one page-level flag.
+  const chargeableTotal = items.reduce((sum, i) => sum + (i.pricePaise !== null ? i.pricePaise * i.quantity : 0), 0);
+  const isFullySubsidised = items.length > 0 && items.every((i) => i.pricePaise === null);
 
   const runValidators = (): FieldErrors => {
     const errors: FieldErrors = {};
@@ -109,8 +113,12 @@ export function CheckoutForm({ cafeSlug, cafeName, onBack }: CheckoutFormProps) 
       if (data.data.paymentRedirectUrl) {
         window.location.href = data.data.paymentRedirectUrl;
       } else {
-        // Order exists but no redirect URL - go to order status page directly
-        window.location.href = `/${cafeSlug}/order/${data.data.orderId}/status`;
+        // Subsidised orders (and idempotent re-hits of an already-placed
+        // order) have nothing to pay — go straight to the confirmation screen.
+        sessionStorage.removeItem("pending_order_id");
+        sessionStorage.removeItem("checkout_idempotency_key");
+        useCartStore.getState().clearCart();
+        window.location.href = `/${cafeSlug}/order/${data.data.orderId}/confirmation`;
       }
     } catch {
       setError("Network error. Please try again.");
@@ -208,7 +216,7 @@ export function CheckoutForm({ cafeSlug, cafeName, onBack }: CheckoutFormProps) 
                   className="font-bold ml-3 text-[#e2e0f8]"
                   style={{ fontFamily: "var(--font-jb-mono), monospace" }}
                 >
-                  {paiseToCurrencyShort(item.pricePaise * item.quantity)}
+                  {item.pricePaise === null ? "Subsidised" : paiseToCurrencyShort(item.pricePaise * item.quantity)}
                 </span>
               </div>
             ))}
@@ -217,14 +225,16 @@ export function CheckoutForm({ cafeSlug, cafeName, onBack }: CheckoutFormProps) 
                 className="font-bold text-[#e2e0f8] uppercase"
                 style={{ fontFamily: "var(--font-jb-mono), monospace" }}
               >
-                Total
+                {isFullySubsidised ? "No payment required" : "Total"}
               </span>
-              <span
-                className="font-extrabold text-xl text-[#cdf200]"
-                style={{ fontFamily: "var(--font-display), sans-serif" }}
-              >
-                {paiseToCurrencyShort(total)}
-              </span>
+              {!isFullySubsidised && (
+                <span
+                  className="font-extrabold text-xl text-[#cdf200]"
+                  style={{ fontFamily: "var(--font-display), sans-serif" }}
+                >
+                  {paiseToCurrencyShort(chargeableTotal)}
+                </span>
+              )}
             </div>
           </div>
         </div>
@@ -328,16 +338,18 @@ export function CheckoutForm({ cafeSlug, cafeName, onBack }: CheckoutFormProps) 
         )}
 
         {/* Secure Payment Note */}
-        <div
-          className="flex items-center gap-2 text-xs text-[#cbc3d7] justify-center pt-2 animate-fade-in-up"
-          style={{ fontFamily: "var(--font-jb-mono), monospace", animationDelay: "120ms" }}
-        >
-          <ShieldCheck size={14} className="text-[#cdf200]" />
-          <span>Secure payment</span>
-        </div>
+        {!isFullySubsidised && (
+          <div
+            className="flex items-center gap-2 text-xs text-[#cbc3d7] justify-center pt-2 animate-fade-in-up"
+            style={{ fontFamily: "var(--font-jb-mono), monospace", animationDelay: "120ms" }}
+          >
+            <ShieldCheck size={14} className="text-[#cdf200]" />
+            <span>Secure payment</span>
+          </div>
+        )}
       </form>
 
-      {/* Fixed Bottom Pay Button */}
+      {/* Fixed Bottom Pay/Place Button */}
       <div className="fixed bottom-0 left-0 right-0 bg-[#0c0d1d] border-t-2 border-[#494454] p-4">
         <button
           type="button"
@@ -354,9 +366,14 @@ export function CheckoutForm({ cafeSlug, cafeName, onBack }: CheckoutFormProps) 
               </svg>
               Processing...
             </>
+          ) : isFullySubsidised ? (
+            <>
+              Place Order
+              <ArrowRight size={16} />
+            </>
           ) : (
             <>
-              Pay {paiseToCurrencyShort(total)}
+              Pay {paiseToCurrencyShort(chargeableTotal)}
               <ArrowRight size={16} />
             </>
           )}

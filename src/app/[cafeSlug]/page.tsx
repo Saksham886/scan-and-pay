@@ -1,36 +1,36 @@
 import { menuService } from "@/backend/services/menu.service";
-import { MenuPageClient } from "@/frontend/components/customer/menu-page-client";
+import { HomeScreen } from "@/frontend/components/customer/home-screen";
 import { notFound } from "next/navigation";
 
 export const dynamic = "force-dynamic";
 export const revalidate = 0;
 
-interface CafeMenuPageProps {
+interface CafeHomePageProps {
   params: Promise<{ cafeSlug: string }>;
 }
 
-export default async function CafeMenuPage({ params }: CafeMenuPageProps) {
+export default async function CafeHomePage({ params }: CafeHomePageProps) {
   const { cafeSlug } = await params;
-  const data = await menuService.getCafeMenu(cafeSlug);
+  const meta = await menuService.getCafeMeta(cafeSlug);
 
-  if (!data) {
+  if (!meta) {
     notFound();
   }
 
-  return <MenuPageClient cafe={data.cafe} categories={data.categories} />;
+  return <HomeScreen cafeSlug={cafeSlug} meta={meta} />;
 }
 
-export async function generateMetadata({ params }: CafeMenuPageProps) {
+export async function generateMetadata({ params }: CafeHomePageProps) {
   const { cafeSlug } = await params;
-  const data = await menuService.getCafeMenu(cafeSlug);
+  const meta = await menuService.getCafeMeta(cafeSlug);
 
-  if (!data) {
+  if (!meta) {
     return { title: "Cafe Not Found" };
   }
 
   return {
-    title: `${data.cafe.name} - Menu | Scan&Pay`,
-    description: `Browse the menu and order from ${data.cafe.name}`,
+    title: `${meta.cafe.name} | Scan&Pay`,
+    description: `Order from ${meta.cafe.name}`,
     manifest: `/${cafeSlug}/manifest.webmanifest`,
   };
 }

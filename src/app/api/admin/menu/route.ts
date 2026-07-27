@@ -3,6 +3,9 @@ import { auth } from "@/backend/lib/auth";
 import { menuRepository } from "@/backend/repositories/menu.repository";
 import { sseManager } from "@/backend/lib/sse";
 import { prisma } from "@/backend/lib/db";
+import { MenuType } from "@/generated/prisma";
+
+const VALID_MENU_TYPES = new Set(Object.values(MenuType));
 
 async function broadcastMenuUpdate(cafeId: string | null) {
   if (cafeId) {
@@ -49,6 +52,9 @@ export async function POST(request: Request) {
     if (!body.categoryId) {
       return NextResponse.json({ success: false, error: "Category is required" }, { status: 400 });
     }
+    if (body.menuType !== undefined && body.menuType !== null && !VALID_MENU_TYPES.has(body.menuType)) {
+      return NextResponse.json({ success: false, error: "Invalid menuType" }, { status: 400 });
+    }
 
     const item = await menuRepository.createMenuItem({
       cafeId,
@@ -58,6 +64,8 @@ export async function POST(request: Request) {
       categoryId: body.categoryId,
       imageUrl: body.imageUrl,
       isVeg: body.isVeg,
+      // Only meaningful for global items — ignored otherwise.
+      menuType: cafeId === null && body.menuType ? body.menuType : null,
     });
 
     await broadcastMenuUpdate(cafeId);

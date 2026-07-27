@@ -27,6 +27,7 @@ export const orderRepository = {
       itemPricePaise: number;
       quantity: number;
       subtotalPaise: number;
+      isSubsidised: boolean;
     }[];
   }) {
     return prisma.order.create({

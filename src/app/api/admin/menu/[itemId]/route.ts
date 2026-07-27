@@ -3,6 +3,9 @@ import { auth } from "@/backend/lib/auth";
 import { menuRepository } from "@/backend/repositories/menu.repository";
 import { sseManager } from "@/backend/lib/sse";
 import { prisma } from "@/backend/lib/db";
+import { MenuType } from "@/generated/prisma";
+
+const VALID_MENU_TYPES = new Set(Object.values(MenuType));
 
 async function requireAdmin() {
   const session = await auth();
@@ -34,13 +37,19 @@ export async function PATCH(
     if ("categoryId" in body && !body.categoryId) {
       return NextResponse.json({ success: false, error: "Category is required" }, { status: 400 });
     }
+    if (body.menuType !== undefined && body.menuType !== null && !VALID_MENU_TYPES.has(body.menuType)) {
+      return NextResponse.json({ success: false, error: "Invalid menuType" }, { status: 400 });
+    }
 
     // cafeId: null means global; undefined means don't change it
     const cafeIdUpdate: { cafeId?: string | null } =
       "cafeId" in body ? { cafeId: body.cafeId ?? null } : {};
+    const menuTypeUpdate: { menuType?: MenuType | null } =
+      "menuType" in body ? { menuType: body.menuType ?? null } : {};
 
     const updated = await menuRepository.updateMenuItem(itemId, {
       ...cafeIdUpdate,
+      ...menuTypeUpdate,
       name: body.name,
       description: body.description,
       pricePaise: body.pricePaise,

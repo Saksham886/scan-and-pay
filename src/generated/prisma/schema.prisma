@@ -38,6 +38,13 @@ enum PaymentProvider {
   RAZORPAY
 }
 
+enum MenuType {
+  BREAKFAST
+  LUNCH
+  EVENING_SNACKS
+  DINNER
+}
+
 // ─── MODELS ─────────────────────────────────────────────
 
 model Cafe {
@@ -57,12 +64,18 @@ model Cafe {
   razorpayKeyId         String?         @map("razorpay_key_id")
   razorpayKeySecret     String?         @map("razorpay_key_secret")
   razorpayWebhookSecret String?         @map("razorpay_webhook_secret")
+  // When true (default), the active menu follows the meal-period clock
+  // (Breakfast/Lunch/Evening Snacks/Dinner) instead of the manual per-menu
+  // isActive flag — see src/backend/lib/menu-schedule.ts.
+  autoScheduleMenus     Boolean         @default(true) @map("auto_schedule_menus")
   createdAt             DateTime        @default(now()) @map("created_at")
   updatedAt             DateTime        @updatedAt @map("updated_at")
 
   users         User[]
   categories    MenuCategory[]
   menuItems     MenuItem[]
+  menus         Menu[]
+  feedback      Feedback[]
   orders        Order[]
   tables        Table[]
   staff         Staff[]
@@ -70,6 +83,37 @@ model Cafe {
   orderCounters OrderCounter[]
 
   @@map("cafes")
+}
+
+model Menu {
+  id           String   @id @default(uuid())
+  cafeId       String   @map("cafe_id")
+  type         MenuType
+  isActive     Boolean  @default(false) @map("is_active")
+  isSubsidised Boolean  @default(false) @map("is_subsidised")
+  createdAt    DateTime @default(now()) @map("created_at")
+  updatedAt    DateTime @updatedAt @map("updated_at")
+
+  cafe       Cafe           @relation(fields: [cafeId], references: [id])
+  categories MenuCategory[]
+  items      MenuItem[]
+
+  @@unique([cafeId, type])
+  @@index([cafeId, isActive])
+  @@map("menus")
+}
+
+model Feedback {
+  id        String   @id @default(uuid())
+  cafeId    String   @map("cafe_id")
+  rating    Int
+  comment   String?
+  createdAt DateTime @default(now()) @map("created_at")
+
+  cafe Cafe @relation(fields: [cafeId], references: [id])
+
+  @@index([cafeId, createdAt(sort: Desc)])
+  @@map("feedback")
 }
 
 model User {
@@ -92,37 +136,61 @@ model User {
 model MenuCategory {
   id        String   @id @default(uuid())
   cafeId    String?  @map("cafe_id")
+  menuId    String?  @map("menu_id")
   name      String
   sortOrder Int      @default(0) @map("sort_order")
   isActive  Boolean  @default(true) @map("is_active")
   createdAt DateTime @default(now()) @map("created_at")
 
   cafe  Cafe?      @relation(fields: [cafeId], references: [id])
+  menu  Menu?      @relation(fields: [menuId], references: [id])
   items MenuItem[]
 
   @@index([cafeId, isActive])
+  @@index([menuId, isActive])
   @@map("menu_categories")
 }
 
 model MenuItem {
-  id          String   @id @default(uuid())
-  cafeId      String?  @map("cafe_id")
-  categoryId  String?  @map("category_id")
-  name        String
-  description String?
-  pricePaise  Int      @map("price_paise")
-  imageUrl    String?  @map("image_url")
-  isAvailable Boolean  @default(true) @map("is_available")
-  isVeg       Boolean  @default(true) @map("is_veg")
-  sortOrder   Int      @default(0) @map("sort_order")
-  createdAt   DateTime @default(now()) @map("created_at")
-  updatedAt   DateTime @updatedAt @map("updated_at")
+  id               String    @id @default(uuid())
+  cafeId           String?   @map("cafe_id")
+  menuId           String?   @map("menu_id")
+  categoryId       String?   @map("category_id")
+  name             String
+  description      String?
+  pricePaise       Int       @map("price_paise")
+  imageUrl         String?   @map("image_url")
+  isAvailable      Boolean   @default(true) @map("is_available")
+  isVeg            Boolean   @default(true) @map("is_veg")
+  // Per-item subsidised flag, independent of Menu.isSubsidised. Effective
+  // subsidised-ness of an item is menu.isSubsidised OR item.isSubsidised —
+  // lets an owner mark a single free item on an otherwise-paid menu, on top
+  // of the existing whole-menu toggle.
+  isSubsidised     Boolean   @default(false) @map("is_subsidised")
+  sortOrder        Int       @default(0) @map("sort_order")
+  // Only meaningful for global items (cafeId = null), which can't carry a
+  // menuId since they're not owned by one cafe's Menu row. Null means "show
+  // on every menu type" (default, backward compatible); set means "only on
+  // this meal period, across every cafe".
+  menuType         MenuType? @map("menu_type")
+  // Set when this row is a cafe-specific override of a global item (created
+  // when a cafe owner edits/hides a global item from their dashboard, so the
+  // change only affects their cafe). Points at the original global item,
+  // which is then excluded from that cafe's merged menu in favor of this row.
+  overriddenFromId String?   @map("overridden_from_id")
+  createdAt        DateTime  @default(now()) @map("created_at")
+  updatedAt        DateTime  @updatedAt @map("updated_at")
 
-  cafe       Cafe?         @relation(fields: [cafeId], references: [id])
-  category   MenuCategory? @relation(fields: [categoryId], references: [id])
-  orderItems OrderItem[]
+  cafe           Cafe?         @relation(fields: [cafeId], references: [id])
+  menu           Menu?         @relation(fields: [menuId], references: [id])
+  category       MenuCategory? @relation(fields: [categoryId], references: [id])
+  orderItems     OrderItem[]
+  overriddenFrom MenuItem?     @relation("ItemOverride", fields: [overriddenFromId], references: [id])
+  overrides      MenuItem[]    @relation("ItemOverride")
 
   @@index([cafeId, isAvailable])
+  @@index([menuId, isAvailable])
+  @@index([overriddenFromId])
   @@map("menu_items")
 }
 
@@ -153,13 +221,17 @@ model Order {
 }
 
 model OrderItem {
-  id             String @id @default(uuid())
-  orderId        String @map("order_id")
-  menuItemId     String @map("menu_item_id")
-  itemName       String @map("item_name")
-  itemPricePaise Int    @map("item_price_paise")
+  id             String  @id @default(uuid())
+  orderId        String  @map("order_id")
+  menuItemId     String  @map("menu_item_id")
+  itemName       String  @map("item_name")
+  itemPricePaise Int     @map("item_price_paise")
   quantity       Int
-  subtotalPaise  Int    @map("subtotal_paise")
+  subtotalPaise  Int     @map("subtotal_paise")
+  // Snapshot of whether this line was subsidised (menu-level or item-level)
+  // at the moment the order was placed, so receipts/reports stay accurate
+  // even if the item's or menu's subsidised flag changes later.
+  isSubsidised   Boolean @default(false) @map("is_subsidised")
 
   order    Order    @relation(fields: [orderId], references: [id])
   menuItem MenuItem @relation(fields: [menuItemId], references: [id])

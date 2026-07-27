@@ -28,19 +28,47 @@ export async function PATCH(
       return NextResponse.json({ success: false, error: "Category is required" }, { status: 400 });
     }
 
-    const updated = await menuRepository.updateMenuItem(id, {
-      name: body.name,
-      description: body.description,
-      pricePaise: body.pricePaise,
-      imageUrl: body.imageUrl,
-      isAvailable: body.isAvailable,
-      isVeg: body.isVeg,
-      categoryId: body.categoryId,
-      sortOrder: body.sortOrder,
-    });
-
-    // Notify customers viewing this cafe's menu
-    if (existing.cafeId) sseManager.broadcastMenuUpdate(existing.cafeId);
+    let updated;
+    if (existing.cafeId === null) {
+      // Editing a global item from a cafe's dashboard never mutates the
+      // shared row — it creates/updates a cafe-specific override so the
+      // change is scoped to this cafe alone.
+      const cafeId = session.user.cafeId;
+      if (!cafeId) {
+        return NextResponse.json({ success: false, error: "No cafe associated" }, { status: 403 });
+      }
+      if (typeof body.menuId !== "string") {
+        return NextResponse.json({ success: false, error: "menuId is required to override a global item" }, { status: 400 });
+      }
+      updated = await menuRepository.upsertCafeOverride(id, cafeId, body.menuId, {
+        name: body.name,
+        description: body.description,
+        pricePaise: body.pricePaise,
+        imageUrl: body.imageUrl,
+        isAvailable: body.isAvailable,
+        isVeg: body.isVeg,
+        categoryId: body.categoryId,
+        sortOrder: body.sortOrder,
+        isSubsidised: body.isSubsidised,
+      });
+      sseManager.broadcastMenuUpdate(cafeId);
+    } else {
+      if (existing.cafeId !== session.user.cafeId && session.user.role !== "SUPER_ADMIN") {
+        return NextResponse.json({ success: false, error: "Forbidden" }, { status: 403 });
+      }
+      updated = await menuRepository.updateMenuItem(id, {
+        name: body.name,
+        description: body.description,
+        pricePaise: body.pricePaise,
+        imageUrl: body.imageUrl,
+        isAvailable: body.isAvailable,
+        isVeg: body.isVeg,
+        categoryId: body.categoryId,
+        sortOrder: body.sortOrder,
+        isSubsidised: body.isSubsidised,
+      });
+      sseManager.broadcastMenuUpdate(existing.cafeId);
+    }
 
     return NextResponse.json({ success: true, data: updated });
   } catch (error) {
@@ -50,7 +78,7 @@ export async function PATCH(
 }
 
 export async function DELETE(
-  _request: Request,
+  request: Request,
   { params }: { params: Promise<{ id: string }> }
 ) {
   try {
@@ -61,16 +89,31 @@ export async function DELETE(
 
     const { id } = await params;
 
-    // Look up the item to get its cafeId for SSE broadcast
     const existing = await prisma.menuItem.findUnique({ where: { id }, select: { cafeId: true } });
     if (!existing) {
       return NextResponse.json({ success: false, error: "Item not found" }, { status: 404 });
     }
 
-    await menuRepository.deleteMenuItem(id);
-
-    // Notify customers viewing this cafe's menu
-    if (existing.cafeId) sseManager.broadcastMenuUpdate(existing.cafeId);
+    if (existing.cafeId === null) {
+      // "Delete" on a global item removes it from this cafe's menu only —
+      // it becomes a hidden cafe-specific override, the shared item is untouched.
+      const cafeId = session.user.cafeId;
+      if (!cafeId) {
+        return NextResponse.json({ success: false, error: "No cafe associated" }, { status: 403 });
+      }
+      const menuId = new URL(request.url).searchParams.get("menuId");
+      if (!menuId) {
+        return NextResponse.json({ success: false, error: "menuId is required to remove a global item" }, { status: 400 });
+      }
+      await menuRepository.upsertCafeOverride(id, cafeId, menuId, { isAvailable: false });
+      sseManager.broadcastMenuUpdate(cafeId);
+    } else {
+      if (existing.cafeId !== session.user.cafeId && session.user.role !== "SUPER_ADMIN") {
+        return NextResponse.json({ success: false, error: "Forbidden" }, { status: 403 });
+      }
+      await menuRepository.deleteMenuItem(id);
+      sseManager.broadcastMenuUpdate(existing.cafeId);
+    }
 
     return NextResponse.json({ success: true });
   } catch (error) {

@@ -11,6 +11,7 @@ interface FloatingCartButtonProps {
 export function FloatingCartButton({ onClick }: FloatingCartButtonProps) {
   const totalItems = useCartStore((s) => s.getTotalItems());
   const totalPaise = useCartStore((s) => s.getTotalPaise());
+  const isSubsidised = useCartStore((s) => s.items.length > 0 && s.items.every((i) => i.pricePaise === null));
 
   if (totalItems === 0) return null;
 
@@ -41,9 +42,11 @@ export function FloatingCartButton({ onClick }: FloatingCartButtonProps) {
           </div>
         </div>
         <div className="flex items-center gap-2">
-          <span key={totalPaise} className="font-bold text-lg animate-pop">
-            {paiseToCurrencyShort(totalPaise)}
-          </span>
+          {!isSubsidised && (
+            <span key={totalPaise} className="font-bold text-lg animate-pop">
+              {paiseToCurrencyShort(totalPaise)}
+            </span>
+          )}
           <div className="w-7 h-7 rounded-full bg-black/15 flex items-center justify-center">
             <ArrowRight size={14} />
           </div>

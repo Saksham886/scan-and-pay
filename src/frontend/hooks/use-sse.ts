@@ -36,8 +36,11 @@ export function useSSE({ url, events, onMessage, enabled = true }: UseSSEOptions
 
     es.onerror = () => {
       es.close();
+      // Jittered delay: an un-jittered flat retry means every client dropped
+      // by the same Redis blip/redeploy reconnects at the same instant,
+      // hitting the backend with a synchronized spike.
       // eslint-disable-next-line react-hooks/immutability
-      reconnectTimeout.current = setTimeout(connect, 3000);
+      reconnectTimeout.current = setTimeout(connect, 3000 + Math.random() * 2000);
     };
   }, [url, enabled, events]);
 

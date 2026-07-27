@@ -19,6 +19,7 @@ import {
   ExternalLink,
   QrCode,
   Wallet,
+  Star,
 } from "lucide-react";
 import { CafeQRModal } from "@/frontend/components/admin/cafe-qr-modal";
 
@@ -170,12 +171,14 @@ export function DashboardShell({ user, children }: DashboardShellProps) {
         { name: "All Cafes",    href: "/admin",           icon: LayoutDashboard },
         { name: "All Orders",   href: "/admin/orders",    icon: ClipboardList },
         { name: "Menu",         href: "/admin/menu",      icon: UtensilsCrossed },
+        { name: "Feedback",     href: "/admin/feedback",  icon: Star },
         { name: "Users",        href: "/admin/users",     icon: Users },
         { name: "Deep Insights",href: "/admin/insights",  icon: Sparkles },
       ]
     : [
         { name: "Orders",       href: "/dashboard",            icon: ClipboardList },
         { name: "Menu",         href: "/dashboard/menu",       icon: UtensilsCrossed },
+        { name: "Feedback",     href: "/dashboard/feedback",   icon: Star },
         { name: "Analytics",    href: "/dashboard/analytics",  icon: BarChart3 },
         { name: "Deep Insights",href: "/dashboard/insights",   icon: Sparkles },
         { name: "Staff",        href: "/dashboard/staff",      icon: Users },

@@ -62,11 +62,9 @@ export default function RootLayout({
       <head>
         {/* Apply saved theme before first paint to avoid flash */}
         {/* Default to dark; only switch to light if user explicitly saved 'light' */}
-        <script
-          dangerouslySetInnerHTML={{
-            __html: `(function(){try{var t=localStorage.getItem('theme');if(t==='light'){document.documentElement.classList.remove('dark')}else{document.documentElement.classList.add('dark')}}catch(e){document.documentElement.classList.add('dark')}})()`,
-          }}
-        />
+        <Script id="theme-init" strategy="beforeInteractive">
+          {`(function(){try{var t=localStorage.getItem('theme');if(t==='light'){document.documentElement.classList.remove('dark')}else{document.documentElement.classList.add('dark')}}catch(e){document.documentElement.classList.add('dark')}})()`}
+        </Script>
       </head>
       <body className="min-h-screen bg-background text-foreground antialiased">
         {children}

@@ -5,59 +5,9 @@ import {
   verifyWebhookSignature as verifyRazorpayWebhookSignature,
   fetchPaymentLink,
 } from "@/backend/lib/razorpay";
-import { sseManager } from "@/backend/lib/sse";
-import { notifyOrderPlaced } from "@/backend/lib/whatsapp";
+import { broadcastNewOrder, sendOrderPlacedWhatsApp } from "@/backend/lib/order-events";
 import type { Prisma } from "@/generated/prisma";
 import { after } from "next/server";
-
-type FullOrder = NonNullable<Awaited<ReturnType<typeof orderRepository.getOrderById>>>;
-
-async function sendOrderPlacedWhatsApp(fullOrder: FullOrder) {
-  if (!fullOrder.customerPhone) return;
-  try {
-    await notifyOrderPlaced({
-      customerPhone: fullOrder.customerPhone,
-      customerName: fullOrder.customerName || "there",
-      orderNumber: fullOrder.orderNumber,
-      totalPaise: fullOrder.totalPaise,
-      cafeName: fullOrder.cafe?.name || "the cafe",
-      items: fullOrder.items.map((i) => ({
-        itemName: i.itemName,
-        quantity: i.quantity,
-        subtotalPaise: i.subtotalPaise,
-      })),
-    });
-  } catch (err) {
-    console.error("[WhatsApp] notifyOrderPlaced failed:", err);
-  }
-}
-
-function broadcastNewOrder(fullOrder: FullOrder) {
-  sseManager.sendToCafe(fullOrder.cafeId, "new_order", {
-    type: "new_order",
-    order: {
-      id: fullOrder.id,
-      orderNumber: fullOrder.orderNumber,
-      status: fullOrder.status,
-      totalPaise: fullOrder.totalPaise,
-      customerName: fullOrder.customerName,
-      customerPhone: fullOrder.customerPhone,
-      notes: fullOrder.notes,
-      createdAt: fullOrder.createdAt.toISOString(),
-      updatedAt: fullOrder.updatedAt.toISOString(),
-      cafeId: fullOrder.cafeId,
-      cafeName: fullOrder.cafe?.name,
-      cafeSlug: fullOrder.cafe?.slug,
-      items: fullOrder.items.map((i) => ({
-        id: i.id,
-        itemName: i.itemName,
-        itemPricePaise: i.itemPricePaise,
-        quantity: i.quantity,
-        subtotalPaise: i.subtotalPaise,
-      })),
-    },
-  });
-}
 
 export const paymentService = {
   async handleWebhook(

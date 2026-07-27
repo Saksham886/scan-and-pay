@@ -11,20 +11,22 @@ import { CartSheet } from "./cart-sheet";
 import { CheckoutForm } from "./checkout-form";
 import { Search, MapPin, Clock, X } from "lucide-react";
 import { toTitleCase } from "@/shared/utils/format";
-import type { CafePublic, MenuCategoryWithItems } from "@/shared/types";
+import type { CafePublic, MenuCategoryWithItems, ActiveMenuMeta } from "@/shared/types";
 
 interface MenuPageClientProps {
   cafe: CafePublic;
+  menu: ActiveMenuMeta | null;
   categories: MenuCategoryWithItems[];
 }
 
-export function MenuPageClient({ cafe, categories: initialCategories }: MenuPageClientProps) {
+export function MenuPageClient({ cafe, menu: initialMenu, categories: initialCategories }: MenuPageClientProps) {
   const [categories, setCategories] = useState(initialCategories);
+  const [menu, setMenu] = useState(initialMenu);
   const [activeCategory, setActiveCategory] = useState("all");
   const [searchQuery, setSearchQuery] = useState("");
   const [showCart, setShowCart] = useState(false);
   const [showCheckout, setShowCheckout] = useState(false);
-  const { setCafeSlug } = useCartStore();
+  const { setCafeSlug, setMenuId } = useCartStore();
 
   useEffect(() => {
     useCartStore.persist.rehydrate();
@@ -34,12 +36,17 @@ export function MenuPageClient({ cafe, categories: initialCategories }: MenuPage
     setCafeSlug(cafe.slug);
   }, [cafe.slug, setCafeSlug]);
 
+  useEffect(() => {
+    setMenuId(menu?.id ?? null);
+  }, [menu?.id, setMenuId]);
+
   const refetchMenu = useCallback(async () => {
     try {
       const res = await fetch(`/api/cafes/${cafe.slug}/menu`);
       const data = await res.json();
       if (data.success) {
         setCategories(data.data.categories);
+        setMenu(data.data.menu);
       }
     } catch {
       // Silently fail

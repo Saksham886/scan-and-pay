@@ -14,6 +14,7 @@
     "db:migrate": "npx prisma migrate dev",
     "db:push": "npx prisma db push",
     "db:seed": "npx tsx prisma/seed.ts",
+    "db:backfill-menus": "npx tsx scripts/backfill-menus.ts",
     "db:studio": "npx prisma studio"
   },
   "dependencies": {

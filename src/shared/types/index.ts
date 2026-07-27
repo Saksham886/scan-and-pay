@@ -21,6 +21,17 @@ export interface CafePublic {
   closingTime: string | null;
 }
 
+export interface ActiveMenuMeta {
+  id: string;
+  type: string;
+  isSubsidised: boolean;
+}
+
+export interface CafeMeta {
+  cafe: CafePublic;
+  activeMenu: ActiveMenuMeta | null;
+}
+
 // ─── Menu Types ─────────────────────────────────────────
 
 export interface MenuCategoryWithItems {
@@ -34,7 +45,8 @@ export interface MenuItemPublic {
   id: string;
   name: string;
   description: string | null;
-  pricePaise: number;
+  /** null when the active menu is subsidised — price is hidden, not just zero. */
+  pricePaise: number | null;
   imageUrl: string | null;
   isAvailable: boolean;
   isVeg: boolean;
@@ -46,7 +58,8 @@ export interface MenuItemPublic {
 export interface CartItem {
   menuItemId: string;
   name: string;
-  pricePaise: number;
+  /** null when added from a subsidised menu — no price shown, no payment collected. */
+  pricePaise: number | null;
   quantity: number;
   isVeg: boolean;
   imageUrl: string | null;
@@ -80,6 +93,13 @@ export interface OrderSummary {
   customerPhone: string | null;
   notes: string | null;
   createdAt: string;
+  cafeName: string | null;
+  /** True only when nothing at all was charged (whole menu subsidised, or
+   *  every item individually was) — false for a mixed paid+subsidised order. */
+  isSubsidised: boolean;
+  /** What was actually collected — equals totalPaise when nothing was
+   *  subsidised, 0 when fully subsidised, partial for a mixed cart. */
+  chargeablePaise: number;
   items: OrderItemSummary[];
 }
 
@@ -89,6 +109,7 @@ export interface OrderItemSummary {
   itemPricePaise: number;
   quantity: number;
   subtotalPaise: number;
+  isSubsidised: boolean;
 }
 
 // ─── Dashboard Types ────────────────────────────────────
@@ -96,7 +117,6 @@ export interface OrderItemSummary {
 export interface DashboardOrder extends OrderSummary {
   updatedAt: string;
   cafeId?: string;
-  cafeName?: string;
   cafeSlug?: string;
 }
 
@@ -191,6 +211,22 @@ export interface PaymentInfo {
   merchantTxnId: string;
   phonepeTxnId: string | null;
   paidAt: string | null;
+}
+
+// ─── Feedback Types ─────────────────────────────────────
+
+export interface FeedbackEntry {
+  id: string;
+  cafeId: string;
+  cafeName?: string;
+  rating: number;
+  comment: string | null;
+  createdAt: string;
+}
+
+export interface SubmitFeedbackRequest {
+  rating: number;
+  comment?: string;
 }
 
 // ─── SSE Event Types ────────────────────────────────────

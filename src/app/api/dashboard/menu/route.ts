@@ -56,12 +56,14 @@ export async function POST(request: Request) {
 
     const item = await menuRepository.createMenuItem({
       cafeId,
+      menuId: typeof body.menuId === "string" ? body.menuId : undefined,
       name: body.name,
       description: body.description,
       pricePaise: body.pricePaise,
       categoryId: body.categoryId,
       imageUrl: body.imageUrl,
       isVeg: body.isVeg,
+      isSubsidised: body.isSubsidised,
     });
 
     // Notify all customers viewing this cafe's menu

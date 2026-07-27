@@ -7,12 +7,14 @@ import type { CartItem } from "@/shared/types";
 interface CartState {
   items: CartItem[];
   cafeSlug: string | null;
+  menuId: string | null;
 
   addItem: (item: Omit<CartItem, "quantity">) => void;
   removeItem: (menuItemId: string) => void;
   updateQuantity: (menuItemId: string, quantity: number) => void;
   clearCart: () => void;
   setCafeSlug: (slug: string) => void;
+  setMenuId: (menuId: string | null) => void;
 
   getTotalPaise: () => number;
   getTotalItems: () => number;
@@ -23,6 +25,7 @@ export const useCartStore = create<CartState>()(
     (set, get) => ({
       items: [],
       cafeSlug: null,
+      menuId: null,
 
       addItem: (item) => {
         const { items } = get();
@@ -57,7 +60,7 @@ export const useCartStore = create<CartState>()(
         });
       },
 
-      clearCart: () => set({ items: [], cafeSlug: null }),
+      clearCart: () => set({ items: [], cafeSlug: null, menuId: null }),
 
       setCafeSlug: (slug) => {
         const { cafeSlug } = get();
@@ -68,8 +71,20 @@ export const useCartStore = create<CartState>()(
         }
       },
 
+      // Same clear-on-change semantics as setCafeSlug: if the admin switches
+      // which menu is active while a customer has this tab open, a stale
+      // cart from the previously-active menu must not ride into a new order.
+      setMenuId: (menuId) => {
+        const { menuId: current } = get();
+        if (current && menuId && current !== menuId) {
+          set({ items: [], menuId });
+        } else {
+          set({ menuId });
+        }
+      },
+
       getTotalPaise: () =>
-        get().items.reduce((sum, i) => sum + i.pricePaise * i.quantity, 0),
+        get().items.reduce((sum, i) => sum + (i.pricePaise ?? 0) * i.quantity, 0),
 
       getTotalItems: () =>
         get().items.reduce((sum, i) => sum + i.quantity, 0),

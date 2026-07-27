@@ -109,7 +109,7 @@ export const MenuItemCard = memo(function MenuItemCard({ item }: MenuItemCardPro
           )}
           style={{ fontFamily: "var(--font-jb-mono), monospace" }}
         >
-          {paiseToCurrencyShort(item.pricePaise)}
+          {item.pricePaise === null ? "Subsidised" : paiseToCurrencyShort(item.pricePaise)}
         </p>
       </div>
 

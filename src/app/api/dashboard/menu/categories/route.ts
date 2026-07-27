@@ -42,6 +42,7 @@ export async function POST(request: Request) {
 
     const category = await menuRepository.createCategory({
       cafeId,
+      menuId: typeof body.menuId === "string" ? body.menuId : undefined,
       name: body.name,
       sortOrder: body.sortOrder,
     });

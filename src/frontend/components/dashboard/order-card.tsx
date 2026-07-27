@@ -5,7 +5,7 @@ import { Card } from "@/frontend/components/ui/card";
 import { Button } from "@/frontend/components/ui/button";
 import { StatusBadge } from "@/frontend/components/ui/status-badge";
 import { paiseToCurrencyShort } from "@/shared/utils/currency";
-import { Clock, User, Phone, ChefHat, Package, CheckCircle2, XCircle, Store } from "lucide-react";
+import { Clock, User, Phone, XCircle, CheckCircle2, Store } from "lucide-react";
 import type { DashboardOrder } from "@/shared/types";
 import type { OrderStatus } from "@/generated/prisma";
 
@@ -15,15 +15,17 @@ interface OrderCardProps {
   showBranch?: boolean;
 }
 
-const nextStatus: Partial<Record<OrderStatus, { label: string; status: OrderStatus; icon: React.ReactNode }>> = {
-  PAID: { label: "Start Preparing", status: "PREPARING", icon: <ChefHat size={16} /> },
-  PREPARING: { label: "Mark Ready", status: "READY", icon: <Package size={16} /> },
-  READY: { label: "Complete", status: "COMPLETED", icon: <CheckCircle2 size={16} /> },
-};
+// Orders land on PAID directly (either a successful gateway payment, or
+// immediately for a fully subsidised order) — that's the Incoming queue,
+// where staff mark each one Completed (handed over) or Cancel it.
+// PREPARING/READY are legacy pre-pivot statuses, still cancellable if any
+// linger from before. COMPLETED/CANCELLED are terminal — no actions.
+const CANCELLABLE_STATUSES: OrderStatus[] = ["PAYMENT_PENDING", "PAID", "PREPARING", "READY"];
 
 export function OrderCard({ order, onStatusUpdate, showBranch = false }: OrderCardProps) {
   const [loading, setLoading] = useState(false);
-  const next = nextStatus[order.status];
+  const canComplete = order.status === "PAID";
+  const canCancel = CANCELLABLE_STATUSES.includes(order.status);
 
   const timeAgo = getTimeAgo(order.createdAt);
 
@@ -101,25 +103,29 @@ export function OrderCard({ order, onStatusUpdate, showBranch = false }: OrderCa
       </div>
 
       {/* Actions */}
-      {next && (
+      {(canComplete || canCancel) && (
         <div className="flex gap-2">
-          <Button
-            size="sm"
-            onClick={() => handleUpdate(next.status)}
-            loading={loading}
-            className="flex-1"
-          >
-            {next.icon}
-            <span className="ml-1.5">{next.label}</span>
-          </Button>
-          {order.status !== "COMPLETED" && (
+          {canComplete && (
+            <Button
+              size="sm"
+              onClick={() => handleUpdate("COMPLETED")}
+              loading={loading}
+              className="flex-1"
+            >
+              <CheckCircle2 size={16} />
+              <span className="ml-1.5">Complete</span>
+            </Button>
+          )}
+          {canCancel && (
             <Button
               size="sm"
               variant="danger"
               onClick={() => handleUpdate("CANCELLED")}
               loading={loading}
+              className="flex-1"
             >
               <XCircle size={16} />
+              <span className="ml-1.5">Cancel</span>
             </Button>
           )}
         </div>
