@@ -1,4 +1,4 @@
-# QR Ordering Platform!
+# QR Ordering Platform
 
 [![CI](https://github.com/tanmaysachann/qr-ordering-platform/actions/workflows/ci.yml/badge.svg)](https://github.com/tanmaysachann/qr-ordering-platform/actions/workflows/ci.yml)
 ![Next.js](https://img.shields.io/badge/Next.js-16-black?logo=next.js)
