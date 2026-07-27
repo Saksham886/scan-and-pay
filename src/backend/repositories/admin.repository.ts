@@ -1,5 +1,5 @@
 import { prisma } from "@/backend/lib/db";
-import type { UserRole, PaymentProvider } from "@/generated/prisma";
+import { MenuType, type UserRole, type PaymentProvider } from "@/generated/prisma";
 
 export const adminRepository = {
   async getAllCafes() {
@@ -39,6 +39,13 @@ export const adminRepository = {
     });
   },
 
+  /** Every cafe needs its 4 meal-period menus to exist so global (shared)
+   *  items have something to attach to — without these, a new cafe shows an
+   *  empty menu even though items exist, since getActiveMenu/getMenuBundle
+   *  both resolve against a cafe's own Menu rows. Created here so no cafe can
+   *  ever be created without them (mirrors scripts/backfill-menus.ts, which
+   *  only exists to patch cafes that predate this). Lunch matches the current
+   *  default across all cafes: active and subsidised. */
   async createCafe(data: {
     name: string;
     slug: string;
@@ -46,7 +53,18 @@ export const adminRepository = {
     phone?: string;
     imageUrl?: string;
   }) {
-    return prisma.cafe.create({ data });
+    return prisma.$transaction(async (tx) => {
+      const cafe = await tx.cafe.create({ data });
+      await tx.menu.createMany({
+        data: [
+          { cafeId: cafe.id, type: MenuType.BREAKFAST, isActive: false, isSubsidised: false },
+          { cafeId: cafe.id, type: MenuType.LUNCH, isActive: true, isSubsidised: true },
+          { cafeId: cafe.id, type: MenuType.EVENING_SNACKS, isActive: false, isSubsidised: true },
+          { cafeId: cafe.id, type: MenuType.DINNER, isActive: false, isSubsidised: true },
+        ],
+      });
+      return cafe;
+    });
   },
 
   async updateCafe(

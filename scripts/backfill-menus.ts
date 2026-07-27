@@ -37,7 +37,7 @@ async function main() {
           data: { cafeId: cafe.id, type: MenuType.BREAKFAST, isActive: false, isSubsidised: false },
         }),
         tx.menu.create({
-          data: { cafeId: cafe.id, type: MenuType.LUNCH, isActive: true, isSubsidised: false },
+          data: { cafeId: cafe.id, type: MenuType.LUNCH, isActive: true, isSubsidised: true },
         }),
         tx.menu.create({
           data: { cafeId: cafe.id, type: MenuType.EVENING_SNACKS, isActive: false, isSubsidised: true },
