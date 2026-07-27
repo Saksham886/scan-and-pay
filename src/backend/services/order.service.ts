@@ -137,9 +137,13 @@ export const orderService = {
 
     if (chargeableTotal > 0) {
       const isTestMode = process.env.PHONEPE_TEST_MODE === "true";
-      merchantId = process.env.PHONEPE_MERCHANT_ID || cafe.phonepeMerchantId || undefined;
-      saltKey = process.env.PHONEPE_SALT_KEY || cafe.phonepeSaltKey || undefined;
-      saltIndex = process.env.PHONEPE_SALT_INDEX || cafe.phonepeSaltIndex || "1";
+      // Cafe-specific credentials always win — .env is only a last-resort
+      // fallback (e.g. a single-tenant dev setup), never allowed to override
+      // a cafe's own gateway config or silently absorb an unconfigured cafe's
+      // payments into whichever account happens to be in .env.
+      merchantId = cafe.phonepeMerchantId || process.env.PHONEPE_MERCHANT_ID || undefined;
+      saltKey = cafe.phonepeSaltKey || process.env.PHONEPE_SALT_KEY || undefined;
+      saltIndex = cafe.phonepeSaltIndex || process.env.PHONEPE_SALT_INDEX || "1";
 
       if (provider === "PHONEPE" && !isTestMode && (!merchantId || !saltKey)) {
         throw new Error("Payment is not configured for this cafe. Please contact support.");
@@ -147,8 +151,8 @@ export const orderService = {
 
       cafeCredentials = merchantId && saltKey ? { merchantId, saltKey, saltIndex } : undefined;
 
-      const razorpayKeyId = process.env.RAZORPAY_KEY_ID || cafe.razorpayKeyId;
-      const razorpayKeySecret = process.env.RAZORPAY_KEY_SECRET || cafe.razorpayKeySecret;
+      const razorpayKeyId = cafe.razorpayKeyId || process.env.RAZORPAY_KEY_ID;
+      const razorpayKeySecret = cafe.razorpayKeySecret || process.env.RAZORPAY_KEY_SECRET;
 
       if (provider === "RAZORPAY" && (!razorpayKeyId || !razorpayKeySecret)) {
         throw new Error("Payment is not configured for this cafe. Please contact support.");

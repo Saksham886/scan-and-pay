@@ -40,8 +40,8 @@ export const paymentService = {
     }
 
     const cafe = payment.order.cafe;
-    const saltKey = process.env.PHONEPE_SALT_KEY || cafe?.phonepeSaltKey || undefined;
-    const saltIndex = process.env.PHONEPE_SALT_INDEX || cafe?.phonepeSaltIndex || undefined;
+    const saltKey = cafe?.phonepeSaltKey || process.env.PHONEPE_SALT_KEY || undefined;
+    const saltIndex = cafe?.phonepeSaltIndex || process.env.PHONEPE_SALT_INDEX || undefined;
 
     // Step 3: Verify signature against the base64 response value (not the full raw body)
     if (!verifyWebhookSignature(base64Response, xVerifyHeader, saltKey, saltIndex)) {
@@ -115,7 +115,7 @@ export const paymentService = {
     }
 
     const cafe = payment.order.cafe;
-    const secret = process.env.RAZORPAY_WEBHOOK_SECRET || cafe?.razorpayWebhookSecret || "";
+    const secret = cafe?.razorpayWebhookSecret || process.env.RAZORPAY_WEBHOOK_SECRET || "";
 
     if (!verifyRazorpayWebhookSignature(body, signatureHeader, secret)) {
       return { success: false, message: "Invalid signature" };
@@ -177,8 +177,8 @@ export const paymentService = {
     if (payment.provider === "RAZORPAY") {
       if (!payment.razorpayOrderId) return "pending";
 
-      const razorpayKeyId = process.env.RAZORPAY_KEY_ID || cafe?.razorpayKeyId;
-      const razorpayKeySecret = process.env.RAZORPAY_KEY_SECRET || cafe?.razorpayKeySecret;
+      const razorpayKeyId = cafe?.razorpayKeyId || process.env.RAZORPAY_KEY_ID;
+      const razorpayKeySecret = cafe?.razorpayKeySecret || process.env.RAZORPAY_KEY_SECRET;
       const razorpayCredentials =
         razorpayKeyId && razorpayKeySecret
           ? { keyId: razorpayKeyId, keySecret: razorpayKeySecret }
@@ -212,9 +212,9 @@ export const paymentService = {
       return isSuccess ? "success" : "failed";
     }
 
-    const merchantId = process.env.PHONEPE_MERCHANT_ID || cafe?.phonepeMerchantId;
-    const saltKey = process.env.PHONEPE_SALT_KEY || cafe?.phonepeSaltKey;
-    const saltIndex = process.env.PHONEPE_SALT_INDEX || cafe?.phonepeSaltIndex || "1";
+    const merchantId = cafe?.phonepeMerchantId || process.env.PHONEPE_MERCHANT_ID;
+    const saltKey = cafe?.phonepeSaltKey || process.env.PHONEPE_SALT_KEY;
+    const saltIndex = cafe?.phonepeSaltIndex || process.env.PHONEPE_SALT_INDEX || "1";
     const credentials = merchantId && saltKey
       ? { merchantId, saltKey, saltIndex }
       : undefined;
