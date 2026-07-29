@@ -3,7 +3,7 @@
 ///   flutter run --dart-define=API_BASE_URL=http://192.168.1.20:3003
 const String kApiBaseUrl = String.fromEnvironment(
   'API_BASE_URL',
-  defaultValue: 'http://10.0.2.2:3003',
+  defaultValue: 'https://scan-and-pay-nine.vercel.app',
 );
 
 const Duration kMenuRefreshInterval = Duration(seconds: 60);

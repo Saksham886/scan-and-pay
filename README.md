@@ -8,7 +8,7 @@
 
 A multi-tenant QR-based food ordering system for cafes. Customers scan a table QR code, browse the menu, and pay via PhonePe. Cafe owners manage orders and menus in real time. A super admin oversees all cafes on the platform.
 
-**Live Demo:** https://scanpay-ordering.vercel.app
+**Live Demo:** https://scan-and-pay-nine.vercel.app
 
 | Customer Menu | Owner Dashboard | Admin Panel |
 |:---:|:---:|:---:|
@@ -21,8 +21,8 @@ A multi-tenant QR-based food ordering system for cafes. Customers scan a table Q
 | Role | Access | URL |
 |------|--------|-----|
 | Customer | Scans QR code to browse menu and place orders | `/{cafeSlug}` |
-| Cafe Owner | Manages menu, monitors live orders, views analytics | [/dashboard](https://scanpay-ordering.vercel.app/dashboard) |
-| Super Admin | Full platform control, onboards cafes, views all orders | [/admin](https://scanpay-ordering.vercel.app/admin) |
+| Cafe Owner | Manages menu, monitors live orders, views analytics | [/dashboard](https://scan-and-pay-nine.vercel.app/dashboard) |
+| Super Admin | Full platform control, onboards cafes, views all orders | [/admin](https://scan-and-pay-nine.vercel.app/admin) |
 
 ---
 
@@ -33,7 +33,7 @@ A multi-tenant QR-based food ordering system for cafes. Customers scan a table Q
 |-------|-------|
 | Email | `admin@cafeorder.com` |
 | Password | `Admin@Demo1234` |
-| URL | [scanpay-ordering.vercel.app/login](https://scanpay-ordering.vercel.app/login) |
+| URL | [scan-and-pay-nine.vercel.app/login](https://scan-and-pay-nine.vercel.app/login) |
 
 ### Cafe Owner (pick any branch)
 | Email | Password |
@@ -43,17 +43,17 @@ A multi-tenant QR-based food ordering system for cafes. Customers scan a table Q
 | `owner@hsr-layout.com` | `Owner@Demo1234` |
 | `owner@whitefield.com` | `Owner@Demo1234` |
 
-URL: [scanpay-ordering.vercel.app/login](https://scanpay-ordering.vercel.app/login)
+URL: [scan-and-pay-nine.vercel.app/login](https://scan-and-pay-nine.vercel.app/login)
 
 ### Customer (no login required)
 Customers access via QR code or directly through the cafe URL:
 
 | Cafe | URL |
 |------|-----|
-| Brew & Bites Koramangala | [scanpay-ordering.vercel.app/koramangala](https://scanpay-ordering.vercel.app/koramangala) |
-| Brew & Bites Indiranagar | [scanpay-ordering.vercel.app/indiranagar](https://scanpay-ordering.vercel.app/indiranagar) |
-| Brew & Bites HSR | [scanpay-ordering.vercel.app/hsr-layout](https://scanpay-ordering.vercel.app/hsr-layout) |
-| Brew & Bites Whitefield | [scanpay-ordering.vercel.app/whitefield](https://scanpay-ordering.vercel.app/whitefield) |
+| Brew & Bites Koramangala | [scan-and-pay-nine.vercel.app/koramangala](https://scan-and-pay-nine.vercel.app/koramangala) |
+| Brew & Bites Indiranagar | [scan-and-pay-nine.vercel.app/indiranagar](https://scan-and-pay-nine.vercel.app/indiranagar) |
+| Brew & Bites HSR | [scan-and-pay-nine.vercel.app/hsr-layout](https://scan-and-pay-nine.vercel.app/hsr-layout) |
+| Brew & Bites Whitefield | [scan-and-pay-nine.vercel.app/whitefield](https://scan-and-pay-nine.vercel.app/whitefield) |
 
 ---
 
