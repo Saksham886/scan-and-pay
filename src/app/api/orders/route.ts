@@ -8,10 +8,15 @@ import {
   validatePhone,
 } from "@/shared/utils/validation";
 import { rateLimitResponse, getClientIp } from "@/backend/lib/rate-limit";
+import { corsPreflightResponse } from "@/backend/lib/cors";
 
 const MAX_ITEMS_PER_ORDER = 50;
 const MAX_QTY_PER_ITEM = 99;
 const MAX_NOTES_LEN = 500;
+
+export async function OPTIONS() {
+  return corsPreflightResponse();
+}
 
 export async function POST(request: Request) {
   try {

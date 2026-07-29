@@ -1,8 +1,13 @@
 import { NextResponse } from "next/server";
 import { feedbackService } from "@/backend/services/feedback.service";
 import { rateLimitResponse, getClientIp } from "@/backend/lib/rate-limit";
+import { corsPreflightResponse } from "@/backend/lib/cors";
 
 const SLUG_RE = /^[a-z0-9-]{1,80}$/;
+
+export async function OPTIONS() {
+  return corsPreflightResponse();
+}
 
 /**
  * POST /api/cafes/[slug]/feedback

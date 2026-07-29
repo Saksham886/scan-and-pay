@@ -3,8 +3,13 @@ import { paymentService } from "@/backend/services/payment.service";
 import { paymentRepository } from "@/backend/repositories/payment.repository";
 import { orderService } from "@/backend/services/order.service";
 import { rateLimitResponse, getClientIp } from "@/backend/lib/rate-limit";
+import { corsPreflightResponse } from "@/backend/lib/cors";
 
 const UUID_RE = /^[0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{12}$/;
+
+export async function OPTIONS() {
+  return corsPreflightResponse();
+}
 
 /**
  * POST /api/orders/[id]/reconcile
