@@ -1,5 +1,4 @@
-import 'package:flutter/material.dart';
-import 'package:flutter/services.dart';
+﻿import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
 import '../../config/constants.dart';
@@ -10,7 +9,6 @@ import '../../services/order_service.dart';
 import '../../state/cart_provider.dart';
 import '../../state/kiosk_config_provider.dart';
 import '../../utils/currency.dart';
-import '../../utils/validation.dart';
 import '../../widgets/idle_reset_guard.dart';
 import '../../widgets/primary_button.dart';
 import '../../widgets/veg_indicator.dart';
@@ -25,43 +23,25 @@ class CheckoutScreen extends StatefulWidget {
   State<CheckoutScreen> createState() => _CheckoutScreenState();
 }
 
+/// Kiosk orders are anonymous: name, phone and email were the bulk of the
+/// time a customer spent at this screen, they were then retyped again on the
+/// payment page, and nothing in the kiosk flow needs them â€” the order number
+/// on screen and on the printed receipt is what the counter goes by.
 class _CheckoutScreenState extends State<CheckoutScreen> {
-  final _nameController = TextEditingController();
-  final _phoneController = TextEditingController();
-  final _emailController = TextEditingController();
   final _notesController = TextEditingController();
   final _orderService = OrderService();
 
-  String? _nameError;
-  String? _phoneError;
-  String? _emailError;
   String? _submitError;
   bool _loading = false;
 
   @override
   void dispose() {
-    _nameController.dispose();
-    _phoneController.dispose();
-    _emailController.dispose();
     _notesController.dispose();
     super.dispose();
   }
 
-  bool _validate() {
-    final nameResult = validateName(_nameController.text);
-    final phoneResult = validatePhone(_phoneController.text);
-    final emailResult = validateEmail(_emailController.text);
-    setState(() {
-      _nameError = nameResult.valid ? null : nameResult.error;
-      _phoneError = phoneResult.valid ? null : phoneResult.error;
-      _emailError = emailResult.valid ? null : emailResult.error;
-    });
-    return nameResult.valid && phoneResult.valid && emailResult.valid;
-  }
-
   Future<void> _submit() async {
     setState(() => _submitError = null);
-    if (!_validate()) return;
 
     final cart = context.read<CartProvider>();
     final cafeSlug = context.read<KioskConfigProvider>().cafeSlug;
@@ -75,12 +55,6 @@ class _CheckoutScreenState extends State<CheckoutScreen> {
           cart.items
               .map((i) => {'menuItemId': i.menuItemId, 'quantity': i.quantity})
               .toList(),
-      customerName: _nameController.text.trim(),
-      customerPhone: normalizePhone(_phoneController.text),
-      customerEmail:
-          _emailController.text.trim().isEmpty
-              ? null
-              : _emailController.text.trim().toLowerCase(),
       notes:
           _notesController.text.trim().isEmpty
               ? null
@@ -166,15 +140,7 @@ class _CheckoutScreenState extends State<CheckoutScreen> {
                       total: cart.totalPaise,
                     ),
                     const SizedBox(height: 16),
-                    _CustomerDetailsCard(
-                      nameController: _nameController,
-                      phoneController: _phoneController,
-                      emailController: _emailController,
-                      notesController: _notesController,
-                      nameError: _nameError,
-                      phoneError: _phoneError,
-                      emailError: _emailError,
-                    ),
+                    _SpecialInstructionsCard(notesController: _notesController),
                     if (_submitError != null) ...[
                       const SizedBox(height: 16),
                       Container(
@@ -428,24 +394,10 @@ class DottedDivider extends StatelessWidget {
   }
 }
 
-class _CustomerDetailsCard extends StatelessWidget {
-  final TextEditingController nameController;
-  final TextEditingController phoneController;
-  final TextEditingController emailController;
+class _SpecialInstructionsCard extends StatelessWidget {
   final TextEditingController notesController;
-  final String? nameError;
-  final String? phoneError;
-  final String? emailError;
 
-  const _CustomerDetailsCard({
-    required this.nameController,
-    required this.phoneController,
-    required this.emailController,
-    required this.notesController,
-    required this.nameError,
-    required this.phoneError,
-    required this.emailError,
-  });
+  const _SpecialInstructionsCard({required this.notesController});
 
   @override
   Widget build(BuildContext context) {
@@ -469,13 +421,13 @@ class _CustomerDetailsCard extends StatelessWidget {
             child: Row(
               children: [
                 const Icon(
-                  Icons.person_outline,
+                  Icons.edit_note,
                   size: 15,
                   color: CustomerColors.primary,
                 ),
                 const SizedBox(width: 8),
                 Text(
-                  'YOUR DETAILS',
+                  'SPECIAL INSTRUCTIONS',
                   style: CustomerText.mono(
                     fontSize: 13,
                     fontWeight: FontWeight.w700,
@@ -484,7 +436,7 @@ class _CustomerDetailsCard extends StatelessWidget {
                 ),
                 const Spacer(),
                 Text(
-                  '* Required',
+                  'Optional',
                   style: CustomerText.mono(
                     fontSize: 11,
                     color: CustomerColors.muted,
@@ -497,57 +449,6 @@ class _CustomerDetailsCard extends StatelessWidget {
             padding: const EdgeInsets.all(14),
             child: Column(
               children: [
-                _NeoField(
-                  label: 'Name *',
-                  controller: nameController,
-                  hint: 'Your name for the order',
-                  error: nameError,
-                  textCapitalization: TextCapitalization.words,
-                ),
-                const SizedBox(height: 14),
-                _NeoField(
-                  label: 'Mobile Number *',
-                  controller: phoneController,
-                  hint: '10-digit mobile number',
-                  error: phoneError,
-                  keyboardType: TextInputType.phone,
-                  maxLength: 10,
-                  inputFormatters: [FilteringTextInputFormatter.digitsOnly],
-                ),
-                Padding(
-                  padding: const EdgeInsets.only(top: 4, bottom: 4),
-                  child: Align(
-                    alignment: Alignment.centerLeft,
-                    child: Text(
-                      "We'll send order updates to this number on WhatsApp.",
-                      style: CustomerText.mono(
-                        fontSize: 11,
-                        color: CustomerColors.muted,
-                      ),
-                    ),
-                  ),
-                ),
-                const SizedBox(height: 10),
-                _NeoField(
-                  label: 'Email (optional)',
-                  controller: emailController,
-                  hint: 'you@example.com',
-                  error: emailError,
-                  keyboardType: TextInputType.emailAddress,
-                ),
-                const SizedBox(height: 14),
-                Align(
-                  alignment: Alignment.centerLeft,
-                  child: Text(
-                    'SPECIAL INSTRUCTIONS',
-                    style: CustomerText.mono(
-                      fontSize: 12,
-                      fontWeight: FontWeight.w700,
-                      letterSpacing: 1,
-                    ),
-                  ),
-                ),
-                const SizedBox(height: 6),
                 TextField(
                   controller: notesController,
                   maxLength: 500,
@@ -600,92 +501,6 @@ class _CustomerDetailsCard extends StatelessWidget {
           ),
         ],
       ),
-    );
-  }
-}
-
-class _NeoField extends StatelessWidget {
-  final String label;
-  final TextEditingController controller;
-  final String hint;
-  final String? error;
-  final TextInputType? keyboardType;
-  final int? maxLength;
-  final List<TextInputFormatter>? inputFormatters;
-  final TextCapitalization textCapitalization;
-
-  const _NeoField({
-    required this.label,
-    required this.controller,
-    required this.hint,
-    required this.error,
-    this.keyboardType,
-    this.maxLength,
-    this.inputFormatters,
-    this.textCapitalization = TextCapitalization.none,
-  });
-
-  @override
-  Widget build(BuildContext context) {
-    return Column(
-      crossAxisAlignment: CrossAxisAlignment.start,
-      children: [
-        Text(
-          label,
-          style: CustomerText.mono(
-            fontSize: 12,
-            fontWeight: FontWeight.w700,
-            letterSpacing: 1,
-          ),
-        ),
-        const SizedBox(height: 6),
-        TextField(
-          controller: controller,
-          keyboardType: keyboardType,
-          maxLength: maxLength,
-          inputFormatters: inputFormatters,
-          textCapitalization: textCapitalization,
-          style: CustomerText.mono(
-            fontSize: 14,
-            color: CustomerColors.foreground,
-          ),
-          decoration: InputDecoration(
-            filled: true,
-            fillColor: CustomerColors.background,
-            hintText: hint,
-            hintStyle: CustomerText.mono(
-              fontSize: 13,
-              color: CustomerColors.border,
-            ),
-            counterText: maxLength != null ? '' : null,
-            errorText: error,
-            errorStyle: CustomerText.mono(
-              fontSize: 11,
-              color: CustomerColors.danger,
-            ),
-            contentPadding: const EdgeInsets.symmetric(
-              horizontal: 14,
-              vertical: 14,
-            ),
-            border: const OutlineInputBorder(
-              borderRadius: BorderRadius.zero,
-              borderSide: BorderSide(color: CustomerColors.border, width: 2),
-            ),
-            enabledBorder: const OutlineInputBorder(
-              borderRadius: BorderRadius.zero,
-              borderSide: BorderSide(color: CustomerColors.border, width: 2),
-            ),
-            focusedBorder: const OutlineInputBorder(
-              borderRadius: BorderRadius.zero,
-              borderSide: BorderSide(color: CustomerColors.accent, width: 2),
-            ),
-            errorBorder: const OutlineInputBorder(
-              borderRadius: BorderRadius.zero,
-              borderSide: BorderSide(color: CustomerColors.danger, width: 2),
-            ),
-          ),
-        ),
-      ],
     );
   }
 }

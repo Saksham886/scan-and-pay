@@ -3,7 +3,7 @@ import { orderRepository } from "@/backend/repositories/order.repository";
 import { paymentRepository } from "@/backend/repositories/payment.repository";
 import { generateOrderNumber } from "@/backend/lib/utils/order-number";
 import { initiatePayment } from "@/backend/lib/phonepe";
-import { createPaymentLink } from "@/backend/lib/razorpay";
+import { createCheckoutOrder } from "@/backend/lib/razorpay";
 import { sseManager } from "@/backend/lib/sse";
 import { broadcastNewOrder, sendOrderPlacedWhatsApp } from "@/backend/lib/order-events";
 import type { CreateOrderRequest, CreateOrderResponse, OrderSummary } from "@/shared/types";
@@ -227,38 +227,40 @@ export const orderService = {
       provider,
     });
 
-    const returnUrl = `${APP_URL}/${cafe.slug}/order/payment-return?txn=${merchantTxnId}&orderId=${order.id}`;
+    let paymentRedirectUrl: string;
 
-    const paymentResult =
-      provider === "RAZORPAY"
-        ? await createPaymentLink({
-            merchantTransactionId: merchantTxnId,
-            amount: chargeableTotal,
-            callbackUrl: returnUrl,
-            customerName: request.customerName,
-            customerPhone: request.customerPhone,
-            customerEmail: request.customerEmail,
-            credentials: razorpayCredentials,
-          })
-        : await initiatePayment({
-            merchantTransactionId: merchantTxnId,
-            amount: chargeableTotal,
-            redirectUrl: returnUrl,
-            callbackUrl: `${APP_URL}/api/webhooks/phonepe`,
-            customerPhone: request.customerPhone,
-            credentials: cafeCredentials,
-          });
-
-    if (!paymentResult.success || !paymentResult.redirectUrl) {
-      // Update order to failed if payment initiation fails
-      await orderRepository.updateOrderStatus(order.id, "FAILED");
-      throw new Error(paymentResult.error || "Failed to initiate payment");
-    }
-
-    const razorpayOrderId =
-      provider === "RAZORPAY" ? (paymentResult as { razorpayOrderId?: string }).razorpayOrderId : undefined;
-    if (razorpayOrderId) {
-      await paymentRepository.attachRazorpayOrderId(merchantTxnId, razorpayOrderId);
+    if (provider === "RAZORPAY") {
+      const result = await createCheckoutOrder({
+        merchantTransactionId: merchantTxnId,
+        amount: chargeableTotal,
+        credentials: razorpayCredentials,
+      });
+      if (!result.success || !result.razorpayOrderId) {
+        await orderRepository.updateOrderStatus(order.id, "FAILED");
+        throw new Error(result.error || "Failed to initiate payment");
+      }
+      await paymentRepository.attachRazorpayOrderId(merchantTxnId, result.razorpayOrderId);
+      // Standard Checkout has to be opened from a page we control, so this
+      // points at our own pay route rather than a hosted Razorpay URL. It's
+      // still just a URL, which is what keeps the kiosk webview and its
+      // payment-return interception working unchanged for either gateway.
+      paymentRedirectUrl = `${APP_URL}/${cafe.slug}/order/pay?txn=${merchantTxnId}&orderId=${order.id}`;
+    } else {
+      const returnUrl = `${APP_URL}/${cafe.slug}/order/payment-return?txn=${merchantTxnId}&orderId=${order.id}`;
+      const result = await initiatePayment({
+        merchantTransactionId: merchantTxnId,
+        amount: chargeableTotal,
+        redirectUrl: returnUrl,
+        callbackUrl: `${APP_URL}/api/webhooks/phonepe`,
+        customerPhone: request.customerPhone,
+        credentials: cafeCredentials,
+      });
+      if (!result.success || !result.redirectUrl) {
+        // Update order to failed if payment initiation fails
+        await orderRepository.updateOrderStatus(order.id, "FAILED");
+        throw new Error(result.error || "Failed to initiate payment");
+      }
+      paymentRedirectUrl = result.redirectUrl;
     }
 
     // Update order status to PAYMENT_PENDING
@@ -268,7 +270,7 @@ export const orderService = {
       orderId: order.id,
       orderNumber: order.orderNumber,
       totalPaise,
-      paymentRedirectUrl: paymentResult.redirectUrl,
+      paymentRedirectUrl,
     };
   },
 

@@ -22,6 +22,8 @@ export const paymentRepository = {
             cafe: {
               select: {
                 id: true,
+                name: true,
+                slug: true,
                 phonepeSaltKey: true,
                 phonepeSaltIndex: true,
                 phonepeMerchantId: true,

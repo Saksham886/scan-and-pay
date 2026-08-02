@@ -3,7 +3,9 @@ import { orderRepository } from "@/backend/repositories/order.repository";
 import { verifyWebhookSignature, checkPaymentStatus } from "@/backend/lib/phonepe";
 import {
   verifyWebhookSignature as verifyRazorpayWebhookSignature,
+  verifyCheckoutSignature,
   fetchPaymentLink,
+  fetchOrderPayments,
 } from "@/backend/lib/razorpay";
 import { broadcastNewOrder, sendOrderPlacedWhatsApp } from "@/backend/lib/order-events";
 import type { Prisma } from "@/generated/prisma";
@@ -101,9 +103,16 @@ export const paymentService = {
       const payload = decoded.payload as Record<string, unknown> | undefined;
       const paymentLink = payload?.payment_link as Record<string, unknown> | undefined;
       const linkEntity = paymentLink?.entity as Record<string, unknown> | undefined;
-      merchantTxnId = linkEntity?.reference_id as string;
+      const entity = (payload?.payment as Record<string, unknown> | undefined)?.entity as
+        | Record<string, unknown>
+        | undefined;
+      const notes = entity?.notes as Record<string, unknown> | undefined;
+      // Payment Links carry the txn id as reference_id; Standard Checkout
+      // orders carry it in notes, since payment.captured doesn't echo the
+      // order's receipt field.
+      merchantTxnId = (linkEntity?.reference_id as string) || (notes?.merchantTxnId as string);
       if (!merchantTxnId) {
-        return { success: false, message: "Missing reference_id" };
+        return { success: false, message: "Missing merchant transaction id" };
       }
     } catch {
       return { success: false, message: "Invalid webhook payload" };
@@ -127,16 +136,26 @@ export const paymentService = {
     }
 
     const event = decoded.event as string | undefined;
-    const failureEvents = ["payment.failed", "payment_link.cancelled", "payment_link.expired"];
-    if (event !== "payment_link.paid" && !failureEvents.includes(event || "")) {
-      return { success: true, message: "Event ignored" };
-    }
-
-    const isSuccess = event === "payment_link.paid";
     const payload = decoded.payload as Record<string, unknown> | undefined;
     const paymentEntity = (payload?.payment as Record<string, unknown> | undefined)?.entity as
       | Record<string, unknown>
       | undefined;
+    const isLinkEvent = payload?.payment_link !== undefined;
+
+    const successEvents = ["payment_link.paid", "payment.captured", "order.paid"];
+    // payment.failed is only terminal for a Payment Link, which is dead once
+    // it fails. A Standard Checkout order stays open for another attempt, and
+    // the kiosk's "Try Again" reopens that same order — marking it FAILED here
+    // would lock out the retry that then succeeds. Those are left to
+    // reconcilePayment and the client's own timeout instead.
+    const failureEvents = isLinkEvent
+      ? ["payment.failed", "payment_link.cancelled", "payment_link.expired"]
+      : [];
+    if (!successEvents.includes(event || "") && !failureEvents.includes(event || "")) {
+      return { success: true, message: "Event ignored" };
+    }
+
+    const isSuccess = successEvents.includes(event || "");
 
     const won = await paymentRepository.claimPaymentResult(merchantTxnId, {
       status: isSuccess ? "SUCCESS" : "FAILED",
@@ -166,6 +185,66 @@ export const paymentService = {
     return { success: true, message: isSuccess ? "Payment confirmed" : "Payment failed" };
   },
 
+  /**
+   * Confirms a Standard Checkout payment straight from Checkout's success
+   * handler. Webhook delivery routinely lags by seconds, which on a kiosk is
+   * the difference between the customer collecting their receipt and standing
+   * in front of a spinner — so the signature settles the payment here, and
+   * the webhook that follows lands on the "already processed" path.
+   */
+  async verifyCheckoutPayment(args: {
+    merchantTxnId: string;
+    razorpayOrderId: string;
+    razorpayPaymentId: string;
+    signature: string;
+  }): Promise<{ success: boolean; message: string }> {
+    const payment = await paymentRepository.findByMerchantTxnId(args.merchantTxnId);
+    if (!payment) {
+      return { success: false, message: "Payment not found" };
+    }
+    // A valid signature only proves *some* Razorpay order was paid. Binding it
+    // to the order we recorded stops a signature from one payment being
+    // replayed to settle a different (larger) one.
+    if (payment.razorpayOrderId !== args.razorpayOrderId) {
+      return { success: false, message: "Order mismatch" };
+    }
+    if (payment.status === "SUCCESS" || payment.status === "REFUNDED") {
+      return { success: true, message: "Already processed" };
+    }
+
+    const cafe = payment.order.cafe;
+    const secret = cafe?.razorpayKeySecret || process.env.RAZORPAY_KEY_SECRET || "";
+    if (
+      !verifyCheckoutSignature(
+        args.razorpayOrderId,
+        args.razorpayPaymentId,
+        args.signature,
+        secret
+      )
+    ) {
+      return { success: false, message: "Invalid signature" };
+    }
+
+    const won = await paymentRepository.claimPaymentResult(args.merchantTxnId, {
+      status: "SUCCESS",
+      razorpayPaymentId: args.razorpayPaymentId,
+      paidAt: new Date(),
+    });
+    if (!won) {
+      return { success: true, message: "Already processed" };
+    }
+
+    await orderRepository.updateOrderStatus(payment.orderId, "PAID");
+
+    const fullOrder = await orderRepository.getOrderById(payment.orderId);
+    if (fullOrder) {
+      broadcastNewOrder(fullOrder);
+      after(() => sendOrderPlacedWhatsApp(fullOrder));
+    }
+
+    return { success: true, message: "Payment confirmed" };
+  },
+
   async reconcilePayment(merchantTxnId: string): Promise<"success" | "failed" | "pending" | "already_done"> {
     const payment = await paymentRepository.findByMerchantTxnId(merchantTxnId);
     if (!payment) return "failed";
@@ -184,17 +263,33 @@ export const paymentService = {
           ? { keyId: razorpayKeyId, keySecret: razorpayKeySecret }
           : undefined;
 
-      const linkResult = await fetchPaymentLink(payment.razorpayOrderId, razorpayCredentials);
-      if (!linkResult.success) return "pending";
-      if (linkResult.status === "created" || linkResult.status === "partially_paid") return "pending";
+      // Standard Checkout orders come back as `order_…`, the older hosted
+      // Payment Links as `plink_…`. Discriminating on the prefix keeps links
+      // still in flight across the deploy reconciling against the right API.
+      const isCheckoutOrder = payment.razorpayOrderId.startsWith("order_");
 
-      const isSuccess = linkResult.status === "paid";
-      const linkPayments = linkResult.data?.payments as Array<Record<string, unknown>> | undefined;
-      const lastPayment = linkPayments?.[linkPayments.length - 1];
+      let isSuccess: boolean;
+      let razorpayPaymentId: string | undefined;
+
+      if (isCheckoutOrder) {
+        const orderResult = await fetchOrderPayments(payment.razorpayOrderId, razorpayCredentials);
+        if (!orderResult.success || orderResult.status === "pending") return "pending";
+        isSuccess = orderResult.status === "paid";
+        razorpayPaymentId = orderResult.paymentId;
+      } else {
+        const linkResult = await fetchPaymentLink(payment.razorpayOrderId, razorpayCredentials);
+        if (!linkResult.success) return "pending";
+        if (linkResult.status === "created" || linkResult.status === "partially_paid") return "pending";
+
+        isSuccess = linkResult.status === "paid";
+        const linkPayments = linkResult.data?.payments as Array<Record<string, unknown>> | undefined;
+        const lastPayment = linkPayments?.[linkPayments.length - 1];
+        razorpayPaymentId = lastPayment?.payment_id as string | undefined;
+      }
 
       const won = await paymentRepository.claimPaymentResult(merchantTxnId, {
         status: isSuccess ? "SUCCESS" : "FAILED",
-        razorpayPaymentId: lastPayment?.payment_id as string | undefined,
+        razorpayPaymentId,
         paidAt: isSuccess ? new Date() : undefined,
       });
       if (!won) return "already_done";

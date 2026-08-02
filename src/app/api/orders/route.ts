@@ -71,13 +71,23 @@ export async function POST(request: Request) {
       }
     }
 
-    const nameCheck = validateName(body.customerName ?? "");
-    if (!nameCheck.valid) {
-      return NextResponse.json({ success: false, error: nameCheck.error }, { status: 400 });
+    // All three are optional: kiosk orders are anonymous, so the customer
+    // types nothing and none of them arrive. Whatever *is* supplied still has
+    // to be valid, which keeps the web checkout — which sends all three and
+    // validates them client-side first — behaving exactly as before.
+    const rawName = typeof body.customerName === "string" ? body.customerName.trim() : "";
+    if (rawName) {
+      const nameCheck = validateName(rawName);
+      if (!nameCheck.valid) {
+        return NextResponse.json({ success: false, error: nameCheck.error }, { status: 400 });
+      }
     }
-    const phoneCheck = validatePhone(body.customerPhone ?? "");
-    if (!phoneCheck.valid) {
-      return NextResponse.json({ success: false, error: phoneCheck.error }, { status: 400 });
+    const rawPhone = typeof body.customerPhone === "string" ? body.customerPhone.trim() : "";
+    if (rawPhone) {
+      const phoneCheck = validatePhone(rawPhone);
+      if (!phoneCheck.valid) {
+        return NextResponse.json({ success: false, error: phoneCheck.error }, { status: 400 });
+      }
     }
     const rawEmail = typeof body.customerEmail === "string" ? body.customerEmail.trim() : "";
     if (rawEmail) {
@@ -87,8 +97,8 @@ export async function POST(request: Request) {
       }
     }
 
-    body.customerName = body.customerName!.trim();
-    body.customerPhone = normalizePhone(body.customerPhone!);
+    body.customerName = rawName || undefined;
+    body.customerPhone = rawPhone ? normalizePhone(rawPhone) : undefined;
     body.customerEmail = rawEmail ? rawEmail.toLowerCase() : undefined;
 
     for (const item of body.items) {

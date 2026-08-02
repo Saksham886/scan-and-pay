@@ -32,7 +32,10 @@ export async function PATCH(
       }
 
       const keySecret = razorpayKeySecret?.trim();
-      const existingCafe = cafe as typeof cafe & { razorpayKeySecret?: string | null };
+      const existingCafe = cafe as typeof cafe & {
+        razorpayKeySecret?: string | null;
+        razorpayWebhookSecret?: string | null;
+      };
       if (!keySecret && !existingCafe.razorpayKeySecret) {
         return NextResponse.json(
           { success: false, error: "Razorpay Key Secret is required" },
@@ -40,10 +43,15 @@ export async function PATCH(
         );
       }
 
+      // Blank webhook secret means "keep existing", same as Key Secret above -
+      // it must NOT be sent through as "" or updateCafeRazorpayCredentials
+      // will happily overwrite the existing one (its check is `!== undefined`).
+      const webhookSecret = razorpayWebhookSecret?.trim() || existingCafe.razorpayWebhookSecret || undefined;
+
       const updated = await adminRepository.updateCafeRazorpayCredentials(id, {
         razorpayKeyId: razorpayKeyId.trim(),
         razorpayKeySecret: keySecret || existingCafe.razorpayKeySecret!,
-        razorpayWebhookSecret: razorpayWebhookSecret?.trim(),
+        razorpayWebhookSecret: webhookSecret,
       });
 
       return NextResponse.json({ success: true, data: updated });

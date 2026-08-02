@@ -49,8 +49,10 @@ enum OrderStatus {
 class CreateOrderRequest {
   final String cafeSlug;
   final List<Map<String, dynamic>> items;
-  final String customerName;
-  final String customerPhone;
+  // All three are nullable: kiosk orders are anonymous and send none of them.
+  // The API validates whatever is present and accepts their absence.
+  final String? customerName;
+  final String? customerPhone;
   final String? customerEmail;
   final String? notes;
   final String idempotencyKey;
@@ -58,8 +60,8 @@ class CreateOrderRequest {
   CreateOrderRequest({
     required this.cafeSlug,
     required this.items,
-    required this.customerName,
-    required this.customerPhone,
+    this.customerName,
+    this.customerPhone,
     this.customerEmail,
     this.notes,
     required this.idempotencyKey,
@@ -69,8 +71,10 @@ class CreateOrderRequest {
     return {
       'cafeSlug': cafeSlug,
       'items': items,
-      'customerName': customerName,
-      'customerPhone': customerPhone,
+      if (customerName != null && customerName!.isNotEmpty)
+        'customerName': customerName,
+      if (customerPhone != null && customerPhone!.isNotEmpty)
+        'customerPhone': customerPhone,
       if (customerEmail != null && customerEmail!.isNotEmpty)
         'customerEmail': customerEmail,
       if (notes != null && notes!.isNotEmpty) 'notes': notes,
