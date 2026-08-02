@@ -6,6 +6,11 @@ const String kApiBaseUrl = String.fromEnvironment(
   defaultValue: 'https://scan-and-pay-nine.vercel.app',
 );
 
+/// Ceiling on any single API call. Without one, a kiosk on flaky cafe wifi can
+/// sit on a spinner indefinitely — the socket never errors, so the screen never
+/// recovers and the customer is stranded mid-order until the idle reset fires.
+const Duration kApiTimeout = Duration(seconds: 15);
+
 const Duration kMenuRefreshInterval = Duration(seconds: 60);
 
 const Duration kPostPaymentPollInterval = Duration(seconds: 2);

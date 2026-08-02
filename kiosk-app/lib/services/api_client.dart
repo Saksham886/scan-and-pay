@@ -1,8 +1,13 @@
+import 'dart:async';
 import 'dart:convert';
 
 import 'package:http/http.dart' as http;
 
 import '../config/constants.dart';
+
+/// Not a status any server sends here — it's synthesised for a client-side
+/// timeout so callers can treat it like any other transient failure.
+const int _timeoutStatusCode = 408;
 
 /// Wraps a decoded `{ success, data, error }` body together with the HTTP
 /// status code, since callers (order-status polling) need the status code
@@ -20,7 +25,8 @@ class ApiResult<T> {
     this.error,
   });
 
-  bool get isTransientError => statusCode == 429 || statusCode >= 500;
+  bool get isTransientError =>
+      statusCode == _timeoutStatusCode || statusCode == 429 || statusCode >= 500;
 }
 
 class ApiClient {
@@ -36,22 +42,42 @@ class ApiClient {
     String path,
     T Function(dynamic) fromData,
   ) async {
-    final res = await _client.get(_uri(path));
-    return _parse(res, fromData);
+    try {
+      final res = await _client.get(_uri(path)).timeout(kApiTimeout);
+      return _parse(res, fromData);
+    } on TimeoutException {
+      return _timedOut<T>();
+    }
   }
 
+  /// A timed-out POST may still have been processed by the server, so callers
+  /// must stay idempotent rather than assume nothing happened — order creation
+  /// reuses its idempotencyKey precisely so a retry resolves to the same order
+  /// instead of charging twice.
   Future<ApiResult<T>> postJson<T>(
     String path,
     Map<String, dynamic> body,
     T Function(dynamic) fromData,
   ) async {
-    final res = await _client.post(
-      _uri(path),
-      headers: const {'Content-Type': 'application/json'},
-      body: jsonEncode(body),
-    );
-    return _parse(res, fromData);
+    try {
+      final res = await _client
+          .post(
+            _uri(path),
+            headers: const {'Content-Type': 'application/json'},
+            body: jsonEncode(body),
+          )
+          .timeout(kApiTimeout);
+      return _parse(res, fromData);
+    } on TimeoutException {
+      return _timedOut<T>();
+    }
   }
+
+  ApiResult<T> _timedOut<T>() => ApiResult<T>(
+        statusCode: _timeoutStatusCode,
+        success: false,
+        error: 'The server took too long to respond. Please try again.',
+      );
 
   ApiResult<T> _parse<T>(http.Response res, T Function(dynamic) fromData) {
     Map<String, dynamic>? json;
