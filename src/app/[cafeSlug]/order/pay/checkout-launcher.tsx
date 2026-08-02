@@ -114,19 +114,25 @@ export default function CheckoutLauncher({
             ...(prefillEmail && { email: true }),
           },
       hidden: hideContactFields ? { contact: true, email: true } : {},
-      // UPI QR first: on a kiosk the customer pays from their own phone, so
-      // landing straight on a scannable code removes a whole method-picking
-      // step. Other methods stay reachable underneath for cafes that need
-      // them.
+      // UPI first, since on a kiosk the customer pays from their own phone and
+      // that should be the shortest path in front of them.
+      //
+      // All three flows deliberately, not just qr: Checkout only offers the
+      // flows that make sense for the device it's on, and a phone is never
+      // offered qr — you can't scan a code with the screen you're paying from.
+      // Restricting the block to qr alone therefore left phones with an empty
+      // UPI block and no way to pay by UPI at all. Ordering puts qr first for
+      // the kiosk tablet, where intent would try to open a UPI app the kiosk
+      // doesn't have.
       config: {
         display: {
           blocks: {
-            upiqr: {
-              name: "Scan & Pay with any UPI app",
-              instruments: [{ method: "upi", flows: ["qr"] }],
+            upiblock: {
+              name: "Pay with any UPI app",
+              instruments: [{ method: "upi", flows: ["qr", "intent", "collect"] }],
             },
           },
-          sequence: ["block.upiqr"],
+          sequence: ["block.upiblock"],
           preferences: { show_default_blocks: true },
         },
       },
