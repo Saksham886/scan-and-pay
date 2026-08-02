@@ -3,7 +3,7 @@ import { orderRepository } from "@/backend/repositories/order.repository";
 import { paymentRepository } from "@/backend/repositories/payment.repository";
 import { generateOrderNumber } from "@/backend/lib/utils/order-number";
 import { initiatePayment } from "@/backend/lib/phonepe";
-import { createCheckoutOrder } from "@/backend/lib/razorpay";
+import { createCheckoutOrder, createPaymentLink } from "@/backend/lib/razorpay";
 import { sseManager } from "@/backend/lib/sse";
 import { broadcastNewOrder, sendOrderPlacedWhatsApp } from "@/backend/lib/order-events";
 import type { CreateOrderRequest, CreateOrderResponse, OrderSummary } from "@/shared/types";
@@ -12,6 +12,21 @@ import { after } from "next/server";
 import { Prisma } from "@/generated/prisma";
 
 const APP_URL = process.env.NEXT_PUBLIC_APP_URL || `http://localhost:${process.env.PORT || 3000}`;
+
+/**
+ * Escape hatch back to Razorpay's hosted Payment Links.
+ *
+ * Standard Checkout runs on our own domain, and a live Razorpay account only
+ * accepts it from domains registered on that account — otherwise every payment
+ * comes back "Payment blocked as website does not match registered website(s)".
+ * Payment Links are hosted by Razorpay, so they sidestep that entirely.
+ *
+ * Flip this on to keep taking payments while the domain registration is
+ * pending, and off again once it lands. Both paths reconcile correctly: they're
+ * told apart by the razorpayOrderId prefix (order_ vs plink_), so payments
+ * already in flight settle against the right API whichever way this is set.
+ */
+const USE_PAYMENT_LINKS = process.env.RAZORPAY_USE_PAYMENT_LINKS === "true";
 
 type ExistingOrder = NonNullable<Awaited<ReturnType<typeof orderRepository.findByIdempotencyKey>>>;
 
@@ -229,7 +244,28 @@ export const orderService = {
 
     let paymentRedirectUrl: string;
 
-    if (provider === "RAZORPAY") {
+    if (provider === "RAZORPAY" && USE_PAYMENT_LINKS) {
+      const returnUrl = `${APP_URL}/${cafe.slug}/order/payment-return?txn=${merchantTxnId}&orderId=${order.id}`;
+      const result = await createPaymentLink({
+        merchantTransactionId: merchantTxnId,
+        amount: chargeableTotal,
+        callbackUrl: returnUrl,
+        customerName: request.customerName,
+        customerPhone: request.customerPhone,
+        customerEmail: request.customerEmail,
+        credentials: razorpayCredentials,
+      });
+      if (!result.success || !result.redirectUrl) {
+        await orderRepository.updateOrderStatus(order.id, "FAILED");
+        throw new Error(result.error || "Failed to initiate payment");
+      }
+      if (result.razorpayOrderId) {
+        await paymentRepository.attachRazorpayOrderId(merchantTxnId, result.razorpayOrderId);
+      }
+      // Razorpay's own hosted page — the kiosk webview loads it exactly as it
+      // loads our pay route, so nothing downstream changes.
+      paymentRedirectUrl = result.redirectUrl;
+    } else if (provider === "RAZORPAY") {
       const result = await createCheckoutOrder({
         merchantTransactionId: merchantTxnId,
         amount: chargeableTotal,

@@ -45,16 +45,22 @@ export async function createPaymentLink(
     return { success: false, error: "Razorpay is not configured" };
   }
 
+  // Kiosk orders are anonymous, so there may be nothing to send at all. The
+  // key is omitted entirely rather than sent as an empty object, since a bare
+  // `customer: {}` is not something the API is documented to accept and a
+  // rejection here would fail every kiosk order.
+  const customer = {
+    ...(params.customerName && { name: params.customerName }),
+    ...(params.customerPhone && { contact: params.customerPhone }),
+    ...(params.customerEmail && { email: params.customerEmail }),
+  };
+
   const payload = {
     amount: params.amount,
     currency: "INR",
     accept_partial: false,
     description: `Order payment (${params.merchantTransactionId})`,
-    customer: {
-      ...(params.customerName && { name: params.customerName }),
-      ...(params.customerPhone && { contact: params.customerPhone }),
-      ...(params.customerEmail && { email: params.customerEmail }),
-    },
+    ...(Object.keys(customer).length > 0 && { customer }),
     notify: { sms: false, email: false },
     reminder_enable: false,
     callback_url: params.callbackUrl,
