@@ -82,6 +82,12 @@ export interface CreateOrderResponse {
   orderNumber: string;
   totalPaise: number;
   paymentRedirectUrl: string;
+  /** An empty paymentRedirectUrl means "don't send the customer to a gateway",
+   *  which covers two opposite situations: a fully subsidised order that is
+   *  already PAID, and an idempotent replay of an order still awaiting payment.
+   *  Clients must branch on this rather than on the empty string, or they will
+   *  show a receipt for an order nobody has paid for. */
+  orderStatus: OrderStatus;
 }
 
 export interface OrderSummary {

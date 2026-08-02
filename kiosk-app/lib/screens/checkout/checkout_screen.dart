@@ -91,13 +91,25 @@ class _CheckoutScreenState extends State<CheckoutScreen> {
                 ),
           ),
         );
-      } else {
+      } else if (order.status?.isPaidOrBeyond == true) {
+        // Genuinely nothing to collect - a fully subsidised order, already PAID.
         Navigator.of(context).pushAndRemoveUntil(
           MaterialPageRoute(
             builder: (_) => OrderStatusScreen(orderId: order.orderId),
           ),
           (route) => route.isFirst,
         );
+      } else {
+        // No redirect URL and not paid means the server replayed an existing
+        // unpaid order against this cart's idempotency key - what happens when
+        // a customer backs out of the payment page and tries again. Showing the
+        // receipt screen here handed over food nobody had paid for, so the key
+        // is dropped and the next attempt creates a fresh, payable order.
+        cart.invalidateIdempotencyKey();
+        setState(() {
+          _submitError = 'That payment did not complete. Please try again.';
+          _loading = false;
+        });
       }
     } catch (_) {
       if (!mounted) return;

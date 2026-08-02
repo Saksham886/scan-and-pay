@@ -56,6 +56,16 @@ class _OrderStatusScreenState extends State<OrderStatusScreen> {
       if (!mounted) return;
 
       if (result.success && result.data != null) {
+        // Last line of defence: this screen is a receipt, and a receipt is a
+        // claim on food. Whatever routing mistake got us here, never present
+        // one for an order that hasn't actually been paid for.
+        if (!result.data!.status.isPaidOrBeyond) {
+          setState(() {
+            _order = null;
+            _error = 'This order has not been paid for yet.';
+          });
+          return;
+        }
         setState(() {
           _order = result.data;
           _error = null;

@@ -7,6 +7,7 @@ import { createCheckoutOrder, createPaymentLink } from "@/backend/lib/razorpay";
 import { sseManager } from "@/backend/lib/sse";
 import { broadcastNewOrder, sendOrderPlacedWhatsApp } from "@/backend/lib/order-events";
 import type { CreateOrderRequest, CreateOrderResponse, OrderSummary } from "@/shared/types";
+import type { OrderStatus } from "@/generated/prisma";
 import { v4 as uuid } from "uuid";
 import { after } from "next/server";
 import { Prisma } from "@/generated/prisma";
@@ -40,6 +41,7 @@ function existingOrderResponse(existing: ExistingOrder): CreateOrderResponse {
     orderNumber: existing.orderNumber,
     totalPaise: existing.totalPaise,
     paymentRedirectUrl: "", // Caller should handle re-initiation
+    orderStatus: existing.status as OrderStatus,
   };
 }
 
@@ -227,6 +229,7 @@ export const orderService = {
         orderNumber: order.orderNumber,
         totalPaise,
         paymentRedirectUrl: "",
+        orderStatus: "PAID",
       };
     }
 
@@ -307,6 +310,7 @@ export const orderService = {
       orderNumber: order.orderNumber,
       totalPaise,
       paymentRedirectUrl,
+      orderStatus: "PAYMENT_PENDING",
     };
   },
 

@@ -89,12 +89,29 @@ class CreateOrderResponse {
   final int totalPaise;
   final String paymentRedirectUrl;
 
+  /// An empty [paymentRedirectUrl] covers two opposite cases — a fully
+  /// subsidised order that is already PAID, and an idempotent replay of an
+  /// order still awaiting payment. Only this tells them apart.
+  final OrderStatus? status;
+
   CreateOrderResponse({
     required this.orderId,
     required this.orderNumber,
     required this.totalPaise,
     required this.paymentRedirectUrl,
+    this.status,
   });
+
+  /// Null rather than a guess when the field is absent or unrecognised: a
+  /// server too old to send it must not be read as "paid".
+  static OrderStatus? _parseStatus(dynamic raw) {
+    if (raw is! String) return null;
+    try {
+      return OrderStatus.fromWire(raw);
+    } catch (_) {
+      return null;
+    }
+  }
 
   factory CreateOrderResponse.fromJson(Map<String, dynamic> json) {
     return CreateOrderResponse(
@@ -102,6 +119,7 @@ class CreateOrderResponse {
       orderNumber: json['orderNumber'] as String,
       totalPaise: json['totalPaise'] as int,
       paymentRedirectUrl: json['paymentRedirectUrl'] as String? ?? '',
+      status: _parseStatus(json['orderStatus']),
     );
   }
 }
