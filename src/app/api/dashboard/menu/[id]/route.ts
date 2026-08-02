@@ -118,6 +118,24 @@ export async function DELETE(
     return NextResponse.json({ success: true });
   } catch (error) {
     console.error("Menu delete error:", error);
+    // OrderItem.menuItemId is a required relation with no onDelete rule, so
+    // Postgres refuses to remove any item that has ever been ordered. Deleting
+    // the order rows instead would destroy sales history, so say what's
+    // actually wrong rather than returning a bare 500.
+    if (
+      typeof error === "object" &&
+      error !== null &&
+      (error as { code?: string }).code === "P2003"
+    ) {
+      return NextResponse.json(
+        {
+          success: false,
+          error:
+            "This item is part of past orders and can't be deleted without losing that history. Mark it unavailable instead to take it off the menu.",
+        },
+        { status: 409 }
+      );
+    }
     return NextResponse.json({ success: false, error: "Failed to delete item" }, { status: 500 });
   }
 }

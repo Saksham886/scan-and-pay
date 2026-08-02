@@ -2,17 +2,26 @@ import type { NextConfig } from "next";
 
 const isProd = process.env.NODE_ENV === "production";
 
+// Razorpay Standard Checkout runs on our own /[cafeSlug]/order/pay page rather
+// than a hosted Razorpay URL, so its SDK, iframe, API calls and telemetry all
+// have to be allowed here. PhonePe needs none of this because its flow is a
+// full redirect off-site.
+const RAZORPAY_HOSTS = "https://checkout.razorpay.com https://*.razorpay.com";
+
 const csp = [
   "default-src 'self'",
   "base-uri 'self'",
   "object-src 'none'",
   "frame-ancestors 'none'",
-  "form-action 'self'",
-  "img-src 'self' data: blob: https://res.cloudinary.com https://*.phonepe.com",
+  `form-action 'self' ${RAZORPAY_HOSTS}`,
+  `img-src 'self' data: blob: https://res.cloudinary.com https://*.phonepe.com ${RAZORPAY_HOSTS}`,
   "font-src 'self' data:",
-  "script-src 'self' 'unsafe-inline'" + (isProd ? "" : " 'unsafe-eval'"),
+  `script-src 'self' 'unsafe-inline' ${RAZORPAY_HOSTS}` + (isProd ? "" : " 'unsafe-eval'"),
   "style-src 'self' 'unsafe-inline'",
-  "connect-src 'self' https://api.cloudinary.com https://api.phonepe.com https://api-preprod.phonepe.com",
+  `connect-src 'self' https://api.cloudinary.com https://api.phonepe.com https://api-preprod.phonepe.com ${RAZORPAY_HOSTS}`,
+  // Checkout renders itself in an iframe, and card payments hand off to the
+  // bank's 3DS page inside it. Without this the modal opens empty.
+  `frame-src 'self' ${RAZORPAY_HOSTS}`,
   "media-src 'self' data:",
   "worker-src 'self' blob:",
   "manifest-src 'self'",
@@ -31,7 +40,10 @@ const securityHeaders = [
     key: "Permissions-Policy",
     value: "camera=(self), microphone=(), geolocation=(), payment=(self), usb=(), interest-cohort=()",
   },
-  { key: "Cross-Origin-Opener-Policy", value: "same-origin" },
+  // allow-popups rather than plain same-origin: some Razorpay methods (netbanking,
+  // a few 3DS card flows) complete in a popup that has to talk back to the opener,
+  // which strict same-origin severs.
+  { key: "Cross-Origin-Opener-Policy", value: "same-origin-allow-popups" },
   { key: "Cross-Origin-Resource-Policy", value: "same-origin" },
   ...(isProd
     ? [{ key: "Strict-Transport-Security", value: "max-age=63072000; includeSubDomains; preload" }]

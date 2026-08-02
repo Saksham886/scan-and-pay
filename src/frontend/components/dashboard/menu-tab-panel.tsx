@@ -93,6 +93,11 @@ export function MenuTabPanel({ menuId, items, categories, itemsApiBase, categori
     onConfirm: () => void;
   }>({ open: false, message: "", onConfirm: () => {} });
 
+  // Delete/toggle used to fire and refetch without ever looking at the
+  // response, so a rejected request just redrew the unchanged row and looked
+  // like a dead button.
+  const [actionError, setActionError] = useState("");
+
   // ── Item CRUD ──────────────────────────────────────────
 
   const openAddModal = () => {
@@ -191,11 +196,17 @@ export function MenuTabPanel({ menuId, items, categories, itemsApiBase, categori
   };
 
   const toggleAvailability = async (item: PanelMenuItem) => {
-    await fetch(`${itemsApiBase}/${item.id}`, {
+    setActionError("");
+    const res = await fetch(`${itemsApiBase}/${item.id}`, {
       method: "PATCH",
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify({ isAvailable: !item.isAvailable, menuId }),
     });
+    if (!res.ok) {
+      const err = await res.json().catch(() => ({}));
+      setActionError(err.error || "Could not update availability.");
+      return;
+    }
     onRefetch();
   };
 
@@ -207,10 +218,16 @@ export function MenuTabPanel({ menuId, items, categories, itemsApiBase, categori
         ? "This is a shared item — removing it only takes it off your menu. Other cafés keep seeing it unchanged."
         : "This menu item will be permanently deleted.",
       onConfirm: async () => {
+        setActionError("");
         const url = isGlobal
           ? `${itemsApiBase}/${item.id}?menuId=${encodeURIComponent(menuId)}`
           : `${itemsApiBase}/${item.id}`;
-        await fetch(url, { method: "DELETE" });
+        const res = await fetch(url, { method: "DELETE" });
+        if (!res.ok) {
+          const err = await res.json().catch(() => ({}));
+          setActionError(err.error || "Could not delete this item.");
+          return;
+        }
         onRefetch();
       },
     });
@@ -287,6 +304,11 @@ export function MenuTabPanel({ menuId, items, categories, itemsApiBase, categori
 
   return (
     <div>
+      {actionError && (
+        <div className="mb-4 rounded-xl border border-red-200 bg-red-50 px-4 py-3 text-sm text-red-700">
+          {actionError}
+        </div>
+      )}
       <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3 mb-4">
         <div className="flex gap-2">
           <button

@@ -15,6 +15,7 @@ import '../../widgets/idle_reset_guard.dart';
 import '../../widgets/loading_view.dart';
 import '../cart/cart_screen.dart';
 import '../setup/setup_screen.dart';
+import '../welcome/welcome_screen.dart';
 import 'widgets/category_sidebar.dart';
 import 'widgets/floating_cart_button.dart';
 import 'widgets/menu_item_card.dart';
@@ -63,6 +64,18 @@ class _MenuScreenState extends State<MenuScreen> {
   void _clearAbandonedCart() {
     final cart = context.read<CartProvider>();
     if (!cart.isEmpty) cart.clear();
+  }
+
+  /// Pushes rather than pops: an idle reset out of checkout rebuilds the stack
+  /// with the menu as its root, so there isn't always a welcome screen below
+  /// this one to pop back to. Abandons whatever is in the cart, since walking
+  /// away from the menu is walking away from the order.
+  void _goHome() {
+    _clearAbandonedCart();
+    Navigator.of(context).pushAndRemoveUntil(
+      MaterialPageRoute(builder: (_) => const WelcomeScreen()),
+      (route) => false,
+    );
   }
 
   @override
@@ -142,6 +155,7 @@ class _MenuScreenState extends State<MenuScreen> {
                             cafeName: cafeName,
                             onHold: _startHold,
                             onHoldCancel: _cancelHold,
+                            onHome: _goHome,
                           ),
                         ),
                         SliverToBoxAdapter(
@@ -228,11 +242,13 @@ class _Hero extends StatelessWidget {
   final String cafeName;
   final VoidCallback onHold;
   final VoidCallback onHoldCancel;
+  final VoidCallback onHome;
 
   const _Hero({
     required this.cafeName,
     required this.onHold,
     required this.onHoldCancel,
+    required this.onHome,
   });
 
   @override
@@ -266,6 +282,32 @@ class _Hero extends StatelessWidget {
                       fontWeight: FontWeight.w600,
                       letterSpacing: 2,
                       color: CustomerColors.accent.withValues(alpha: 0.8),
+                    ),
+                  ),
+                  const Spacer(),
+                  InkWell(
+                    onTap: onHome,
+                    child: Container(
+                      padding: const EdgeInsets.symmetric(horizontal: 14, vertical: 8),
+                      decoration: BoxDecoration(
+                        border: Border.all(color: CustomerColors.border, width: 2),
+                      ),
+                      child: Row(
+                        mainAxisSize: MainAxisSize.min,
+                        children: [
+                          const Icon(Icons.home_outlined, size: 16, color: CustomerColors.muted),
+                          const SizedBox(width: 6),
+                          Text(
+                            'HOME',
+                            style: CustomerText.mono(
+                              fontSize: 11,
+                              fontWeight: FontWeight.w700,
+                              letterSpacing: 1,
+                              color: CustomerColors.muted,
+                            ),
+                          ),
+                        ],
+                      ),
                     ),
                   ),
                 ],
