@@ -3,7 +3,6 @@ import 'dart:async';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
-import '../../config/constants.dart';
 import '../../config/customer_theme.dart';
 import '../../models/order.dart';
 import '../../services/order_service.dart';
@@ -15,11 +14,10 @@ import '../../widgets/neo_pressable.dart';
 import '../../widgets/primary_button.dart';
 import '../feedback/feedback_screen.dart';
 
-/// A kiosk receipt screen, not a live order tracker: on a shared kiosk the
-/// device has to free up for the next customer immediately after payment,
-/// so this fetches the order once, shows a receipt, and auto-resets to the
-/// menu shortly after - it does not poll for PREPARING/READY/COMPLETED the
-/// way a customer's own phone would.
+/// A kiosk receipt screen, not a live order tracker: it fetches the order
+/// once and shows a receipt, then waits for the customer to tap Continue -
+/// it does not poll for PREPARING/READY/COMPLETED the way a customer's own
+/// phone would.
 class OrderStatusScreen extends StatefulWidget {
   final String orderId;
 
@@ -31,23 +29,13 @@ class OrderStatusScreen extends StatefulWidget {
 
 class _OrderStatusScreenState extends State<OrderStatusScreen> {
   final _orderService = OrderService();
-  Timer? _resetTimer;
-  Timer? _countdownTimer;
   OrderSummary? _order;
   String? _error;
-  int _countdown = kReceiptAutoReset.inSeconds;
 
   @override
   void initState() {
     super.initState();
     _fetch();
-  }
-
-  @override
-  void dispose() {
-    _resetTimer?.cancel();
-    _countdownTimer?.cancel();
-    super.dispose();
   }
 
   Future<void> _fetch() async {
@@ -70,7 +58,6 @@ class _OrderStatusScreenState extends State<OrderStatusScreen> {
           _order = result.data;
           _error = null;
         });
-        _scheduleReset();
       } else {
         setState(() => _error = result.error ?? 'Could not load order status');
       }
@@ -78,20 +65,6 @@ class _OrderStatusScreenState extends State<OrderStatusScreen> {
       if (!mounted) return;
       setState(() => _error = 'Network error loading order status');
     }
-  }
-
-  void _scheduleReset() {
-    _resetTimer?.cancel();
-    _countdownTimer?.cancel();
-    _countdown = kReceiptAutoReset.inSeconds;
-    _resetTimer = Timer(kReceiptAutoReset, _goToFeedback);
-    _countdownTimer = Timer.periodic(const Duration(seconds: 1), (timer) {
-      if (!mounted || _countdown <= 1) {
-        timer.cancel();
-        return;
-      }
-      setState(() => _countdown -= 1);
-    });
   }
 
   void _goToFeedback() {
@@ -120,7 +93,7 @@ class _OrderStatusScreenState extends State<OrderStatusScreen> {
                     ),
                   )
                 : const LoadingView(message: 'Loading order...'))
-            : _Receipt(order: _order!, countdown: _countdown, onContinue: _goToFeedback),
+            : _Receipt(order: _order!, onContinue: _goToFeedback),
       ),
     );
   }
@@ -128,10 +101,9 @@ class _OrderStatusScreenState extends State<OrderStatusScreen> {
 
 class _Receipt extends StatefulWidget {
   final OrderSummary order;
-  final int countdown;
   final VoidCallback onContinue;
 
-  const _Receipt({required this.order, required this.countdown, required this.onContinue});
+  const _Receipt({required this.order, required this.onContinue});
 
   @override
   State<_Receipt> createState() => _ReceiptState();
@@ -235,7 +207,6 @@ class _ReceiptState extends State<_Receipt> {
   @override
   Widget build(BuildContext context) {
     final order = widget.order;
-    final countdown = widget.countdown;
     final onContinue = widget.onContinue;
     return ListView(
       padding: const EdgeInsets.fromLTRB(20, 32, 20, 32),
@@ -358,12 +329,6 @@ class _ReceiptState extends State<_Receipt> {
         ),
         const SizedBox(height: 20),
         PrimaryButton(label: 'Continue', onPressed: onContinue),
-        const SizedBox(height: 12),
-        Text(
-          'Continuing in ${countdown}s',
-          textAlign: TextAlign.center,
-          style: CustomerText.mono(fontSize: 12, color: CustomerColors.muted),
-        ),
       ],
     );
   }
