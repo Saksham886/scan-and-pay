@@ -40,7 +40,9 @@ class _CheckoutScreenState extends State<CheckoutScreen> {
     super.dispose();
   }
 
-  Future<void> _submit() async {
+  /// [isRetry] guards the single automatic re-submit below, so a server that
+  /// keeps replaying stale orders can't put this into a loop.
+  Future<void> _submit({bool isRetry = false}) async {
     setState(() => _submitError = null);
 
     final cart = context.read<CartProvider>();
@@ -106,6 +108,12 @@ class _CheckoutScreenState extends State<CheckoutScreen> {
         // receipt screen here handed over food nobody had paid for, so the key
         // is dropped and the next attempt creates a fresh, payable order.
         cart.invalidateIdempotencyKey();
+        if (!isRetry) {
+          // Straight back through with a fresh key, which creates a genuinely
+          // new payable order. The customer already asked to pay - making them
+          // tap Pay twice to get past a stale order is noise on a kiosk.
+          return _submit(isRetry: true);
+        }
         setState(() {
           _submitError = 'That payment did not complete. Please try again.';
           _loading = false;
