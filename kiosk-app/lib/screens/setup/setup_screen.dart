@@ -5,7 +5,7 @@ import '../../config/customer_theme.dart';
 import '../../services/menu_service.dart';
 import '../../state/kiosk_config_provider.dart';
 import '../../widgets/primary_button.dart';
-import '../menu/menu_screen.dart';
+import '../welcome/welcome_screen.dart';
 
 class SetupScreen extends StatefulWidget {
   const SetupScreen({super.key});
@@ -47,7 +47,7 @@ class _SetupScreenState extends State<SetupScreen> {
             );
         if (!mounted) return;
         Navigator.of(context).pushAndRemoveUntil(
-          MaterialPageRoute(builder: (_) => const MenuScreen()),
+          MaterialPageRoute(builder: (_) => const WelcomeScreen()),
           (route) => false,
         );
       } else {

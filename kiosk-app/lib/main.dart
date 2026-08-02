@@ -2,8 +2,8 @@ import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
 import 'config/customer_theme.dart';
-import 'screens/menu/menu_screen.dart';
 import 'screens/setup/setup_screen.dart';
+import 'screens/welcome/welcome_screen.dart';
 import 'state/cart_provider.dart';
 import 'state/kiosk_config_provider.dart';
 import 'state/menu_provider.dart';
@@ -45,6 +45,6 @@ class _RootRouter extends StatelessWidget {
     if (!config.isLoaded) {
       return const Scaffold(body: LoadingView());
     }
-    return config.isConfigured ? const MenuScreen() : const SetupScreen();
+    return config.isConfigured ? const WelcomeScreen() : const SetupScreen();
   }
 }

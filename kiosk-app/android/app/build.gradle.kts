@@ -64,3 +64,9 @@ android {
 flutter {
     source = "../.."
 }
+
+dependencies {
+    // Vendor SDK for the USB 80mm receipt printer (ThinkPc/net.posprinter) -
+    // no Maven artifact, shipped as a plain jar by the manufacturer.
+    implementation(files("libs/posprinterconnectandsendsdk.jar"))
+}

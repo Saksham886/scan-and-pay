@@ -32,3 +32,39 @@ class CafePublic {
     );
   }
 }
+
+class ActiveMenuMeta {
+  final String id;
+  final String type;
+  final bool isSubsidised;
+
+  ActiveMenuMeta({
+    required this.id,
+    required this.type,
+    required this.isSubsidised,
+  });
+
+  factory ActiveMenuMeta.fromJson(Map<String, dynamic> json) {
+    return ActiveMenuMeta(
+      id: json['id'] as String,
+      type: json['type'] as String,
+      isSubsidised: json['isSubsidised'] == true,
+    );
+  }
+}
+
+class CafeMeta {
+  final CafePublic cafe;
+  final ActiveMenuMeta? activeMenu;
+
+  CafeMeta({required this.cafe, this.activeMenu});
+
+  factory CafeMeta.fromJson(Map<String, dynamic> json) {
+    return CafeMeta(
+      cafe: CafePublic.fromJson(json['cafe'] as Map<String, dynamic>),
+      activeMenu: json['activeMenu'] == null
+          ? null
+          : ActiveMenuMeta.fromJson(json['activeMenu'] as Map<String, dynamic>),
+    );
+  }
+}

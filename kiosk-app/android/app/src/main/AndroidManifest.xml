@@ -4,6 +4,9 @@
          not only in the debug-only manifest, or release/profile builds get
          no network access at all. -->
     <uses-permission android:name="android.permission.INTERNET"/>
+    <!-- USB host mode for the receipt printer - not "required" so the app
+         still installs on kiosk hardware without a USB host port. -->
+    <uses-feature android:name="android.hardware.usb.host" android:required="false"/>
     <application
         android:label="kiosk_app"
         android:name="${applicationName}"
@@ -33,6 +36,16 @@
                 <action android:name="android.intent.action.MAIN"/>
                 <category android:name="android.intent.category.LAUNCHER"/>
             </intent-filter>
+            <!-- Lets Android recognize the receipt printer by VID:PID and
+                 prompt for/persist USB permission for it directly, as a path
+                 to permission that doesn't depend on the app already being
+                 open and unpinned when requestPermission() is called. -->
+            <intent-filter>
+                <action android:name="android.hardware.usb.action.USB_DEVICE_ATTACHED"/>
+            </intent-filter>
+            <meta-data
+                android:name="android.hardware.usb.action.USB_DEVICE_ATTACHED"
+                android:resource="@xml/usb_device_filter"/>
         </activity>
         <!-- Don't delete the meta-data below.
              This is used by the Flutter tool to generate GeneratedPluginRegistrant.java -->
