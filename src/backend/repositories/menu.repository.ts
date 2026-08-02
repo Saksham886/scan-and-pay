@@ -12,7 +12,7 @@ export const menuRepository = {
 
   async getAllMenuItems(cafeId: string) {
     return prisma.menuItem.findMany({
-      where: { OR: [{ cafeId }, { cafeId: null }] },
+      where: { deletedAt: null, OR: [{ cafeId }, { cafeId: null }] },
       include: { category: true },
       orderBy: { sortOrder: "asc" },
     });
@@ -26,7 +26,7 @@ export const menuRepository = {
       : cafeId ? { cafeId }
       : {};
     return prisma.menuItem.findMany({
-      where,
+      where: { ...where, deletedAt: null },
       include: { category: true, cafe: { select: { id: true, name: true, slug: true } } },
       orderBy: [{ createdAt: "desc" }],
     });
@@ -35,7 +35,7 @@ export const menuRepository = {
   // Returns all global items (cafeId = null)
   async getGlobalMenuItems() {
     return prisma.menuItem.findMany({
-      where: { cafeId: null },
+      where: { cafeId: null, deletedAt: null },
       include: { category: true },
       orderBy: { sortOrder: "asc" },
     });
@@ -81,8 +81,13 @@ export const menuRepository = {
     return prisma.menuItem.update({ where: { id }, data: normalized });
   },
 
+  /** Soft delete — see MenuItem.deletedAt. isAvailable is cleared too so any
+   *  query that predates this filter still stops serving the item. */
   async deleteMenuItem(id: string) {
-    return prisma.menuItem.delete({ where: { id } });
+    return prisma.menuItem.update({
+      where: { id },
+      data: { deletedAt: new Date(), isAvailable: false },
+    });
   },
 
   // Returns categories visible to a specific cafe (cafe-specific + global),
@@ -156,7 +161,7 @@ export const menuRepository = {
       where: { cafeId },
       include: {
         categories: { orderBy: { sortOrder: "asc" } },
-        items: { orderBy: { sortOrder: "asc" } },
+        items: { where: { deletedAt: null }, orderBy: { sortOrder: "asc" } },
       },
       orderBy: { type: "asc" },
     });
@@ -170,13 +175,22 @@ export const menuRepository = {
       menus.map(async (menu) => {
         // Scoped to this menu's own overrides, matching getMenuForMenuId's
         // exclusion scope — so the dashboard shows exactly what customers see.
-        const overriddenIds = menu.items
+        // Queried rather than read off menu.items for the same reason as there:
+        // hidden and deleted overrides are filtered out of that list, and
+        // deriving the exclusions from it would let the shared original
+        // reappear right after the owner removed it.
+        const overrides = await prisma.menuItem.findMany({
+          where: { menuId: menu.id, overriddenFromId: { not: null } },
+          select: { overriddenFromId: true },
+        });
+        const overriddenIds = overrides
           .map((i) => i.overriddenFromId)
           .filter((id): id is string => id !== null);
         const globalItems = await prisma.menuItem.findMany({
           where: {
             cafeId: null,
             isAvailable: true,
+            deletedAt: null,
             OR: [{ menuType: null }, { menuType: menu.type }],
             NOT: { id: { in: overriddenIds } },
           },
@@ -257,13 +271,23 @@ export const menuRepository = {
     const allCategories = [...menuCategories, ...globalCategories];
 
     const menuItems = await prisma.menuItem.findMany({
-      where: { menuId, isAvailable: true },
+      where: { menuId, isAvailable: true, deletedAt: null },
       orderBy: { sortOrder: "asc" },
     });
     // Global items the cafe has overridden (edited/hidden from their
-    // dashboard) are excluded here so customers see the cafe's own version
+    // dashboard) are excluded below so customers see the cafe's own version
     // (already included in menuItems above) instead of the shared original.
-    const overriddenIds = menuItems
+    //
+    // Deliberately queried rather than derived from menuItems: an override
+    // that exists purely to *hide* a global item is unavailable by definition,
+    // so it never appeared in the list above — which meant the shared original
+    // sailed straight back onto the customer menu, the exact opposite of what
+    // hiding it was for.
+    const overrides = await prisma.menuItem.findMany({
+      where: { menuId, overriddenFromId: { not: null } },
+      select: { overriddenFromId: true },
+    });
+    const overriddenIds = overrides
       .map((i) => i.overriddenFromId)
       .filter((id): id is string => id !== null);
     // A global item with no menuType shows on every menu (backward-compatible
@@ -272,6 +296,7 @@ export const menuRepository = {
       where: {
         cafeId: null,
         isAvailable: true,
+        deletedAt: null,
         OR: [{ menuType: null }, { menuType: menu.type }],
         NOT: { id: { in: overriddenIds } },
       },
@@ -328,6 +353,7 @@ export const menuRepository = {
       categoryId?: string;
       sortOrder?: number;
       isSubsidised?: boolean;
+      deletedAt?: Date | null;
     }
   ) {
     const existingOverride = await prisma.menuItem.findFirst({
@@ -356,6 +382,7 @@ export const menuRepository = {
         isVeg: data.isVeg ?? original.isVeg,
         sortOrder: data.sortOrder ?? original.sortOrder,
         isSubsidised: data.isSubsidised ?? original.isSubsidised,
+        deletedAt: data.deletedAt ?? null,
       },
     });
   },
@@ -368,6 +395,7 @@ export const menuRepository = {
       where: {
         id: { in: itemIds },
         isAvailable: true,
+        deletedAt: null,
         OR: [
           { menuId },
           { cafeId: null, OR: [{ menuType: null }, { menuType }] },

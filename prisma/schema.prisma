@@ -178,6 +178,11 @@ model MenuItem {
   // change only affects their cafe). Points at the original global item,
   // which is then excluded from that cafe's merged menu in favor of this row.
   overriddenFromId String?   @map("overridden_from_id")
+  // Soft delete. OrderItem.menuItemId is a required relation, so Postgres
+  // refuses to remove any item that has ever been ordered — a hard delete
+  // would mean destroying sales history to take a dish off the menu. Deleted
+  // rows stay for that history and are filtered out of every listing.
+  deletedAt        DateTime? @map("deleted_at")
   createdAt        DateTime  @default(now()) @map("created_at")
   updatedAt        DateTime  @updatedAt @map("updated_at")
 
@@ -191,6 +196,7 @@ model MenuItem {
   @@index([cafeId, isAvailable])
   @@index([menuId, isAvailable])
   @@index([overriddenFromId])
+  @@index([deletedAt])
   @@map("menu_items")
 }
 
