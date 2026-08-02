@@ -197,6 +197,7 @@ exports.Prisma.MenuItemScalarFieldEnum = {
   sortOrder: 'sortOrder',
   menuType: 'menuType',
   overriddenFromId: 'overriddenFromId',
+  deletedAt: 'deletedAt',
   createdAt: 'createdAt',
   updatedAt: 'updatedAt'
 };

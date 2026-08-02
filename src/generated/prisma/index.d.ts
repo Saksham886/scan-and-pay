@@ -8602,6 +8602,7 @@ export namespace Prisma {
     sortOrder: number | null
     menuType: $Enums.MenuType | null
     overriddenFromId: string | null
+    deletedAt: Date | null
     createdAt: Date | null
     updatedAt: Date | null
   }
@@ -8621,6 +8622,7 @@ export namespace Prisma {
     sortOrder: number | null
     menuType: $Enums.MenuType | null
     overriddenFromId: string | null
+    deletedAt: Date | null
     createdAt: Date | null
     updatedAt: Date | null
   }
@@ -8640,6 +8642,7 @@ export namespace Prisma {
     sortOrder: number
     menuType: number
     overriddenFromId: number
+    deletedAt: number
     createdAt: number
     updatedAt: number
     _all: number
@@ -8671,6 +8674,7 @@ export namespace Prisma {
     sortOrder?: true
     menuType?: true
     overriddenFromId?: true
+    deletedAt?: true
     createdAt?: true
     updatedAt?: true
   }
@@ -8690,6 +8694,7 @@ export namespace Prisma {
     sortOrder?: true
     menuType?: true
     overriddenFromId?: true
+    deletedAt?: true
     createdAt?: true
     updatedAt?: true
   }
@@ -8709,6 +8714,7 @@ export namespace Prisma {
     sortOrder?: true
     menuType?: true
     overriddenFromId?: true
+    deletedAt?: true
     createdAt?: true
     updatedAt?: true
     _all?: true
@@ -8815,6 +8821,7 @@ export namespace Prisma {
     sortOrder: number
     menuType: $Enums.MenuType | null
     overriddenFromId: string | null
+    deletedAt: Date | null
     createdAt: Date
     updatedAt: Date
     _count: MenuItemCountAggregateOutputType | null
@@ -8853,6 +8860,7 @@ export namespace Prisma {
     sortOrder?: boolean
     menuType?: boolean
     overriddenFromId?: boolean
+    deletedAt?: boolean
     createdAt?: boolean
     updatedAt?: boolean
     cafe?: boolean | MenuItem$cafeArgs<ExtArgs>
@@ -8879,6 +8887,7 @@ export namespace Prisma {
     sortOrder?: boolean
     menuType?: boolean
     overriddenFromId?: boolean
+    deletedAt?: boolean
     createdAt?: boolean
     updatedAt?: boolean
     cafe?: boolean | MenuItem$cafeArgs<ExtArgs>
@@ -8902,6 +8911,7 @@ export namespace Prisma {
     sortOrder?: boolean
     menuType?: boolean
     overriddenFromId?: boolean
+    deletedAt?: boolean
     createdAt?: boolean
     updatedAt?: boolean
     cafe?: boolean | MenuItem$cafeArgs<ExtArgs>
@@ -8925,11 +8935,12 @@ export namespace Prisma {
     sortOrder?: boolean
     menuType?: boolean
     overriddenFromId?: boolean
+    deletedAt?: boolean
     createdAt?: boolean
     updatedAt?: boolean
   }
 
-  export type MenuItemOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id" | "cafeId" | "menuId" | "categoryId" | "name" | "description" | "pricePaise" | "imageUrl" | "isAvailable" | "isVeg" | "isSubsidised" | "sortOrder" | "menuType" | "overriddenFromId" | "createdAt" | "updatedAt", ExtArgs["result"]["menuItem"]>
+  export type MenuItemOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id" | "cafeId" | "menuId" | "categoryId" | "name" | "description" | "pricePaise" | "imageUrl" | "isAvailable" | "isVeg" | "isSubsidised" | "sortOrder" | "menuType" | "overriddenFromId" | "deletedAt" | "createdAt" | "updatedAt", ExtArgs["result"]["menuItem"]>
   export type MenuItemInclude<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     cafe?: boolean | MenuItem$cafeArgs<ExtArgs>
     menu?: boolean | MenuItem$menuArgs<ExtArgs>
@@ -8977,6 +8988,7 @@ export namespace Prisma {
       sortOrder: number
       menuType: $Enums.MenuType | null
       overriddenFromId: string | null
+      deletedAt: Date | null
       createdAt: Date
       updatedAt: Date
     }, ExtArgs["result"]["menuItem"]>
@@ -9422,6 +9434,7 @@ export namespace Prisma {
     readonly sortOrder: FieldRef<"MenuItem", 'Int'>
     readonly menuType: FieldRef<"MenuItem", 'MenuType'>
     readonly overriddenFromId: FieldRef<"MenuItem", 'String'>
+    readonly deletedAt: FieldRef<"MenuItem", 'DateTime'>
     readonly createdAt: FieldRef<"MenuItem", 'DateTime'>
     readonly updatedAt: FieldRef<"MenuItem", 'DateTime'>
   }
@@ -19313,6 +19326,7 @@ export namespace Prisma {
     sortOrder: 'sortOrder',
     menuType: 'menuType',
     overriddenFromId: 'overriddenFromId',
+    deletedAt: 'deletedAt',
     createdAt: 'createdAt',
     updatedAt: 'updatedAt'
   };
@@ -20084,6 +20098,7 @@ export namespace Prisma {
     sortOrder?: IntFilter<"MenuItem"> | number
     menuType?: EnumMenuTypeNullableFilter<"MenuItem"> | $Enums.MenuType | null
     overriddenFromId?: StringNullableFilter<"MenuItem"> | string | null
+    deletedAt?: DateTimeNullableFilter<"MenuItem"> | Date | string | null
     createdAt?: DateTimeFilter<"MenuItem"> | Date | string
     updatedAt?: DateTimeFilter<"MenuItem"> | Date | string
     cafe?: XOR<CafeNullableScalarRelationFilter, CafeWhereInput> | null
@@ -20109,6 +20124,7 @@ export namespace Prisma {
     sortOrder?: SortOrder
     menuType?: SortOrderInput | SortOrder
     overriddenFromId?: SortOrderInput | SortOrder
+    deletedAt?: SortOrderInput | SortOrder
     createdAt?: SortOrder
     updatedAt?: SortOrder
     cafe?: CafeOrderByWithRelationInput
@@ -20137,6 +20153,7 @@ export namespace Prisma {
     sortOrder?: IntFilter<"MenuItem"> | number
     menuType?: EnumMenuTypeNullableFilter<"MenuItem"> | $Enums.MenuType | null
     overriddenFromId?: StringNullableFilter<"MenuItem"> | string | null
+    deletedAt?: DateTimeNullableFilter<"MenuItem"> | Date | string | null
     createdAt?: DateTimeFilter<"MenuItem"> | Date | string
     updatedAt?: DateTimeFilter<"MenuItem"> | Date | string
     cafe?: XOR<CafeNullableScalarRelationFilter, CafeWhereInput> | null
@@ -20162,6 +20179,7 @@ export namespace Prisma {
     sortOrder?: SortOrder
     menuType?: SortOrderInput | SortOrder
     overriddenFromId?: SortOrderInput | SortOrder
+    deletedAt?: SortOrderInput | SortOrder
     createdAt?: SortOrder
     updatedAt?: SortOrder
     _count?: MenuItemCountOrderByAggregateInput
@@ -20189,6 +20207,7 @@ export namespace Prisma {
     sortOrder?: IntWithAggregatesFilter<"MenuItem"> | number
     menuType?: EnumMenuTypeNullableWithAggregatesFilter<"MenuItem"> | $Enums.MenuType | null
     overriddenFromId?: StringNullableWithAggregatesFilter<"MenuItem"> | string | null
+    deletedAt?: DateTimeNullableWithAggregatesFilter<"MenuItem"> | Date | string | null
     createdAt?: DateTimeWithAggregatesFilter<"MenuItem"> | Date | string
     updatedAt?: DateTimeWithAggregatesFilter<"MenuItem"> | Date | string
   }
@@ -21307,6 +21326,7 @@ export namespace Prisma {
     isSubsidised?: boolean
     sortOrder?: number
     menuType?: $Enums.MenuType | null
+    deletedAt?: Date | string | null
     createdAt?: Date | string
     updatedAt?: Date | string
     cafe?: CafeCreateNestedOneWithoutMenuItemsInput
@@ -21332,6 +21352,7 @@ export namespace Prisma {
     sortOrder?: number
     menuType?: $Enums.MenuType | null
     overriddenFromId?: string | null
+    deletedAt?: Date | string | null
     createdAt?: Date | string
     updatedAt?: Date | string
     orderItems?: OrderItemUncheckedCreateNestedManyWithoutMenuItemInput
@@ -21349,6 +21370,7 @@ export namespace Prisma {
     isSubsidised?: BoolFieldUpdateOperationsInput | boolean
     sortOrder?: IntFieldUpdateOperationsInput | number
     menuType?: NullableEnumMenuTypeFieldUpdateOperationsInput | $Enums.MenuType | null
+    deletedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     cafe?: CafeUpdateOneWithoutMenuItemsNestedInput
@@ -21374,6 +21396,7 @@ export namespace Prisma {
     sortOrder?: IntFieldUpdateOperationsInput | number
     menuType?: NullableEnumMenuTypeFieldUpdateOperationsInput | $Enums.MenuType | null
     overriddenFromId?: NullableStringFieldUpdateOperationsInput | string | null
+    deletedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     orderItems?: OrderItemUncheckedUpdateManyWithoutMenuItemNestedInput
@@ -21395,6 +21418,7 @@ export namespace Prisma {
     sortOrder?: number
     menuType?: $Enums.MenuType | null
     overriddenFromId?: string | null
+    deletedAt?: Date | string | null
     createdAt?: Date | string
     updatedAt?: Date | string
   }
@@ -21410,6 +21434,7 @@ export namespace Prisma {
     isSubsidised?: BoolFieldUpdateOperationsInput | boolean
     sortOrder?: IntFieldUpdateOperationsInput | number
     menuType?: NullableEnumMenuTypeFieldUpdateOperationsInput | $Enums.MenuType | null
+    deletedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
   }
@@ -21429,6 +21454,7 @@ export namespace Prisma {
     sortOrder?: IntFieldUpdateOperationsInput | number
     menuType?: NullableEnumMenuTypeFieldUpdateOperationsInput | $Enums.MenuType | null
     overriddenFromId?: NullableStringFieldUpdateOperationsInput | string | null
+    deletedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
   }
@@ -22619,6 +22645,17 @@ export namespace Prisma {
     not?: NestedEnumMenuTypeNullableFilter<$PrismaModel> | $Enums.MenuType | null
   }
 
+  export type DateTimeNullableFilter<$PrismaModel = never> = {
+    equals?: Date | string | DateTimeFieldRefInput<$PrismaModel> | null
+    in?: Date[] | string[] | ListDateTimeFieldRefInput<$PrismaModel> | null
+    notIn?: Date[] | string[] | ListDateTimeFieldRefInput<$PrismaModel> | null
+    lt?: Date | string | DateTimeFieldRefInput<$PrismaModel>
+    lte?: Date | string | DateTimeFieldRefInput<$PrismaModel>
+    gt?: Date | string | DateTimeFieldRefInput<$PrismaModel>
+    gte?: Date | string | DateTimeFieldRefInput<$PrismaModel>
+    not?: NestedDateTimeNullableFilter<$PrismaModel> | Date | string | null
+  }
+
   export type MenuCategoryNullableScalarRelationFilter = {
     is?: MenuCategoryWhereInput | null
     isNot?: MenuCategoryWhereInput | null
@@ -22654,6 +22691,7 @@ export namespace Prisma {
     sortOrder?: SortOrder
     menuType?: SortOrder
     overriddenFromId?: SortOrder
+    deletedAt?: SortOrder
     createdAt?: SortOrder
     updatedAt?: SortOrder
   }
@@ -22678,6 +22716,7 @@ export namespace Prisma {
     sortOrder?: SortOrder
     menuType?: SortOrder
     overriddenFromId?: SortOrder
+    deletedAt?: SortOrder
     createdAt?: SortOrder
     updatedAt?: SortOrder
   }
@@ -22697,6 +22736,7 @@ export namespace Prisma {
     sortOrder?: SortOrder
     menuType?: SortOrder
     overriddenFromId?: SortOrder
+    deletedAt?: SortOrder
     createdAt?: SortOrder
     updatedAt?: SortOrder
   }
@@ -22714,6 +22754,20 @@ export namespace Prisma {
     _count?: NestedIntNullableFilter<$PrismaModel>
     _min?: NestedEnumMenuTypeNullableFilter<$PrismaModel>
     _max?: NestedEnumMenuTypeNullableFilter<$PrismaModel>
+  }
+
+  export type DateTimeNullableWithAggregatesFilter<$PrismaModel = never> = {
+    equals?: Date | string | DateTimeFieldRefInput<$PrismaModel> | null
+    in?: Date[] | string[] | ListDateTimeFieldRefInput<$PrismaModel> | null
+    notIn?: Date[] | string[] | ListDateTimeFieldRefInput<$PrismaModel> | null
+    lt?: Date | string | DateTimeFieldRefInput<$PrismaModel>
+    lte?: Date | string | DateTimeFieldRefInput<$PrismaModel>
+    gt?: Date | string | DateTimeFieldRefInput<$PrismaModel>
+    gte?: Date | string | DateTimeFieldRefInput<$PrismaModel>
+    not?: NestedDateTimeNullableWithAggregatesFilter<$PrismaModel> | Date | string | null
+    _count?: NestedIntNullableFilter<$PrismaModel>
+    _min?: NestedDateTimeNullableFilter<$PrismaModel>
+    _max?: NestedDateTimeNullableFilter<$PrismaModel>
   }
 
   export type EnumOrderStatusFilter<$PrismaModel = never> = {
@@ -22952,17 +23006,6 @@ export namespace Prisma {
     not?: InputJsonValue | JsonFieldRefInput<$PrismaModel> | JsonNullValueFilter
   }
 
-  export type DateTimeNullableFilter<$PrismaModel = never> = {
-    equals?: Date | string | DateTimeFieldRefInput<$PrismaModel> | null
-    in?: Date[] | string[] | ListDateTimeFieldRefInput<$PrismaModel> | null
-    notIn?: Date[] | string[] | ListDateTimeFieldRefInput<$PrismaModel> | null
-    lt?: Date | string | DateTimeFieldRefInput<$PrismaModel>
-    lte?: Date | string | DateTimeFieldRefInput<$PrismaModel>
-    gt?: Date | string | DateTimeFieldRefInput<$PrismaModel>
-    gte?: Date | string | DateTimeFieldRefInput<$PrismaModel>
-    not?: NestedDateTimeNullableFilter<$PrismaModel> | Date | string | null
-  }
-
   export type PaymentCountOrderByAggregateInput = {
     id?: SortOrder
     orderId?: SortOrder
@@ -23057,20 +23100,6 @@ export namespace Prisma {
     _count?: NestedIntNullableFilter<$PrismaModel>
     _min?: NestedJsonNullableFilter<$PrismaModel>
     _max?: NestedJsonNullableFilter<$PrismaModel>
-  }
-
-  export type DateTimeNullableWithAggregatesFilter<$PrismaModel = never> = {
-    equals?: Date | string | DateTimeFieldRefInput<$PrismaModel> | null
-    in?: Date[] | string[] | ListDateTimeFieldRefInput<$PrismaModel> | null
-    notIn?: Date[] | string[] | ListDateTimeFieldRefInput<$PrismaModel> | null
-    lt?: Date | string | DateTimeFieldRefInput<$PrismaModel>
-    lte?: Date | string | DateTimeFieldRefInput<$PrismaModel>
-    gt?: Date | string | DateTimeFieldRefInput<$PrismaModel>
-    gte?: Date | string | DateTimeFieldRefInput<$PrismaModel>
-    not?: NestedDateTimeNullableWithAggregatesFilter<$PrismaModel> | Date | string | null
-    _count?: NestedIntNullableFilter<$PrismaModel>
-    _min?: NestedDateTimeNullableFilter<$PrismaModel>
-    _max?: NestedDateTimeNullableFilter<$PrismaModel>
   }
 
   export type TableCountOrderByAggregateInput = {
@@ -23972,6 +24001,10 @@ export namespace Prisma {
     set?: $Enums.MenuType | null
   }
 
+  export type NullableDateTimeFieldUpdateOperationsInput = {
+    set?: Date | string | null
+  }
+
   export type CafeUpdateOneWithoutMenuItemsNestedInput = {
     create?: XOR<CafeCreateWithoutMenuItemsInput, CafeUncheckedCreateWithoutMenuItemsInput>
     connectOrCreate?: CafeCreateOrConnectWithoutMenuItemsInput
@@ -24244,10 +24277,6 @@ export namespace Prisma {
 
   export type EnumPaymentStatusFieldUpdateOperationsInput = {
     set?: $Enums.PaymentStatus
-  }
-
-  export type NullableDateTimeFieldUpdateOperationsInput = {
-    set?: Date | string | null
   }
 
   export type OrderUpdateOneRequiredWithoutPaymentsNestedInput = {
@@ -24565,6 +24594,17 @@ export namespace Prisma {
     not?: NestedEnumMenuTypeNullableFilter<$PrismaModel> | $Enums.MenuType | null
   }
 
+  export type NestedDateTimeNullableFilter<$PrismaModel = never> = {
+    equals?: Date | string | DateTimeFieldRefInput<$PrismaModel> | null
+    in?: Date[] | string[] | ListDateTimeFieldRefInput<$PrismaModel> | null
+    notIn?: Date[] | string[] | ListDateTimeFieldRefInput<$PrismaModel> | null
+    lt?: Date | string | DateTimeFieldRefInput<$PrismaModel>
+    lte?: Date | string | DateTimeFieldRefInput<$PrismaModel>
+    gt?: Date | string | DateTimeFieldRefInput<$PrismaModel>
+    gte?: Date | string | DateTimeFieldRefInput<$PrismaModel>
+    not?: NestedDateTimeNullableFilter<$PrismaModel> | Date | string | null
+  }
+
   export type NestedEnumMenuTypeNullableWithAggregatesFilter<$PrismaModel = never> = {
     equals?: $Enums.MenuType | EnumMenuTypeFieldRefInput<$PrismaModel> | null
     in?: $Enums.MenuType[] | ListEnumMenuTypeFieldRefInput<$PrismaModel> | null
@@ -24573,6 +24613,20 @@ export namespace Prisma {
     _count?: NestedIntNullableFilter<$PrismaModel>
     _min?: NestedEnumMenuTypeNullableFilter<$PrismaModel>
     _max?: NestedEnumMenuTypeNullableFilter<$PrismaModel>
+  }
+
+  export type NestedDateTimeNullableWithAggregatesFilter<$PrismaModel = never> = {
+    equals?: Date | string | DateTimeFieldRefInput<$PrismaModel> | null
+    in?: Date[] | string[] | ListDateTimeFieldRefInput<$PrismaModel> | null
+    notIn?: Date[] | string[] | ListDateTimeFieldRefInput<$PrismaModel> | null
+    lt?: Date | string | DateTimeFieldRefInput<$PrismaModel>
+    lte?: Date | string | DateTimeFieldRefInput<$PrismaModel>
+    gt?: Date | string | DateTimeFieldRefInput<$PrismaModel>
+    gte?: Date | string | DateTimeFieldRefInput<$PrismaModel>
+    not?: NestedDateTimeNullableWithAggregatesFilter<$PrismaModel> | Date | string | null
+    _count?: NestedIntNullableFilter<$PrismaModel>
+    _min?: NestedDateTimeNullableFilter<$PrismaModel>
+    _max?: NestedDateTimeNullableFilter<$PrismaModel>
   }
 
   export type NestedEnumOrderStatusFilter<$PrismaModel = never> = {
@@ -24626,17 +24680,6 @@ export namespace Prisma {
     not?: NestedEnumPaymentStatusFilter<$PrismaModel> | $Enums.PaymentStatus
   }
 
-  export type NestedDateTimeNullableFilter<$PrismaModel = never> = {
-    equals?: Date | string | DateTimeFieldRefInput<$PrismaModel> | null
-    in?: Date[] | string[] | ListDateTimeFieldRefInput<$PrismaModel> | null
-    notIn?: Date[] | string[] | ListDateTimeFieldRefInput<$PrismaModel> | null
-    lt?: Date | string | DateTimeFieldRefInput<$PrismaModel>
-    lte?: Date | string | DateTimeFieldRefInput<$PrismaModel>
-    gt?: Date | string | DateTimeFieldRefInput<$PrismaModel>
-    gte?: Date | string | DateTimeFieldRefInput<$PrismaModel>
-    not?: NestedDateTimeNullableFilter<$PrismaModel> | Date | string | null
-  }
-
   export type NestedEnumPaymentStatusWithAggregatesFilter<$PrismaModel = never> = {
     equals?: $Enums.PaymentStatus | EnumPaymentStatusFieldRefInput<$PrismaModel>
     in?: $Enums.PaymentStatus[] | ListEnumPaymentStatusFieldRefInput<$PrismaModel>
@@ -24668,20 +24711,6 @@ export namespace Prisma {
     gt?: InputJsonValue | JsonFieldRefInput<$PrismaModel>
     gte?: InputJsonValue | JsonFieldRefInput<$PrismaModel>
     not?: InputJsonValue | JsonFieldRefInput<$PrismaModel> | JsonNullValueFilter
-  }
-
-  export type NestedDateTimeNullableWithAggregatesFilter<$PrismaModel = never> = {
-    equals?: Date | string | DateTimeFieldRefInput<$PrismaModel> | null
-    in?: Date[] | string[] | ListDateTimeFieldRefInput<$PrismaModel> | null
-    notIn?: Date[] | string[] | ListDateTimeFieldRefInput<$PrismaModel> | null
-    lt?: Date | string | DateTimeFieldRefInput<$PrismaModel>
-    lte?: Date | string | DateTimeFieldRefInput<$PrismaModel>
-    gt?: Date | string | DateTimeFieldRefInput<$PrismaModel>
-    gte?: Date | string | DateTimeFieldRefInput<$PrismaModel>
-    not?: NestedDateTimeNullableWithAggregatesFilter<$PrismaModel> | Date | string | null
-    _count?: NestedIntNullableFilter<$PrismaModel>
-    _min?: NestedDateTimeNullableFilter<$PrismaModel>
-    _max?: NestedDateTimeNullableFilter<$PrismaModel>
   }
 
   export type UserCreateWithoutCafeInput = {
@@ -24759,6 +24788,7 @@ export namespace Prisma {
     isSubsidised?: boolean
     sortOrder?: number
     menuType?: $Enums.MenuType | null
+    deletedAt?: Date | string | null
     createdAt?: Date | string
     updatedAt?: Date | string
     menu?: MenuCreateNestedOneWithoutItemsInput
@@ -24782,6 +24812,7 @@ export namespace Prisma {
     sortOrder?: number
     menuType?: $Enums.MenuType | null
     overriddenFromId?: string | null
+    deletedAt?: Date | string | null
     createdAt?: Date | string
     updatedAt?: Date | string
     orderItems?: OrderItemUncheckedCreateNestedManyWithoutMenuItemInput
@@ -25102,6 +25133,7 @@ export namespace Prisma {
     sortOrder?: IntFilter<"MenuItem"> | number
     menuType?: EnumMenuTypeNullableFilter<"MenuItem"> | $Enums.MenuType | null
     overriddenFromId?: StringNullableFilter<"MenuItem"> | string | null
+    deletedAt?: DateTimeNullableFilter<"MenuItem"> | Date | string | null
     createdAt?: DateTimeFilter<"MenuItem"> | Date | string
     updatedAt?: DateTimeFilter<"MenuItem"> | Date | string
   }
@@ -25419,6 +25451,7 @@ export namespace Prisma {
     isSubsidised?: boolean
     sortOrder?: number
     menuType?: $Enums.MenuType | null
+    deletedAt?: Date | string | null
     createdAt?: Date | string
     updatedAt?: Date | string
     cafe?: CafeCreateNestedOneWithoutMenuItemsInput
@@ -25442,6 +25475,7 @@ export namespace Prisma {
     sortOrder?: number
     menuType?: $Enums.MenuType | null
     overriddenFromId?: string | null
+    deletedAt?: Date | string | null
     createdAt?: Date | string
     updatedAt?: Date | string
     orderItems?: OrderItemUncheckedCreateNestedManyWithoutMenuItemInput
@@ -26008,6 +26042,7 @@ export namespace Prisma {
     isSubsidised?: boolean
     sortOrder?: number
     menuType?: $Enums.MenuType | null
+    deletedAt?: Date | string | null
     createdAt?: Date | string
     updatedAt?: Date | string
     cafe?: CafeCreateNestedOneWithoutMenuItemsInput
@@ -26031,6 +26066,7 @@ export namespace Prisma {
     sortOrder?: number
     menuType?: $Enums.MenuType | null
     overriddenFromId?: string | null
+    deletedAt?: Date | string | null
     createdAt?: Date | string
     updatedAt?: Date | string
     orderItems?: OrderItemUncheckedCreateNestedManyWithoutMenuItemInput
@@ -26329,6 +26365,7 @@ export namespace Prisma {
     isSubsidised?: boolean
     sortOrder?: number
     menuType?: $Enums.MenuType | null
+    deletedAt?: Date | string | null
     createdAt?: Date | string
     updatedAt?: Date | string
     cafe?: CafeCreateNestedOneWithoutMenuItemsInput
@@ -26353,6 +26390,7 @@ export namespace Prisma {
     sortOrder?: number
     menuType?: $Enums.MenuType | null
     overriddenFromId?: string | null
+    deletedAt?: Date | string | null
     createdAt?: Date | string
     updatedAt?: Date | string
     orderItems?: OrderItemUncheckedCreateNestedManyWithoutMenuItemInput
@@ -26374,6 +26412,7 @@ export namespace Prisma {
     isSubsidised?: boolean
     sortOrder?: number
     menuType?: $Enums.MenuType | null
+    deletedAt?: Date | string | null
     createdAt?: Date | string
     updatedAt?: Date | string
     cafe?: CafeCreateNestedOneWithoutMenuItemsInput
@@ -26397,6 +26436,7 @@ export namespace Prisma {
     isSubsidised?: boolean
     sortOrder?: number
     menuType?: $Enums.MenuType | null
+    deletedAt?: Date | string | null
     createdAt?: Date | string
     updatedAt?: Date | string
     orderItems?: OrderItemUncheckedCreateNestedManyWithoutMenuItemInput
@@ -26602,6 +26642,7 @@ export namespace Prisma {
     isSubsidised?: BoolFieldUpdateOperationsInput | boolean
     sortOrder?: IntFieldUpdateOperationsInput | number
     menuType?: NullableEnumMenuTypeFieldUpdateOperationsInput | $Enums.MenuType | null
+    deletedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     cafe?: CafeUpdateOneWithoutMenuItemsNestedInput
@@ -26626,6 +26667,7 @@ export namespace Prisma {
     sortOrder?: IntFieldUpdateOperationsInput | number
     menuType?: NullableEnumMenuTypeFieldUpdateOperationsInput | $Enums.MenuType | null
     overriddenFromId?: NullableStringFieldUpdateOperationsInput | string | null
+    deletedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     orderItems?: OrderItemUncheckedUpdateManyWithoutMenuItemNestedInput
@@ -27014,6 +27056,7 @@ export namespace Prisma {
     isSubsidised?: boolean
     sortOrder?: number
     menuType?: $Enums.MenuType | null
+    deletedAt?: Date | string | null
     createdAt?: Date | string
     updatedAt?: Date | string
     cafe?: CafeCreateNestedOneWithoutMenuItemsInput
@@ -27038,6 +27081,7 @@ export namespace Prisma {
     sortOrder?: number
     menuType?: $Enums.MenuType | null
     overriddenFromId?: string | null
+    deletedAt?: Date | string | null
     createdAt?: Date | string
     updatedAt?: Date | string
     overrides?: MenuItemUncheckedCreateNestedManyWithoutOverriddenFromInput
@@ -27117,6 +27161,7 @@ export namespace Prisma {
     isSubsidised?: BoolFieldUpdateOperationsInput | boolean
     sortOrder?: IntFieldUpdateOperationsInput | number
     menuType?: NullableEnumMenuTypeFieldUpdateOperationsInput | $Enums.MenuType | null
+    deletedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     cafe?: CafeUpdateOneWithoutMenuItemsNestedInput
@@ -27141,6 +27186,7 @@ export namespace Prisma {
     sortOrder?: IntFieldUpdateOperationsInput | number
     menuType?: NullableEnumMenuTypeFieldUpdateOperationsInput | $Enums.MenuType | null
     overriddenFromId?: NullableStringFieldUpdateOperationsInput | string | null
+    deletedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     overrides?: MenuItemUncheckedUpdateManyWithoutOverriddenFromNestedInput
@@ -27954,6 +28000,7 @@ export namespace Prisma {
     sortOrder?: number
     menuType?: $Enums.MenuType | null
     overriddenFromId?: string | null
+    deletedAt?: Date | string | null
     createdAt?: Date | string
     updatedAt?: Date | string
   }
@@ -28098,6 +28145,7 @@ export namespace Prisma {
     isSubsidised?: BoolFieldUpdateOperationsInput | boolean
     sortOrder?: IntFieldUpdateOperationsInput | number
     menuType?: NullableEnumMenuTypeFieldUpdateOperationsInput | $Enums.MenuType | null
+    deletedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     menu?: MenuUpdateOneWithoutItemsNestedInput
@@ -28121,6 +28169,7 @@ export namespace Prisma {
     sortOrder?: IntFieldUpdateOperationsInput | number
     menuType?: NullableEnumMenuTypeFieldUpdateOperationsInput | $Enums.MenuType | null
     overriddenFromId?: NullableStringFieldUpdateOperationsInput | string | null
+    deletedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     orderItems?: OrderItemUncheckedUpdateManyWithoutMenuItemNestedInput
@@ -28141,6 +28190,7 @@ export namespace Prisma {
     sortOrder?: IntFieldUpdateOperationsInput | number
     menuType?: NullableEnumMenuTypeFieldUpdateOperationsInput | $Enums.MenuType | null
     overriddenFromId?: NullableStringFieldUpdateOperationsInput | string | null
+    deletedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
   }
@@ -28373,6 +28423,7 @@ export namespace Prisma {
     sortOrder?: number
     menuType?: $Enums.MenuType | null
     overriddenFromId?: string | null
+    deletedAt?: Date | string | null
     createdAt?: Date | string
     updatedAt?: Date | string
   }
@@ -28417,6 +28468,7 @@ export namespace Prisma {
     isSubsidised?: BoolFieldUpdateOperationsInput | boolean
     sortOrder?: IntFieldUpdateOperationsInput | number
     menuType?: NullableEnumMenuTypeFieldUpdateOperationsInput | $Enums.MenuType | null
+    deletedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     cafe?: CafeUpdateOneWithoutMenuItemsNestedInput
@@ -28440,6 +28492,7 @@ export namespace Prisma {
     sortOrder?: IntFieldUpdateOperationsInput | number
     menuType?: NullableEnumMenuTypeFieldUpdateOperationsInput | $Enums.MenuType | null
     overriddenFromId?: NullableStringFieldUpdateOperationsInput | string | null
+    deletedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     orderItems?: OrderItemUncheckedUpdateManyWithoutMenuItemNestedInput
@@ -28460,6 +28513,7 @@ export namespace Prisma {
     sortOrder?: IntFieldUpdateOperationsInput | number
     menuType?: NullableEnumMenuTypeFieldUpdateOperationsInput | $Enums.MenuType | null
     overriddenFromId?: NullableStringFieldUpdateOperationsInput | string | null
+    deletedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
   }
@@ -28518,6 +28572,7 @@ export namespace Prisma {
     sortOrder?: number
     menuType?: $Enums.MenuType | null
     overriddenFromId?: string | null
+    deletedAt?: Date | string | null
     createdAt?: Date | string
     updatedAt?: Date | string
   }
@@ -28533,6 +28588,7 @@ export namespace Prisma {
     isSubsidised?: BoolFieldUpdateOperationsInput | boolean
     sortOrder?: IntFieldUpdateOperationsInput | number
     menuType?: NullableEnumMenuTypeFieldUpdateOperationsInput | $Enums.MenuType | null
+    deletedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     cafe?: CafeUpdateOneWithoutMenuItemsNestedInput
@@ -28556,6 +28612,7 @@ export namespace Prisma {
     sortOrder?: IntFieldUpdateOperationsInput | number
     menuType?: NullableEnumMenuTypeFieldUpdateOperationsInput | $Enums.MenuType | null
     overriddenFromId?: NullableStringFieldUpdateOperationsInput | string | null
+    deletedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     orderItems?: OrderItemUncheckedUpdateManyWithoutMenuItemNestedInput
@@ -28576,6 +28633,7 @@ export namespace Prisma {
     sortOrder?: IntFieldUpdateOperationsInput | number
     menuType?: NullableEnumMenuTypeFieldUpdateOperationsInput | $Enums.MenuType | null
     overriddenFromId?: NullableStringFieldUpdateOperationsInput | string | null
+    deletedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
   }
@@ -28604,6 +28662,7 @@ export namespace Prisma {
     isSubsidised?: boolean
     sortOrder?: number
     menuType?: $Enums.MenuType | null
+    deletedAt?: Date | string | null
     createdAt?: Date | string
     updatedAt?: Date | string
   }
@@ -28649,6 +28708,7 @@ export namespace Prisma {
     isSubsidised?: BoolFieldUpdateOperationsInput | boolean
     sortOrder?: IntFieldUpdateOperationsInput | number
     menuType?: NullableEnumMenuTypeFieldUpdateOperationsInput | $Enums.MenuType | null
+    deletedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     cafe?: CafeUpdateOneWithoutMenuItemsNestedInput
@@ -28672,6 +28732,7 @@ export namespace Prisma {
     isSubsidised?: BoolFieldUpdateOperationsInput | boolean
     sortOrder?: IntFieldUpdateOperationsInput | number
     menuType?: NullableEnumMenuTypeFieldUpdateOperationsInput | $Enums.MenuType | null
+    deletedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     orderItems?: OrderItemUncheckedUpdateManyWithoutMenuItemNestedInput
@@ -28692,6 +28753,7 @@ export namespace Prisma {
     isSubsidised?: BoolFieldUpdateOperationsInput | boolean
     sortOrder?: IntFieldUpdateOperationsInput | number
     menuType?: NullableEnumMenuTypeFieldUpdateOperationsInput | $Enums.MenuType | null
+    deletedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
   }
