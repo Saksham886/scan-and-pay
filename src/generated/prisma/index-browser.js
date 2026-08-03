@@ -157,6 +157,12 @@ exports.Prisma.FeedbackScalarFieldEnum = {
   cafeId: 'cafeId',
   rating: 'rating',
   comment: 'comment',
+  customerName: 'customerName',
+  mealSession: 'mealSession',
+  foodQuality: 'foodQuality',
+  cleanliness: 'cleanliness',
+  menuVariety: 'menuVariety',
+  overallExperience: 'overallExperience',
   createdAt: 'createdAt'
 };
 
@@ -331,6 +337,37 @@ exports.MenuType = exports.$Enums.MenuType = {
   LUNCH: 'LUNCH',
   EVENING_SNACKS: 'EVENING_SNACKS',
   DINNER: 'DINNER'
+};
+
+exports.FeedbackMealSession = exports.$Enums.FeedbackMealSession = {
+  BREAKFAST: 'BREAKFAST',
+  LUNCH: 'LUNCH',
+  SNACKS: 'SNACKS'
+};
+
+exports.FeedbackFoodQuality = exports.$Enums.FeedbackFoodQuality = {
+  EXCELLENT: 'EXCELLENT',
+  GOOD: 'GOOD',
+  AVERAGE: 'AVERAGE',
+  NEEDS_IMPROVEMENT: 'NEEDS_IMPROVEMENT'
+};
+
+exports.FeedbackCleanliness = exports.$Enums.FeedbackCleanliness = {
+  VERY_CLEAN: 'VERY_CLEAN',
+  MOSTLY_CLEAN: 'MOSTLY_CLEAN',
+  OFTEN_DIRTY: 'OFTEN_DIRTY'
+};
+
+exports.FeedbackMenuVariety = exports.$Enums.FeedbackMenuVariety = {
+  GREAT: 'GREAT',
+  DECENT: 'DECENT',
+  NOT_ENOUGH_VARIETY: 'NOT_ENOUGH_VARIETY'
+};
+
+exports.FeedbackOverallExperience = exports.$Enums.FeedbackOverallExperience = {
+  EXCELLENT: 'EXCELLENT',
+  GOOD: 'GOOD',
+  POOR: 'POOR'
 };
 
 exports.UserRole = exports.$Enums.UserRole = {

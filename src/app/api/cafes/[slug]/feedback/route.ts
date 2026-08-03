@@ -2,6 +2,7 @@ import { NextResponse } from "next/server";
 import { feedbackService } from "@/backend/services/feedback.service";
 import { rateLimitResponse, getClientIp } from "@/backend/lib/rate-limit";
 import { corsPreflightResponse } from "@/backend/lib/cors";
+import type { SubmitFeedbackSurveyRequest } from "@/shared/types";
 
 const SLUG_RE = /^[a-z0-9-]{1,80}$/;
 
@@ -11,8 +12,10 @@ export async function OPTIONS() {
 
 /**
  * POST /api/cafes/[slug]/feedback
- * Standalone star-rating feedback from the customer home screen, decoupled
- * from any specific order.
+ * Standalone feedback from the customer home screen, decoupled from any
+ * specific order. Accepts either the kiosk cafeteria survey (name + the five
+ * multiple-choice answers) or the older `{ rating, comment }` star rating the
+ * web screen still sends.
  */
 export async function POST(
   request: Request,
@@ -40,7 +43,18 @@ export async function POST(
       return NextResponse.json({ success: false, error: "Invalid body" }, { status: 400 });
     }
 
-    const { rating, comment } = body as Record<string, unknown>;
+    const { rating, comment, overallExperience } = body as Record<string, unknown>;
+
+    // The survey carries no rating, so `overallExperience` is what tells the
+    // two payload shapes apart; the service validates every answer.
+    if (overallExperience !== undefined) {
+      const survey = await feedbackService.createSurveyFeedback(
+        slug,
+        body as unknown as SubmitFeedbackSurveyRequest
+      );
+      return NextResponse.json({ success: true, data: survey }, { status: 201 });
+    }
+
     if (typeof rating !== "number") {
       return NextResponse.json({ success: false, error: "rating is required" }, { status: 400 });
     }

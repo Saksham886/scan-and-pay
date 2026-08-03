@@ -8,10 +8,77 @@ import '../../services/feedback_service.dart';
 import '../../widgets/neo_pressable.dart';
 import '../../widgets/primary_button.dart';
 
+/// One answer option: what the customer reads, and the enum name the API
+/// stores.
+class _Option {
+  final String value;
+  final String label;
+
+  const _Option(this.value, this.label);
+}
+
+/// One survey question. [key] matches the field name in the POST body so the
+/// answers map straight onto the request.
+class _Question {
+  final String key;
+  final String prompt;
+  final List<_Option> options;
+
+  const _Question({required this.key, required this.prompt, required this.options});
+}
+
+const _questions = <_Question>[
+  _Question(
+    key: 'mealSession',
+    prompt: 'Meal Session',
+    options: [
+      _Option('BREAKFAST', 'Breakfast'),
+      _Option('LUNCH', 'Lunch'),
+      _Option('SNACKS', 'Snacks'),
+    ],
+  ),
+  _Question(
+    key: 'foodQuality',
+    prompt: 'How would you rate the taste and quality of the food?',
+    options: [
+      _Option('EXCELLENT', 'Excellent'),
+      _Option('GOOD', 'Good'),
+      _Option('AVERAGE', 'Average'),
+      _Option('NEEDS_IMPROVEMENT', 'Needs Improvement'),
+    ],
+  ),
+  _Question(
+    key: 'cleanliness',
+    prompt: 'How clean and hygienic is the cafeteria seating and serving area?',
+    options: [
+      _Option('VERY_CLEAN', 'Very Clean'),
+      _Option('MOSTLY_CLEAN', 'Mostly Clean'),
+      _Option('OFTEN_DIRTY', 'Often Dirty'),
+    ],
+  ),
+  _Question(
+    key: 'menuVariety',
+    prompt: 'How do you feel about the menu variety and options?',
+    options: [
+      _Option('GREAT', 'Great'),
+      _Option('DECENT', 'Decent'),
+      _Option('NOT_ENOUGH_VARIETY', 'Not Enough Variety'),
+    ],
+  ),
+  _Question(
+    key: 'overallExperience',
+    prompt: 'How would you rate your overall experience at the cafeteria?',
+    options: [
+      _Option('EXCELLENT', 'Excellent'),
+      _Option('GOOD', 'Good'),
+      _Option('POOR', 'Poor'),
+    ],
+  ),
+];
+
 /// General "how was your experience" feedback about the cafe, reached from
-/// the welcome screen - not tied to any order. Mirrors the web app's
-/// `/[cafeSlug]/feedback` page. Distinct from [FeedbackScreen], which rates
-/// a specific order right after checkout.
+/// the welcome screen - not tied to any order. Distinct from [FeedbackScreen],
+/// which rates a specific order right after checkout.
 class CafeFeedbackScreen extends StatefulWidget {
   final String cafeSlug;
   final String cafeName;
@@ -28,36 +95,52 @@ class CafeFeedbackScreen extends StatefulWidget {
 
 class _CafeFeedbackScreenState extends State<CafeFeedbackScreen> {
   final _feedbackService = FeedbackService();
-  final _commentController = TextEditingController();
+  final _nameController = TextEditingController();
   Timer? _resetTimer;
   Timer? _countdownTimer;
 
-  int _rating = 0;
+  final Map<String, String> _answers = {};
   bool _submitting = false;
   bool _submitted = false;
   String? _error;
   int _countdown = kFeedbackAutoReset.inSeconds;
 
   @override
+  void initState() {
+    super.initState();
+    // The submit button unlocks only once the name and every question are
+    // filled in, so keystrokes have to drive a rebuild.
+    _nameController.addListener(() => setState(() {}));
+  }
+
+  @override
   void dispose() {
-    _commentController.dispose();
+    _nameController.dispose();
     _resetTimer?.cancel();
     _countdownTimer?.cancel();
     super.dispose();
   }
 
+  bool get _complete =>
+      _nameController.text.trim().isNotEmpty &&
+      _questions.every((q) => _answers.containsKey(q.key));
+
   Future<void> _submit() async {
-    if (_rating == 0 || _submitting) return;
+    if (!_complete || _submitting) return;
     setState(() {
       _submitting = true;
       _error = null;
     });
 
     try {
-      final result = await _feedbackService.submitCafeFeedback(
+      final result = await _feedbackService.submitCafeSurvey(
         cafeSlug: widget.cafeSlug,
-        rating: _rating,
-        comment: _commentController.text.trim(),
+        customerName: _nameController.text.trim(),
+        mealSession: _answers['mealSession']!,
+        foodQuality: _answers['foodQuality']!,
+        cleanliness: _answers['cleanliness']!,
+        menuVariety: _answers['menuVariety']!,
+        overallExperience: _answers['overallExperience']!,
       );
       if (!mounted) return;
       if (result.success) {
@@ -112,11 +195,12 @@ class _CafeFeedbackScreenState extends State<CafeFeedbackScreen> {
               child: _submitted
                   ? _ThankYou(countdown: _countdown, onBack: _backToWelcome)
                   : _FeedbackForm(
-                      rating: _rating,
-                      onSelectRating: (v) => setState(() => _rating = v),
-                      commentController: _commentController,
+                      nameController: _nameController,
+                      answers: _answers,
+                      onAnswer: (key, value) => setState(() => _answers[key] = value),
                       error: _error,
                       submitting: _submitting,
+                      complete: _complete,
                       onSubmit: _submit,
                     ),
             ),
@@ -170,19 +254,21 @@ class _Header extends StatelessWidget {
 }
 
 class _FeedbackForm extends StatelessWidget {
-  final int rating;
-  final ValueChanged<int> onSelectRating;
-  final TextEditingController commentController;
+  final TextEditingController nameController;
+  final Map<String, String> answers;
+  final void Function(String key, String value) onAnswer;
   final String? error;
   final bool submitting;
+  final bool complete;
   final VoidCallback onSubmit;
 
   const _FeedbackForm({
-    required this.rating,
-    required this.onSelectRating,
-    required this.commentController,
+    required this.nameController,
+    required this.answers,
+    required this.onAnswer,
     required this.error,
     required this.submitting,
+    required this.complete,
     required this.onSubmit,
   });
 
@@ -190,70 +276,161 @@ class _FeedbackForm extends StatelessWidget {
   Widget build(BuildContext context) {
     return SingleChildScrollView(
       padding: const EdgeInsets.all(24),
-      child: ConstrainedBox(
-        constraints: const BoxConstraints(maxWidth: 440),
-        child: Column(
-          mainAxisSize: MainAxisSize.min,
-          children: [
-            const SizedBox(height: 16),
-            Text(
-              'HOW WAS YOUR EXPERIENCE?',
-              textAlign: TextAlign.center,
-              style: CustomerText.display(fontSize: 20),
-            ),
-            const SizedBox(height: 28),
-            Row(
-              mainAxisAlignment: MainAxisAlignment.center,
-              children: [
-                for (var i = 1; i <= 5; i++)
+      child: Center(
+        child: ConstrainedBox(
+          constraints: const BoxConstraints(maxWidth: 520),
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.stretch,
+            mainAxisSize: MainAxisSize.min,
+            children: [
+              const SizedBox(height: 8),
+              Text(
+                'HOW WAS YOUR EXPERIENCE?',
+                textAlign: TextAlign.center,
+                style: CustomerText.display(fontSize: 20),
+              ),
+              const SizedBox(height: 8),
+              Text(
+                'A few quick questions - it takes under a minute.',
+                textAlign: TextAlign.center,
+                style: CustomerText.mono(fontSize: 12, color: CustomerColors.muted),
+              ),
+              const SizedBox(height: 28),
+              const _Prompt(text: 'Name', required: true),
+              const SizedBox(height: 10),
+              Container(
+                decoration: BoxDecoration(
+                  color: CustomerColors.surface,
+                  border: Border.all(color: CustomerColors.border, width: 2),
+                ),
+                child: TextField(
+                  controller: nameController,
+                  maxLength: 80,
+                  textCapitalization: TextCapitalization.words,
+                  style: CustomerText.mono(fontSize: 15, color: CustomerColors.foreground),
+                  decoration: InputDecoration(
+                    filled: true,
+                    fillColor: Colors.transparent,
+                    hintText: 'Your name',
+                    hintStyle: CustomerText.mono(fontSize: 15, color: CustomerColors.border),
+                    counterText: '',
+                    contentPadding: const EdgeInsets.all(14),
+                    border: InputBorder.none,
+                  ),
+                ),
+              ),
+              for (final question in _questions) ...[
+                const SizedBox(height: 26),
+                _Prompt(text: question.prompt, required: true),
+                const SizedBox(height: 10),
+                for (final option in question.options)
                   Padding(
-                    padding: const EdgeInsets.symmetric(horizontal: 6),
-                    child: NeoPressable(
-                      onTap: () => onSelectRating(i),
-                      child: Icon(
-                        i <= rating ? Icons.star : Icons.star_border,
-                        size: 44,
-                        color: i <= rating ? CustomerColors.accent : CustomerColors.border,
-                      ),
+                    padding: const EdgeInsets.only(bottom: 10),
+                    child: _OptionTile(
+                      label: option.label,
+                      selected: answers[question.key] == option.value,
+                      onTap: () => onAnswer(question.key, option.value),
                     ),
                   ),
               ],
-            ),
-            const SizedBox(height: 28),
-            Container(
-              decoration: BoxDecoration(
-                color: CustomerColors.surface,
-                border: Border.all(color: CustomerColors.border, width: 2),
+              if (error != null) ...[
+                const SizedBox(height: 14),
+                Text(
+                  error!,
+                  textAlign: TextAlign.center,
+                  style: CustomerText.mono(fontSize: 13, color: CustomerColors.danger),
+                ),
+              ],
+              const SizedBox(height: 20),
+              PrimaryButton(
+                label: submitting ? 'Submitting...' : 'Submit Feedback',
+                loading: submitting,
+                onPressed: complete ? onSubmit : null,
               ),
-              child: TextField(
-                controller: commentController,
-                maxLines: 4,
-                maxLength: 1000,
-                style: CustomerText.mono(fontSize: 14, color: CustomerColors.foreground),
-                decoration: InputDecoration(
-                  filled: true,
-                  fillColor: Colors.transparent,
-                  hintText: 'Tell us more (optional)...',
-                  hintStyle: CustomerText.mono(fontSize: 14, color: CustomerColors.border),
-                  counterStyle: CustomerText.mono(fontSize: 11, color: CustomerColors.border),
-                  contentPadding: const EdgeInsets.all(14),
-                  border: InputBorder.none,
+              if (!complete) ...[
+                const SizedBox(height: 10),
+                Text(
+                  'Please answer every question to submit.',
+                  textAlign: TextAlign.center,
+                  style: CustomerText.mono(fontSize: 12, color: CustomerColors.muted),
+                ),
+              ],
+              const SizedBox(height: 16),
+            ],
+          ),
+        ),
+      ),
+    );
+  }
+}
+
+class _Prompt extends StatelessWidget {
+  final String text;
+  final bool required;
+
+  const _Prompt({required this.text, this.required = false});
+
+  @override
+  Widget build(BuildContext context) {
+    return RichText(
+      text: TextSpan(
+        text: text,
+        style: CustomerText.mono(
+          fontSize: 14,
+          fontWeight: FontWeight.w700,
+          color: CustomerColors.foreground,
+        ),
+        children: required
+            ? [
+                TextSpan(
+                  text: ' *',
+                  style: CustomerText.mono(fontSize: 14, color: CustomerColors.danger),
+                ),
+              ]
+            : null,
+      ),
+    );
+  }
+}
+
+class _OptionTile extends StatelessWidget {
+  final String label;
+  final bool selected;
+  final VoidCallback onTap;
+
+  const _OptionTile({required this.label, required this.selected, required this.onTap});
+
+  @override
+  Widget build(BuildContext context) {
+    return NeoPressable(
+      onTap: onTap,
+      child: Container(
+        padding: const EdgeInsets.symmetric(vertical: 16, horizontal: 16),
+        decoration: BoxDecoration(
+          color: selected ? CustomerColors.accent : CustomerColors.surface,
+          border: Border.all(
+            color: selected ? CustomerColors.black : CustomerColors.border,
+            width: 2,
+          ),
+          boxShadow: selected ? neoShadow(offset: neoShadowSmOffset) : null,
+        ),
+        child: Row(
+          children: [
+            Icon(
+              selected ? Icons.radio_button_checked : Icons.radio_button_unchecked,
+              size: 20,
+              color: selected ? CustomerColors.black : CustomerColors.border,
+            ),
+            const SizedBox(width: 12),
+            Expanded(
+              child: Text(
+                label,
+                style: CustomerText.mono(
+                  fontSize: 15,
+                  fontWeight: selected ? FontWeight.w700 : FontWeight.w500,
+                  color: selected ? CustomerColors.black : CustomerColors.foreground,
                 ),
               ),
-            ),
-            if (error != null) ...[
-              const SizedBox(height: 14),
-              Text(
-                error!,
-                textAlign: TextAlign.center,
-                style: CustomerText.mono(fontSize: 13, color: CustomerColors.danger),
-              ),
-            ],
-            const SizedBox(height: 20),
-            PrimaryButton(
-              label: submitting ? 'Submitting...' : 'Submit Feedback',
-              loading: submitting,
-              onPressed: rating == 0 ? null : onSubmit,
             ),
           ],
         ),

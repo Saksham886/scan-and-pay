@@ -1,12 +1,35 @@
 import { prisma } from "@/backend/lib/db";
+import type {
+  FeedbackCleanliness,
+  FeedbackFoodQuality,
+  FeedbackMealSession,
+  FeedbackMenuVariety,
+  FeedbackOverallExperience,
+} from "@/shared/types";
 
 export const feedbackRepository = {
-  async createFeedback(data: { cafeId: string; rating: number; comment?: string }) {
+  async createFeedback(data: {
+    cafeId: string;
+    rating: number;
+    comment?: string;
+    customerName?: string;
+    mealSession?: FeedbackMealSession;
+    foodQuality?: FeedbackFoodQuality;
+    cleanliness?: FeedbackCleanliness;
+    menuVariety?: FeedbackMenuVariety;
+    overallExperience?: FeedbackOverallExperience;
+  }) {
     return prisma.feedback.create({
       data: {
         cafeId: data.cafeId,
         rating: data.rating,
         comment: data.comment,
+        customerName: data.customerName,
+        mealSession: data.mealSession,
+        foodQuality: data.foodQuality,
+        cleanliness: data.cleanliness,
+        menuVariety: data.menuVariety,
+        overallExperience: data.overallExperience,
       },
     });
   },

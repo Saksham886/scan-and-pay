@@ -138,6 +138,52 @@ export const MenuType: {
 
 export type MenuType = (typeof MenuType)[keyof typeof MenuType]
 
+
+export const FeedbackMealSession: {
+  BREAKFAST: 'BREAKFAST',
+  LUNCH: 'LUNCH',
+  SNACKS: 'SNACKS'
+};
+
+export type FeedbackMealSession = (typeof FeedbackMealSession)[keyof typeof FeedbackMealSession]
+
+
+export const FeedbackFoodQuality: {
+  EXCELLENT: 'EXCELLENT',
+  GOOD: 'GOOD',
+  AVERAGE: 'AVERAGE',
+  NEEDS_IMPROVEMENT: 'NEEDS_IMPROVEMENT'
+};
+
+export type FeedbackFoodQuality = (typeof FeedbackFoodQuality)[keyof typeof FeedbackFoodQuality]
+
+
+export const FeedbackCleanliness: {
+  VERY_CLEAN: 'VERY_CLEAN',
+  MOSTLY_CLEAN: 'MOSTLY_CLEAN',
+  OFTEN_DIRTY: 'OFTEN_DIRTY'
+};
+
+export type FeedbackCleanliness = (typeof FeedbackCleanliness)[keyof typeof FeedbackCleanliness]
+
+
+export const FeedbackMenuVariety: {
+  GREAT: 'GREAT',
+  DECENT: 'DECENT',
+  NOT_ENOUGH_VARIETY: 'NOT_ENOUGH_VARIETY'
+};
+
+export type FeedbackMenuVariety = (typeof FeedbackMenuVariety)[keyof typeof FeedbackMenuVariety]
+
+
+export const FeedbackOverallExperience: {
+  EXCELLENT: 'EXCELLENT',
+  GOOD: 'GOOD',
+  POOR: 'POOR'
+};
+
+export type FeedbackOverallExperience = (typeof FeedbackOverallExperience)[keyof typeof FeedbackOverallExperience]
+
 }
 
 export type UserRole = $Enums.UserRole
@@ -159,6 +205,26 @@ export const PaymentProvider: typeof $Enums.PaymentProvider
 export type MenuType = $Enums.MenuType
 
 export const MenuType: typeof $Enums.MenuType
+
+export type FeedbackMealSession = $Enums.FeedbackMealSession
+
+export const FeedbackMealSession: typeof $Enums.FeedbackMealSession
+
+export type FeedbackFoodQuality = $Enums.FeedbackFoodQuality
+
+export const FeedbackFoodQuality: typeof $Enums.FeedbackFoodQuality
+
+export type FeedbackCleanliness = $Enums.FeedbackCleanliness
+
+export const FeedbackCleanliness: typeof $Enums.FeedbackCleanliness
+
+export type FeedbackMenuVariety = $Enums.FeedbackMenuVariety
+
+export const FeedbackMenuVariety: typeof $Enums.FeedbackMenuVariety
+
+export type FeedbackOverallExperience = $Enums.FeedbackOverallExperience
+
+export const FeedbackOverallExperience: typeof $Enums.FeedbackOverallExperience
 
 /**
  * ##  Prisma Client ʲˢ
@@ -5130,6 +5196,12 @@ export namespace Prisma {
     cafeId: string | null
     rating: number | null
     comment: string | null
+    customerName: string | null
+    mealSession: $Enums.FeedbackMealSession | null
+    foodQuality: $Enums.FeedbackFoodQuality | null
+    cleanliness: $Enums.FeedbackCleanliness | null
+    menuVariety: $Enums.FeedbackMenuVariety | null
+    overallExperience: $Enums.FeedbackOverallExperience | null
     createdAt: Date | null
   }
 
@@ -5138,6 +5210,12 @@ export namespace Prisma {
     cafeId: string | null
     rating: number | null
     comment: string | null
+    customerName: string | null
+    mealSession: $Enums.FeedbackMealSession | null
+    foodQuality: $Enums.FeedbackFoodQuality | null
+    cleanliness: $Enums.FeedbackCleanliness | null
+    menuVariety: $Enums.FeedbackMenuVariety | null
+    overallExperience: $Enums.FeedbackOverallExperience | null
     createdAt: Date | null
   }
 
@@ -5146,6 +5224,12 @@ export namespace Prisma {
     cafeId: number
     rating: number
     comment: number
+    customerName: number
+    mealSession: number
+    foodQuality: number
+    cleanliness: number
+    menuVariety: number
+    overallExperience: number
     createdAt: number
     _all: number
   }
@@ -5164,6 +5248,12 @@ export namespace Prisma {
     cafeId?: true
     rating?: true
     comment?: true
+    customerName?: true
+    mealSession?: true
+    foodQuality?: true
+    cleanliness?: true
+    menuVariety?: true
+    overallExperience?: true
     createdAt?: true
   }
 
@@ -5172,6 +5262,12 @@ export namespace Prisma {
     cafeId?: true
     rating?: true
     comment?: true
+    customerName?: true
+    mealSession?: true
+    foodQuality?: true
+    cleanliness?: true
+    menuVariety?: true
+    overallExperience?: true
     createdAt?: true
   }
 
@@ -5180,6 +5276,12 @@ export namespace Prisma {
     cafeId?: true
     rating?: true
     comment?: true
+    customerName?: true
+    mealSession?: true
+    foodQuality?: true
+    cleanliness?: true
+    menuVariety?: true
+    overallExperience?: true
     createdAt?: true
     _all?: true
   }
@@ -5275,6 +5377,12 @@ export namespace Prisma {
     cafeId: string
     rating: number
     comment: string | null
+    customerName: string | null
+    mealSession: $Enums.FeedbackMealSession | null
+    foodQuality: $Enums.FeedbackFoodQuality | null
+    cleanliness: $Enums.FeedbackCleanliness | null
+    menuVariety: $Enums.FeedbackMenuVariety | null
+    overallExperience: $Enums.FeedbackOverallExperience | null
     createdAt: Date
     _count: FeedbackCountAggregateOutputType | null
     _avg: FeedbackAvgAggregateOutputType | null
@@ -5302,6 +5410,12 @@ export namespace Prisma {
     cafeId?: boolean
     rating?: boolean
     comment?: boolean
+    customerName?: boolean
+    mealSession?: boolean
+    foodQuality?: boolean
+    cleanliness?: boolean
+    menuVariety?: boolean
+    overallExperience?: boolean
     createdAt?: boolean
     cafe?: boolean | CafeDefaultArgs<ExtArgs>
   }, ExtArgs["result"]["feedback"]>
@@ -5311,6 +5425,12 @@ export namespace Prisma {
     cafeId?: boolean
     rating?: boolean
     comment?: boolean
+    customerName?: boolean
+    mealSession?: boolean
+    foodQuality?: boolean
+    cleanliness?: boolean
+    menuVariety?: boolean
+    overallExperience?: boolean
     createdAt?: boolean
     cafe?: boolean | CafeDefaultArgs<ExtArgs>
   }, ExtArgs["result"]["feedback"]>
@@ -5320,6 +5440,12 @@ export namespace Prisma {
     cafeId?: boolean
     rating?: boolean
     comment?: boolean
+    customerName?: boolean
+    mealSession?: boolean
+    foodQuality?: boolean
+    cleanliness?: boolean
+    menuVariety?: boolean
+    overallExperience?: boolean
     createdAt?: boolean
     cafe?: boolean | CafeDefaultArgs<ExtArgs>
   }, ExtArgs["result"]["feedback"]>
@@ -5329,10 +5455,16 @@ export namespace Prisma {
     cafeId?: boolean
     rating?: boolean
     comment?: boolean
+    customerName?: boolean
+    mealSession?: boolean
+    foodQuality?: boolean
+    cleanliness?: boolean
+    menuVariety?: boolean
+    overallExperience?: boolean
     createdAt?: boolean
   }
 
-  export type FeedbackOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id" | "cafeId" | "rating" | "comment" | "createdAt", ExtArgs["result"]["feedback"]>
+  export type FeedbackOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id" | "cafeId" | "rating" | "comment" | "customerName" | "mealSession" | "foodQuality" | "cleanliness" | "menuVariety" | "overallExperience" | "createdAt", ExtArgs["result"]["feedback"]>
   export type FeedbackInclude<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     cafe?: boolean | CafeDefaultArgs<ExtArgs>
   }
@@ -5353,6 +5485,12 @@ export namespace Prisma {
       cafeId: string
       rating: number
       comment: string | null
+      customerName: string | null
+      mealSession: $Enums.FeedbackMealSession | null
+      foodQuality: $Enums.FeedbackFoodQuality | null
+      cleanliness: $Enums.FeedbackCleanliness | null
+      menuVariety: $Enums.FeedbackMenuVariety | null
+      overallExperience: $Enums.FeedbackOverallExperience | null
       createdAt: Date
     }, ExtArgs["result"]["feedback"]>
     composites: {}
@@ -5782,6 +5920,12 @@ export namespace Prisma {
     readonly cafeId: FieldRef<"Feedback", 'String'>
     readonly rating: FieldRef<"Feedback", 'Int'>
     readonly comment: FieldRef<"Feedback", 'String'>
+    readonly customerName: FieldRef<"Feedback", 'String'>
+    readonly mealSession: FieldRef<"Feedback", 'FeedbackMealSession'>
+    readonly foodQuality: FieldRef<"Feedback", 'FeedbackFoodQuality'>
+    readonly cleanliness: FieldRef<"Feedback", 'FeedbackCleanliness'>
+    readonly menuVariety: FieldRef<"Feedback", 'FeedbackMenuVariety'>
+    readonly overallExperience: FieldRef<"Feedback", 'FeedbackOverallExperience'>
     readonly createdAt: FieldRef<"Feedback", 'DateTime'>
   }
     
@@ -19277,6 +19421,12 @@ export namespace Prisma {
     cafeId: 'cafeId',
     rating: 'rating',
     comment: 'comment',
+    customerName: 'customerName',
+    mealSession: 'mealSession',
+    foodQuality: 'foodQuality',
+    cleanliness: 'cleanliness',
+    menuVariety: 'menuVariety',
+    overallExperience: 'overallExperience',
     createdAt: 'createdAt'
   };
 
@@ -19572,6 +19722,76 @@ export namespace Prisma {
    * Reference to a field of type 'Int[]'
    */
   export type ListIntFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'Int[]'>
+    
+
+
+  /**
+   * Reference to a field of type 'FeedbackMealSession'
+   */
+  export type EnumFeedbackMealSessionFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'FeedbackMealSession'>
+    
+
+
+  /**
+   * Reference to a field of type 'FeedbackMealSession[]'
+   */
+  export type ListEnumFeedbackMealSessionFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'FeedbackMealSession[]'>
+    
+
+
+  /**
+   * Reference to a field of type 'FeedbackFoodQuality'
+   */
+  export type EnumFeedbackFoodQualityFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'FeedbackFoodQuality'>
+    
+
+
+  /**
+   * Reference to a field of type 'FeedbackFoodQuality[]'
+   */
+  export type ListEnumFeedbackFoodQualityFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'FeedbackFoodQuality[]'>
+    
+
+
+  /**
+   * Reference to a field of type 'FeedbackCleanliness'
+   */
+  export type EnumFeedbackCleanlinessFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'FeedbackCleanliness'>
+    
+
+
+  /**
+   * Reference to a field of type 'FeedbackCleanliness[]'
+   */
+  export type ListEnumFeedbackCleanlinessFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'FeedbackCleanliness[]'>
+    
+
+
+  /**
+   * Reference to a field of type 'FeedbackMenuVariety'
+   */
+  export type EnumFeedbackMenuVarietyFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'FeedbackMenuVariety'>
+    
+
+
+  /**
+   * Reference to a field of type 'FeedbackMenuVariety[]'
+   */
+  export type ListEnumFeedbackMenuVarietyFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'FeedbackMenuVariety[]'>
+    
+
+
+  /**
+   * Reference to a field of type 'FeedbackOverallExperience'
+   */
+  export type EnumFeedbackOverallExperienceFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'FeedbackOverallExperience'>
+    
+
+
+  /**
+   * Reference to a field of type 'FeedbackOverallExperience[]'
+   */
+  export type ListEnumFeedbackOverallExperienceFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'FeedbackOverallExperience[]'>
     
 
 
@@ -19880,6 +20100,12 @@ export namespace Prisma {
     cafeId?: StringFilter<"Feedback"> | string
     rating?: IntFilter<"Feedback"> | number
     comment?: StringNullableFilter<"Feedback"> | string | null
+    customerName?: StringNullableFilter<"Feedback"> | string | null
+    mealSession?: EnumFeedbackMealSessionNullableFilter<"Feedback"> | $Enums.FeedbackMealSession | null
+    foodQuality?: EnumFeedbackFoodQualityNullableFilter<"Feedback"> | $Enums.FeedbackFoodQuality | null
+    cleanliness?: EnumFeedbackCleanlinessNullableFilter<"Feedback"> | $Enums.FeedbackCleanliness | null
+    menuVariety?: EnumFeedbackMenuVarietyNullableFilter<"Feedback"> | $Enums.FeedbackMenuVariety | null
+    overallExperience?: EnumFeedbackOverallExperienceNullableFilter<"Feedback"> | $Enums.FeedbackOverallExperience | null
     createdAt?: DateTimeFilter<"Feedback"> | Date | string
     cafe?: XOR<CafeScalarRelationFilter, CafeWhereInput>
   }
@@ -19889,6 +20115,12 @@ export namespace Prisma {
     cafeId?: SortOrder
     rating?: SortOrder
     comment?: SortOrderInput | SortOrder
+    customerName?: SortOrderInput | SortOrder
+    mealSession?: SortOrderInput | SortOrder
+    foodQuality?: SortOrderInput | SortOrder
+    cleanliness?: SortOrderInput | SortOrder
+    menuVariety?: SortOrderInput | SortOrder
+    overallExperience?: SortOrderInput | SortOrder
     createdAt?: SortOrder
     cafe?: CafeOrderByWithRelationInput
   }
@@ -19901,6 +20133,12 @@ export namespace Prisma {
     cafeId?: StringFilter<"Feedback"> | string
     rating?: IntFilter<"Feedback"> | number
     comment?: StringNullableFilter<"Feedback"> | string | null
+    customerName?: StringNullableFilter<"Feedback"> | string | null
+    mealSession?: EnumFeedbackMealSessionNullableFilter<"Feedback"> | $Enums.FeedbackMealSession | null
+    foodQuality?: EnumFeedbackFoodQualityNullableFilter<"Feedback"> | $Enums.FeedbackFoodQuality | null
+    cleanliness?: EnumFeedbackCleanlinessNullableFilter<"Feedback"> | $Enums.FeedbackCleanliness | null
+    menuVariety?: EnumFeedbackMenuVarietyNullableFilter<"Feedback"> | $Enums.FeedbackMenuVariety | null
+    overallExperience?: EnumFeedbackOverallExperienceNullableFilter<"Feedback"> | $Enums.FeedbackOverallExperience | null
     createdAt?: DateTimeFilter<"Feedback"> | Date | string
     cafe?: XOR<CafeScalarRelationFilter, CafeWhereInput>
   }, "id">
@@ -19910,6 +20148,12 @@ export namespace Prisma {
     cafeId?: SortOrder
     rating?: SortOrder
     comment?: SortOrderInput | SortOrder
+    customerName?: SortOrderInput | SortOrder
+    mealSession?: SortOrderInput | SortOrder
+    foodQuality?: SortOrderInput | SortOrder
+    cleanliness?: SortOrderInput | SortOrder
+    menuVariety?: SortOrderInput | SortOrder
+    overallExperience?: SortOrderInput | SortOrder
     createdAt?: SortOrder
     _count?: FeedbackCountOrderByAggregateInput
     _avg?: FeedbackAvgOrderByAggregateInput
@@ -19926,6 +20170,12 @@ export namespace Prisma {
     cafeId?: StringWithAggregatesFilter<"Feedback"> | string
     rating?: IntWithAggregatesFilter<"Feedback"> | number
     comment?: StringNullableWithAggregatesFilter<"Feedback"> | string | null
+    customerName?: StringNullableWithAggregatesFilter<"Feedback"> | string | null
+    mealSession?: EnumFeedbackMealSessionNullableWithAggregatesFilter<"Feedback"> | $Enums.FeedbackMealSession | null
+    foodQuality?: EnumFeedbackFoodQualityNullableWithAggregatesFilter<"Feedback"> | $Enums.FeedbackFoodQuality | null
+    cleanliness?: EnumFeedbackCleanlinessNullableWithAggregatesFilter<"Feedback"> | $Enums.FeedbackCleanliness | null
+    menuVariety?: EnumFeedbackMenuVarietyNullableWithAggregatesFilter<"Feedback"> | $Enums.FeedbackMenuVariety | null
+    overallExperience?: EnumFeedbackOverallExperienceNullableWithAggregatesFilter<"Feedback"> | $Enums.FeedbackOverallExperience | null
     createdAt?: DateTimeWithAggregatesFilter<"Feedback"> | Date | string
   }
 
@@ -21105,6 +21355,12 @@ export namespace Prisma {
     id?: string
     rating: number
     comment?: string | null
+    customerName?: string | null
+    mealSession?: $Enums.FeedbackMealSession | null
+    foodQuality?: $Enums.FeedbackFoodQuality | null
+    cleanliness?: $Enums.FeedbackCleanliness | null
+    menuVariety?: $Enums.FeedbackMenuVariety | null
+    overallExperience?: $Enums.FeedbackOverallExperience | null
     createdAt?: Date | string
     cafe: CafeCreateNestedOneWithoutFeedbackInput
   }
@@ -21114,6 +21370,12 @@ export namespace Prisma {
     cafeId: string
     rating: number
     comment?: string | null
+    customerName?: string | null
+    mealSession?: $Enums.FeedbackMealSession | null
+    foodQuality?: $Enums.FeedbackFoodQuality | null
+    cleanliness?: $Enums.FeedbackCleanliness | null
+    menuVariety?: $Enums.FeedbackMenuVariety | null
+    overallExperience?: $Enums.FeedbackOverallExperience | null
     createdAt?: Date | string
   }
 
@@ -21121,6 +21383,12 @@ export namespace Prisma {
     id?: StringFieldUpdateOperationsInput | string
     rating?: IntFieldUpdateOperationsInput | number
     comment?: NullableStringFieldUpdateOperationsInput | string | null
+    customerName?: NullableStringFieldUpdateOperationsInput | string | null
+    mealSession?: NullableEnumFeedbackMealSessionFieldUpdateOperationsInput | $Enums.FeedbackMealSession | null
+    foodQuality?: NullableEnumFeedbackFoodQualityFieldUpdateOperationsInput | $Enums.FeedbackFoodQuality | null
+    cleanliness?: NullableEnumFeedbackCleanlinessFieldUpdateOperationsInput | $Enums.FeedbackCleanliness | null
+    menuVariety?: NullableEnumFeedbackMenuVarietyFieldUpdateOperationsInput | $Enums.FeedbackMenuVariety | null
+    overallExperience?: NullableEnumFeedbackOverallExperienceFieldUpdateOperationsInput | $Enums.FeedbackOverallExperience | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     cafe?: CafeUpdateOneRequiredWithoutFeedbackNestedInput
   }
@@ -21130,6 +21398,12 @@ export namespace Prisma {
     cafeId?: StringFieldUpdateOperationsInput | string
     rating?: IntFieldUpdateOperationsInput | number
     comment?: NullableStringFieldUpdateOperationsInput | string | null
+    customerName?: NullableStringFieldUpdateOperationsInput | string | null
+    mealSession?: NullableEnumFeedbackMealSessionFieldUpdateOperationsInput | $Enums.FeedbackMealSession | null
+    foodQuality?: NullableEnumFeedbackFoodQualityFieldUpdateOperationsInput | $Enums.FeedbackFoodQuality | null
+    cleanliness?: NullableEnumFeedbackCleanlinessFieldUpdateOperationsInput | $Enums.FeedbackCleanliness | null
+    menuVariety?: NullableEnumFeedbackMenuVarietyFieldUpdateOperationsInput | $Enums.FeedbackMenuVariety | null
+    overallExperience?: NullableEnumFeedbackOverallExperienceFieldUpdateOperationsInput | $Enums.FeedbackOverallExperience | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
   }
 
@@ -21138,6 +21412,12 @@ export namespace Prisma {
     cafeId: string
     rating: number
     comment?: string | null
+    customerName?: string | null
+    mealSession?: $Enums.FeedbackMealSession | null
+    foodQuality?: $Enums.FeedbackFoodQuality | null
+    cleanliness?: $Enums.FeedbackCleanliness | null
+    menuVariety?: $Enums.FeedbackMenuVariety | null
+    overallExperience?: $Enums.FeedbackOverallExperience | null
     createdAt?: Date | string
   }
 
@@ -21145,6 +21425,12 @@ export namespace Prisma {
     id?: StringFieldUpdateOperationsInput | string
     rating?: IntFieldUpdateOperationsInput | number
     comment?: NullableStringFieldUpdateOperationsInput | string | null
+    customerName?: NullableStringFieldUpdateOperationsInput | string | null
+    mealSession?: NullableEnumFeedbackMealSessionFieldUpdateOperationsInput | $Enums.FeedbackMealSession | null
+    foodQuality?: NullableEnumFeedbackFoodQualityFieldUpdateOperationsInput | $Enums.FeedbackFoodQuality | null
+    cleanliness?: NullableEnumFeedbackCleanlinessFieldUpdateOperationsInput | $Enums.FeedbackCleanliness | null
+    menuVariety?: NullableEnumFeedbackMenuVarietyFieldUpdateOperationsInput | $Enums.FeedbackMenuVariety | null
+    overallExperience?: NullableEnumFeedbackOverallExperienceFieldUpdateOperationsInput | $Enums.FeedbackOverallExperience | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
   }
 
@@ -21153,6 +21439,12 @@ export namespace Prisma {
     cafeId?: StringFieldUpdateOperationsInput | string
     rating?: IntFieldUpdateOperationsInput | number
     comment?: NullableStringFieldUpdateOperationsInput | string | null
+    customerName?: NullableStringFieldUpdateOperationsInput | string | null
+    mealSession?: NullableEnumFeedbackMealSessionFieldUpdateOperationsInput | $Enums.FeedbackMealSession | null
+    foodQuality?: NullableEnumFeedbackFoodQualityFieldUpdateOperationsInput | $Enums.FeedbackFoodQuality | null
+    cleanliness?: NullableEnumFeedbackCleanlinessFieldUpdateOperationsInput | $Enums.FeedbackCleanliness | null
+    menuVariety?: NullableEnumFeedbackMenuVarietyFieldUpdateOperationsInput | $Enums.FeedbackMenuVariety | null
+    overallExperience?: NullableEnumFeedbackOverallExperienceFieldUpdateOperationsInput | $Enums.FeedbackOverallExperience | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
   }
 
@@ -22479,11 +22771,52 @@ export namespace Prisma {
     not?: NestedIntFilter<$PrismaModel> | number
   }
 
+  export type EnumFeedbackMealSessionNullableFilter<$PrismaModel = never> = {
+    equals?: $Enums.FeedbackMealSession | EnumFeedbackMealSessionFieldRefInput<$PrismaModel> | null
+    in?: $Enums.FeedbackMealSession[] | ListEnumFeedbackMealSessionFieldRefInput<$PrismaModel> | null
+    notIn?: $Enums.FeedbackMealSession[] | ListEnumFeedbackMealSessionFieldRefInput<$PrismaModel> | null
+    not?: NestedEnumFeedbackMealSessionNullableFilter<$PrismaModel> | $Enums.FeedbackMealSession | null
+  }
+
+  export type EnumFeedbackFoodQualityNullableFilter<$PrismaModel = never> = {
+    equals?: $Enums.FeedbackFoodQuality | EnumFeedbackFoodQualityFieldRefInput<$PrismaModel> | null
+    in?: $Enums.FeedbackFoodQuality[] | ListEnumFeedbackFoodQualityFieldRefInput<$PrismaModel> | null
+    notIn?: $Enums.FeedbackFoodQuality[] | ListEnumFeedbackFoodQualityFieldRefInput<$PrismaModel> | null
+    not?: NestedEnumFeedbackFoodQualityNullableFilter<$PrismaModel> | $Enums.FeedbackFoodQuality | null
+  }
+
+  export type EnumFeedbackCleanlinessNullableFilter<$PrismaModel = never> = {
+    equals?: $Enums.FeedbackCleanliness | EnumFeedbackCleanlinessFieldRefInput<$PrismaModel> | null
+    in?: $Enums.FeedbackCleanliness[] | ListEnumFeedbackCleanlinessFieldRefInput<$PrismaModel> | null
+    notIn?: $Enums.FeedbackCleanliness[] | ListEnumFeedbackCleanlinessFieldRefInput<$PrismaModel> | null
+    not?: NestedEnumFeedbackCleanlinessNullableFilter<$PrismaModel> | $Enums.FeedbackCleanliness | null
+  }
+
+  export type EnumFeedbackMenuVarietyNullableFilter<$PrismaModel = never> = {
+    equals?: $Enums.FeedbackMenuVariety | EnumFeedbackMenuVarietyFieldRefInput<$PrismaModel> | null
+    in?: $Enums.FeedbackMenuVariety[] | ListEnumFeedbackMenuVarietyFieldRefInput<$PrismaModel> | null
+    notIn?: $Enums.FeedbackMenuVariety[] | ListEnumFeedbackMenuVarietyFieldRefInput<$PrismaModel> | null
+    not?: NestedEnumFeedbackMenuVarietyNullableFilter<$PrismaModel> | $Enums.FeedbackMenuVariety | null
+  }
+
+  export type EnumFeedbackOverallExperienceNullableFilter<$PrismaModel = never> = {
+    equals?: $Enums.FeedbackOverallExperience | EnumFeedbackOverallExperienceFieldRefInput<$PrismaModel> | null
+    in?: $Enums.FeedbackOverallExperience[] | ListEnumFeedbackOverallExperienceFieldRefInput<$PrismaModel> | null
+    notIn?: $Enums.FeedbackOverallExperience[] | ListEnumFeedbackOverallExperienceFieldRefInput<$PrismaModel> | null
+    not?: NestedEnumFeedbackOverallExperienceNullableFilter<$PrismaModel> | $Enums.FeedbackOverallExperience | null
+  }
+
   export type FeedbackCountOrderByAggregateInput = {
     id?: SortOrder
     cafeId?: SortOrder
     rating?: SortOrder
     comment?: SortOrder
+    customerName?: SortOrder
+    mealSession?: SortOrder
+    foodQuality?: SortOrder
+    cleanliness?: SortOrder
+    menuVariety?: SortOrder
+    overallExperience?: SortOrder
     createdAt?: SortOrder
   }
 
@@ -22496,6 +22829,12 @@ export namespace Prisma {
     cafeId?: SortOrder
     rating?: SortOrder
     comment?: SortOrder
+    customerName?: SortOrder
+    mealSession?: SortOrder
+    foodQuality?: SortOrder
+    cleanliness?: SortOrder
+    menuVariety?: SortOrder
+    overallExperience?: SortOrder
     createdAt?: SortOrder
   }
 
@@ -22504,6 +22843,12 @@ export namespace Prisma {
     cafeId?: SortOrder
     rating?: SortOrder
     comment?: SortOrder
+    customerName?: SortOrder
+    mealSession?: SortOrder
+    foodQuality?: SortOrder
+    cleanliness?: SortOrder
+    menuVariety?: SortOrder
+    overallExperience?: SortOrder
     createdAt?: SortOrder
   }
 
@@ -22525,6 +22870,56 @@ export namespace Prisma {
     _sum?: NestedIntFilter<$PrismaModel>
     _min?: NestedIntFilter<$PrismaModel>
     _max?: NestedIntFilter<$PrismaModel>
+  }
+
+  export type EnumFeedbackMealSessionNullableWithAggregatesFilter<$PrismaModel = never> = {
+    equals?: $Enums.FeedbackMealSession | EnumFeedbackMealSessionFieldRefInput<$PrismaModel> | null
+    in?: $Enums.FeedbackMealSession[] | ListEnumFeedbackMealSessionFieldRefInput<$PrismaModel> | null
+    notIn?: $Enums.FeedbackMealSession[] | ListEnumFeedbackMealSessionFieldRefInput<$PrismaModel> | null
+    not?: NestedEnumFeedbackMealSessionNullableWithAggregatesFilter<$PrismaModel> | $Enums.FeedbackMealSession | null
+    _count?: NestedIntNullableFilter<$PrismaModel>
+    _min?: NestedEnumFeedbackMealSessionNullableFilter<$PrismaModel>
+    _max?: NestedEnumFeedbackMealSessionNullableFilter<$PrismaModel>
+  }
+
+  export type EnumFeedbackFoodQualityNullableWithAggregatesFilter<$PrismaModel = never> = {
+    equals?: $Enums.FeedbackFoodQuality | EnumFeedbackFoodQualityFieldRefInput<$PrismaModel> | null
+    in?: $Enums.FeedbackFoodQuality[] | ListEnumFeedbackFoodQualityFieldRefInput<$PrismaModel> | null
+    notIn?: $Enums.FeedbackFoodQuality[] | ListEnumFeedbackFoodQualityFieldRefInput<$PrismaModel> | null
+    not?: NestedEnumFeedbackFoodQualityNullableWithAggregatesFilter<$PrismaModel> | $Enums.FeedbackFoodQuality | null
+    _count?: NestedIntNullableFilter<$PrismaModel>
+    _min?: NestedEnumFeedbackFoodQualityNullableFilter<$PrismaModel>
+    _max?: NestedEnumFeedbackFoodQualityNullableFilter<$PrismaModel>
+  }
+
+  export type EnumFeedbackCleanlinessNullableWithAggregatesFilter<$PrismaModel = never> = {
+    equals?: $Enums.FeedbackCleanliness | EnumFeedbackCleanlinessFieldRefInput<$PrismaModel> | null
+    in?: $Enums.FeedbackCleanliness[] | ListEnumFeedbackCleanlinessFieldRefInput<$PrismaModel> | null
+    notIn?: $Enums.FeedbackCleanliness[] | ListEnumFeedbackCleanlinessFieldRefInput<$PrismaModel> | null
+    not?: NestedEnumFeedbackCleanlinessNullableWithAggregatesFilter<$PrismaModel> | $Enums.FeedbackCleanliness | null
+    _count?: NestedIntNullableFilter<$PrismaModel>
+    _min?: NestedEnumFeedbackCleanlinessNullableFilter<$PrismaModel>
+    _max?: NestedEnumFeedbackCleanlinessNullableFilter<$PrismaModel>
+  }
+
+  export type EnumFeedbackMenuVarietyNullableWithAggregatesFilter<$PrismaModel = never> = {
+    equals?: $Enums.FeedbackMenuVariety | EnumFeedbackMenuVarietyFieldRefInput<$PrismaModel> | null
+    in?: $Enums.FeedbackMenuVariety[] | ListEnumFeedbackMenuVarietyFieldRefInput<$PrismaModel> | null
+    notIn?: $Enums.FeedbackMenuVariety[] | ListEnumFeedbackMenuVarietyFieldRefInput<$PrismaModel> | null
+    not?: NestedEnumFeedbackMenuVarietyNullableWithAggregatesFilter<$PrismaModel> | $Enums.FeedbackMenuVariety | null
+    _count?: NestedIntNullableFilter<$PrismaModel>
+    _min?: NestedEnumFeedbackMenuVarietyNullableFilter<$PrismaModel>
+    _max?: NestedEnumFeedbackMenuVarietyNullableFilter<$PrismaModel>
+  }
+
+  export type EnumFeedbackOverallExperienceNullableWithAggregatesFilter<$PrismaModel = never> = {
+    equals?: $Enums.FeedbackOverallExperience | EnumFeedbackOverallExperienceFieldRefInput<$PrismaModel> | null
+    in?: $Enums.FeedbackOverallExperience[] | ListEnumFeedbackOverallExperienceFieldRefInput<$PrismaModel> | null
+    notIn?: $Enums.FeedbackOverallExperience[] | ListEnumFeedbackOverallExperienceFieldRefInput<$PrismaModel> | null
+    not?: NestedEnumFeedbackOverallExperienceNullableWithAggregatesFilter<$PrismaModel> | $Enums.FeedbackOverallExperience | null
+    _count?: NestedIntNullableFilter<$PrismaModel>
+    _min?: NestedEnumFeedbackOverallExperienceNullableFilter<$PrismaModel>
+    _max?: NestedEnumFeedbackOverallExperienceNullableFilter<$PrismaModel>
   }
 
   export type EnumUserRoleFilter<$PrismaModel = never> = {
@@ -23801,6 +24196,26 @@ export namespace Prisma {
     divide?: number
   }
 
+  export type NullableEnumFeedbackMealSessionFieldUpdateOperationsInput = {
+    set?: $Enums.FeedbackMealSession | null
+  }
+
+  export type NullableEnumFeedbackFoodQualityFieldUpdateOperationsInput = {
+    set?: $Enums.FeedbackFoodQuality | null
+  }
+
+  export type NullableEnumFeedbackCleanlinessFieldUpdateOperationsInput = {
+    set?: $Enums.FeedbackCleanliness | null
+  }
+
+  export type NullableEnumFeedbackMenuVarietyFieldUpdateOperationsInput = {
+    set?: $Enums.FeedbackMenuVariety | null
+  }
+
+  export type NullableEnumFeedbackOverallExperienceFieldUpdateOperationsInput = {
+    set?: $Enums.FeedbackOverallExperience | null
+  }
+
   export type CafeUpdateOneRequiredWithoutFeedbackNestedInput = {
     create?: XOR<CafeCreateWithoutFeedbackInput, CafeUncheckedCreateWithoutFeedbackInput>
     connectOrCreate?: CafeCreateOrConnectWithoutFeedbackInput
@@ -24543,6 +24958,41 @@ export namespace Prisma {
     _max?: NestedEnumMenuTypeFilter<$PrismaModel>
   }
 
+  export type NestedEnumFeedbackMealSessionNullableFilter<$PrismaModel = never> = {
+    equals?: $Enums.FeedbackMealSession | EnumFeedbackMealSessionFieldRefInput<$PrismaModel> | null
+    in?: $Enums.FeedbackMealSession[] | ListEnumFeedbackMealSessionFieldRefInput<$PrismaModel> | null
+    notIn?: $Enums.FeedbackMealSession[] | ListEnumFeedbackMealSessionFieldRefInput<$PrismaModel> | null
+    not?: NestedEnumFeedbackMealSessionNullableFilter<$PrismaModel> | $Enums.FeedbackMealSession | null
+  }
+
+  export type NestedEnumFeedbackFoodQualityNullableFilter<$PrismaModel = never> = {
+    equals?: $Enums.FeedbackFoodQuality | EnumFeedbackFoodQualityFieldRefInput<$PrismaModel> | null
+    in?: $Enums.FeedbackFoodQuality[] | ListEnumFeedbackFoodQualityFieldRefInput<$PrismaModel> | null
+    notIn?: $Enums.FeedbackFoodQuality[] | ListEnumFeedbackFoodQualityFieldRefInput<$PrismaModel> | null
+    not?: NestedEnumFeedbackFoodQualityNullableFilter<$PrismaModel> | $Enums.FeedbackFoodQuality | null
+  }
+
+  export type NestedEnumFeedbackCleanlinessNullableFilter<$PrismaModel = never> = {
+    equals?: $Enums.FeedbackCleanliness | EnumFeedbackCleanlinessFieldRefInput<$PrismaModel> | null
+    in?: $Enums.FeedbackCleanliness[] | ListEnumFeedbackCleanlinessFieldRefInput<$PrismaModel> | null
+    notIn?: $Enums.FeedbackCleanliness[] | ListEnumFeedbackCleanlinessFieldRefInput<$PrismaModel> | null
+    not?: NestedEnumFeedbackCleanlinessNullableFilter<$PrismaModel> | $Enums.FeedbackCleanliness | null
+  }
+
+  export type NestedEnumFeedbackMenuVarietyNullableFilter<$PrismaModel = never> = {
+    equals?: $Enums.FeedbackMenuVariety | EnumFeedbackMenuVarietyFieldRefInput<$PrismaModel> | null
+    in?: $Enums.FeedbackMenuVariety[] | ListEnumFeedbackMenuVarietyFieldRefInput<$PrismaModel> | null
+    notIn?: $Enums.FeedbackMenuVariety[] | ListEnumFeedbackMenuVarietyFieldRefInput<$PrismaModel> | null
+    not?: NestedEnumFeedbackMenuVarietyNullableFilter<$PrismaModel> | $Enums.FeedbackMenuVariety | null
+  }
+
+  export type NestedEnumFeedbackOverallExperienceNullableFilter<$PrismaModel = never> = {
+    equals?: $Enums.FeedbackOverallExperience | EnumFeedbackOverallExperienceFieldRefInput<$PrismaModel> | null
+    in?: $Enums.FeedbackOverallExperience[] | ListEnumFeedbackOverallExperienceFieldRefInput<$PrismaModel> | null
+    notIn?: $Enums.FeedbackOverallExperience[] | ListEnumFeedbackOverallExperienceFieldRefInput<$PrismaModel> | null
+    not?: NestedEnumFeedbackOverallExperienceNullableFilter<$PrismaModel> | $Enums.FeedbackOverallExperience | null
+  }
+
   export type NestedIntWithAggregatesFilter<$PrismaModel = never> = {
     equals?: number | IntFieldRefInput<$PrismaModel>
     in?: number[] | ListIntFieldRefInput<$PrismaModel>
@@ -24568,6 +25018,56 @@ export namespace Prisma {
     gt?: number | FloatFieldRefInput<$PrismaModel>
     gte?: number | FloatFieldRefInput<$PrismaModel>
     not?: NestedFloatFilter<$PrismaModel> | number
+  }
+
+  export type NestedEnumFeedbackMealSessionNullableWithAggregatesFilter<$PrismaModel = never> = {
+    equals?: $Enums.FeedbackMealSession | EnumFeedbackMealSessionFieldRefInput<$PrismaModel> | null
+    in?: $Enums.FeedbackMealSession[] | ListEnumFeedbackMealSessionFieldRefInput<$PrismaModel> | null
+    notIn?: $Enums.FeedbackMealSession[] | ListEnumFeedbackMealSessionFieldRefInput<$PrismaModel> | null
+    not?: NestedEnumFeedbackMealSessionNullableWithAggregatesFilter<$PrismaModel> | $Enums.FeedbackMealSession | null
+    _count?: NestedIntNullableFilter<$PrismaModel>
+    _min?: NestedEnumFeedbackMealSessionNullableFilter<$PrismaModel>
+    _max?: NestedEnumFeedbackMealSessionNullableFilter<$PrismaModel>
+  }
+
+  export type NestedEnumFeedbackFoodQualityNullableWithAggregatesFilter<$PrismaModel = never> = {
+    equals?: $Enums.FeedbackFoodQuality | EnumFeedbackFoodQualityFieldRefInput<$PrismaModel> | null
+    in?: $Enums.FeedbackFoodQuality[] | ListEnumFeedbackFoodQualityFieldRefInput<$PrismaModel> | null
+    notIn?: $Enums.FeedbackFoodQuality[] | ListEnumFeedbackFoodQualityFieldRefInput<$PrismaModel> | null
+    not?: NestedEnumFeedbackFoodQualityNullableWithAggregatesFilter<$PrismaModel> | $Enums.FeedbackFoodQuality | null
+    _count?: NestedIntNullableFilter<$PrismaModel>
+    _min?: NestedEnumFeedbackFoodQualityNullableFilter<$PrismaModel>
+    _max?: NestedEnumFeedbackFoodQualityNullableFilter<$PrismaModel>
+  }
+
+  export type NestedEnumFeedbackCleanlinessNullableWithAggregatesFilter<$PrismaModel = never> = {
+    equals?: $Enums.FeedbackCleanliness | EnumFeedbackCleanlinessFieldRefInput<$PrismaModel> | null
+    in?: $Enums.FeedbackCleanliness[] | ListEnumFeedbackCleanlinessFieldRefInput<$PrismaModel> | null
+    notIn?: $Enums.FeedbackCleanliness[] | ListEnumFeedbackCleanlinessFieldRefInput<$PrismaModel> | null
+    not?: NestedEnumFeedbackCleanlinessNullableWithAggregatesFilter<$PrismaModel> | $Enums.FeedbackCleanliness | null
+    _count?: NestedIntNullableFilter<$PrismaModel>
+    _min?: NestedEnumFeedbackCleanlinessNullableFilter<$PrismaModel>
+    _max?: NestedEnumFeedbackCleanlinessNullableFilter<$PrismaModel>
+  }
+
+  export type NestedEnumFeedbackMenuVarietyNullableWithAggregatesFilter<$PrismaModel = never> = {
+    equals?: $Enums.FeedbackMenuVariety | EnumFeedbackMenuVarietyFieldRefInput<$PrismaModel> | null
+    in?: $Enums.FeedbackMenuVariety[] | ListEnumFeedbackMenuVarietyFieldRefInput<$PrismaModel> | null
+    notIn?: $Enums.FeedbackMenuVariety[] | ListEnumFeedbackMenuVarietyFieldRefInput<$PrismaModel> | null
+    not?: NestedEnumFeedbackMenuVarietyNullableWithAggregatesFilter<$PrismaModel> | $Enums.FeedbackMenuVariety | null
+    _count?: NestedIntNullableFilter<$PrismaModel>
+    _min?: NestedEnumFeedbackMenuVarietyNullableFilter<$PrismaModel>
+    _max?: NestedEnumFeedbackMenuVarietyNullableFilter<$PrismaModel>
+  }
+
+  export type NestedEnumFeedbackOverallExperienceNullableWithAggregatesFilter<$PrismaModel = never> = {
+    equals?: $Enums.FeedbackOverallExperience | EnumFeedbackOverallExperienceFieldRefInput<$PrismaModel> | null
+    in?: $Enums.FeedbackOverallExperience[] | ListEnumFeedbackOverallExperienceFieldRefInput<$PrismaModel> | null
+    notIn?: $Enums.FeedbackOverallExperience[] | ListEnumFeedbackOverallExperienceFieldRefInput<$PrismaModel> | null
+    not?: NestedEnumFeedbackOverallExperienceNullableWithAggregatesFilter<$PrismaModel> | $Enums.FeedbackOverallExperience | null
+    _count?: NestedIntNullableFilter<$PrismaModel>
+    _min?: NestedEnumFeedbackOverallExperienceNullableFilter<$PrismaModel>
+    _max?: NestedEnumFeedbackOverallExperienceNullableFilter<$PrismaModel>
   }
 
   export type NestedEnumUserRoleFilter<$PrismaModel = never> = {
@@ -24865,6 +25365,12 @@ export namespace Prisma {
     id?: string
     rating: number
     comment?: string | null
+    customerName?: string | null
+    mealSession?: $Enums.FeedbackMealSession | null
+    foodQuality?: $Enums.FeedbackFoodQuality | null
+    cleanliness?: $Enums.FeedbackCleanliness | null
+    menuVariety?: $Enums.FeedbackMenuVariety | null
+    overallExperience?: $Enums.FeedbackOverallExperience | null
     createdAt?: Date | string
   }
 
@@ -24872,6 +25378,12 @@ export namespace Prisma {
     id?: string
     rating: number
     comment?: string | null
+    customerName?: string | null
+    mealSession?: $Enums.FeedbackMealSession | null
+    foodQuality?: $Enums.FeedbackFoodQuality | null
+    cleanliness?: $Enums.FeedbackCleanliness | null
+    menuVariety?: $Enums.FeedbackMenuVariety | null
+    overallExperience?: $Enums.FeedbackOverallExperience | null
     createdAt?: Date | string
   }
 
@@ -25191,6 +25703,12 @@ export namespace Prisma {
     cafeId?: StringFilter<"Feedback"> | string
     rating?: IntFilter<"Feedback"> | number
     comment?: StringNullableFilter<"Feedback"> | string | null
+    customerName?: StringNullableFilter<"Feedback"> | string | null
+    mealSession?: EnumFeedbackMealSessionNullableFilter<"Feedback"> | $Enums.FeedbackMealSession | null
+    foodQuality?: EnumFeedbackFoodQualityNullableFilter<"Feedback"> | $Enums.FeedbackFoodQuality | null
+    cleanliness?: EnumFeedbackCleanlinessNullableFilter<"Feedback"> | $Enums.FeedbackCleanliness | null
+    menuVariety?: EnumFeedbackMenuVarietyNullableFilter<"Feedback"> | $Enums.FeedbackMenuVariety | null
+    overallExperience?: EnumFeedbackOverallExperienceNullableFilter<"Feedback"> | $Enums.FeedbackOverallExperience | null
     createdAt?: DateTimeFilter<"Feedback"> | Date | string
   }
 
@@ -28018,6 +28536,12 @@ export namespace Prisma {
     id?: string
     rating: number
     comment?: string | null
+    customerName?: string | null
+    mealSession?: $Enums.FeedbackMealSession | null
+    foodQuality?: $Enums.FeedbackFoodQuality | null
+    cleanliness?: $Enums.FeedbackCleanliness | null
+    menuVariety?: $Enums.FeedbackMenuVariety | null
+    overallExperience?: $Enums.FeedbackOverallExperience | null
     createdAt?: Date | string
   }
 
@@ -28230,6 +28754,12 @@ export namespace Prisma {
     id?: StringFieldUpdateOperationsInput | string
     rating?: IntFieldUpdateOperationsInput | number
     comment?: NullableStringFieldUpdateOperationsInput | string | null
+    customerName?: NullableStringFieldUpdateOperationsInput | string | null
+    mealSession?: NullableEnumFeedbackMealSessionFieldUpdateOperationsInput | $Enums.FeedbackMealSession | null
+    foodQuality?: NullableEnumFeedbackFoodQualityFieldUpdateOperationsInput | $Enums.FeedbackFoodQuality | null
+    cleanliness?: NullableEnumFeedbackCleanlinessFieldUpdateOperationsInput | $Enums.FeedbackCleanliness | null
+    menuVariety?: NullableEnumFeedbackMenuVarietyFieldUpdateOperationsInput | $Enums.FeedbackMenuVariety | null
+    overallExperience?: NullableEnumFeedbackOverallExperienceFieldUpdateOperationsInput | $Enums.FeedbackOverallExperience | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
   }
 
@@ -28237,6 +28767,12 @@ export namespace Prisma {
     id?: StringFieldUpdateOperationsInput | string
     rating?: IntFieldUpdateOperationsInput | number
     comment?: NullableStringFieldUpdateOperationsInput | string | null
+    customerName?: NullableStringFieldUpdateOperationsInput | string | null
+    mealSession?: NullableEnumFeedbackMealSessionFieldUpdateOperationsInput | $Enums.FeedbackMealSession | null
+    foodQuality?: NullableEnumFeedbackFoodQualityFieldUpdateOperationsInput | $Enums.FeedbackFoodQuality | null
+    cleanliness?: NullableEnumFeedbackCleanlinessFieldUpdateOperationsInput | $Enums.FeedbackCleanliness | null
+    menuVariety?: NullableEnumFeedbackMenuVarietyFieldUpdateOperationsInput | $Enums.FeedbackMenuVariety | null
+    overallExperience?: NullableEnumFeedbackOverallExperienceFieldUpdateOperationsInput | $Enums.FeedbackOverallExperience | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
   }
 
@@ -28244,6 +28780,12 @@ export namespace Prisma {
     id?: StringFieldUpdateOperationsInput | string
     rating?: IntFieldUpdateOperationsInput | number
     comment?: NullableStringFieldUpdateOperationsInput | string | null
+    customerName?: NullableStringFieldUpdateOperationsInput | string | null
+    mealSession?: NullableEnumFeedbackMealSessionFieldUpdateOperationsInput | $Enums.FeedbackMealSession | null
+    foodQuality?: NullableEnumFeedbackFoodQualityFieldUpdateOperationsInput | $Enums.FeedbackFoodQuality | null
+    cleanliness?: NullableEnumFeedbackCleanlinessFieldUpdateOperationsInput | $Enums.FeedbackCleanliness | null
+    menuVariety?: NullableEnumFeedbackMenuVarietyFieldUpdateOperationsInput | $Enums.FeedbackMenuVariety | null
+    overallExperience?: NullableEnumFeedbackOverallExperienceFieldUpdateOperationsInput | $Enums.FeedbackOverallExperience | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
   }
 

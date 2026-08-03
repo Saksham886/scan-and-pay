@@ -221,12 +221,25 @@ export interface PaymentInfo {
 
 // ─── Feedback Types ─────────────────────────────────────
 
+export type FeedbackMealSession = "BREAKFAST" | "LUNCH" | "SNACKS";
+export type FeedbackFoodQuality = "EXCELLENT" | "GOOD" | "AVERAGE" | "NEEDS_IMPROVEMENT";
+export type FeedbackCleanliness = "VERY_CLEAN" | "MOSTLY_CLEAN" | "OFTEN_DIRTY";
+export type FeedbackMenuVariety = "GREAT" | "DECENT" | "NOT_ENOUGH_VARIETY";
+export type FeedbackOverallExperience = "EXCELLENT" | "GOOD" | "POOR";
+
 export interface FeedbackEntry {
   id: string;
   cafeId: string;
   cafeName?: string;
   rating: number;
   comment: string | null;
+  /** Survey fields — null on entries left before the survey replaced the star rating. */
+  customerName: string | null;
+  mealSession: FeedbackMealSession | null;
+  foodQuality: FeedbackFoodQuality | null;
+  cleanliness: FeedbackCleanliness | null;
+  menuVariety: FeedbackMenuVariety | null;
+  overallExperience: FeedbackOverallExperience | null;
   createdAt: string;
 }
 
@@ -234,6 +247,72 @@ export interface SubmitFeedbackRequest {
   rating: number;
   comment?: string;
 }
+
+/** Cafeteria survey submitted from the kiosk home screen. */
+export interface SubmitFeedbackSurveyRequest {
+  customerName: string;
+  mealSession: FeedbackMealSession;
+  foodQuality: FeedbackFoodQuality;
+  cleanliness: FeedbackCleanliness;
+  menuVariety: FeedbackMenuVariety;
+  overallExperience: FeedbackOverallExperience;
+}
+
+/**
+ * The survey as the customer sees it, in order. The kiosk app keeps its own
+ * copy of this list in Dart (kiosk-app/lib/screens/feedback/cafe_feedback_screen.dart)
+ * - keep the two in step when a question changes.
+ */
+export interface FeedbackSurveyQuestion {
+  key: Exclude<keyof SubmitFeedbackSurveyRequest, "customerName">;
+  prompt: string;
+  options: string[];
+}
+
+export const FEEDBACK_SURVEY_QUESTIONS: FeedbackSurveyQuestion[] = [
+  {
+    key: "mealSession",
+    prompt: "Meal Session",
+    options: ["BREAKFAST", "LUNCH", "SNACKS"],
+  },
+  {
+    key: "foodQuality",
+    prompt: "How would you rate the taste and quality of the food?",
+    options: ["EXCELLENT", "GOOD", "AVERAGE", "NEEDS_IMPROVEMENT"],
+  },
+  {
+    key: "cleanliness",
+    prompt: "How clean and hygienic is the cafeteria seating and serving area?",
+    options: ["VERY_CLEAN", "MOSTLY_CLEAN", "OFTEN_DIRTY"],
+  },
+  {
+    key: "menuVariety",
+    prompt: "How do you feel about the menu variety and options?",
+    options: ["GREAT", "DECENT", "NOT_ENOUGH_VARIETY"],
+  },
+  {
+    key: "overallExperience",
+    prompt: "How would you rate your overall experience at the cafeteria?",
+    options: ["EXCELLENT", "GOOD", "POOR"],
+  },
+];
+
+export const FEEDBACK_ANSWER_LABELS: Record<string, string> = {
+  BREAKFAST: "Breakfast",
+  LUNCH: "Lunch",
+  SNACKS: "Snacks",
+  EXCELLENT: "Excellent",
+  GOOD: "Good",
+  AVERAGE: "Average",
+  NEEDS_IMPROVEMENT: "Needs Improvement",
+  VERY_CLEAN: "Very Clean",
+  MOSTLY_CLEAN: "Mostly Clean",
+  OFTEN_DIRTY: "Often Dirty",
+  GREAT: "Great",
+  DECENT: "Decent",
+  NOT_ENOUGH_VARIETY: "Not Enough Variety",
+  POOR: "Poor",
+};
 
 // ─── SSE Event Types ────────────────────────────────────
 

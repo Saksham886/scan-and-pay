@@ -3,7 +3,11 @@
 import { useState, useEffect } from "react";
 import { useRouter } from "next/navigation";
 import { ArrowLeft, CheckCircle2 } from "lucide-react";
-import { StarRatingInput } from "./star-rating-input";
+import {
+  FEEDBACK_ANSWER_LABELS,
+  FEEDBACK_SURVEY_QUESTIONS,
+  type SubmitFeedbackSurveyRequest,
+} from "@/shared/types";
 
 interface FeedbackScreenProps {
   cafeSlug: string;
@@ -12,14 +16,19 @@ interface FeedbackScreenProps {
 
 const AUTO_REDIRECT_SECONDS = 5;
 
+const MONO = { fontFamily: "var(--font-jb-mono), monospace" };
+
 export function FeedbackScreen({ cafeSlug, cafeName }: FeedbackScreenProps) {
   const router = useRouter();
-  const [rating, setRating] = useState(0);
-  const [comment, setComment] = useState("");
+  const [name, setName] = useState("");
+  const [answers, setAnswers] = useState<Record<string, string>>({});
   const [submitting, setSubmitting] = useState(false);
   const [error, setError] = useState("");
   const [submitted, setSubmitted] = useState(false);
   const [countdown, setCountdown] = useState(AUTO_REDIRECT_SECONDS);
+
+  const complete =
+    name.trim().length > 0 && FEEDBACK_SURVEY_QUESTIONS.every((q) => answers[q.key]);
 
   useEffect(() => {
     if (!submitted) return;
@@ -32,17 +41,21 @@ export function FeedbackScreen({ cafeSlug, cafeName }: FeedbackScreenProps) {
   }, [submitted, countdown, router, cafeSlug]);
 
   const handleSubmit = async () => {
-    if (rating === 0) {
-      setError("Please select a star rating.");
+    if (!complete) {
+      setError("Please enter your name and answer every question.");
       return;
     }
     setError("");
     setSubmitting(true);
     try {
+      const payload = {
+        customerName: name.trim(),
+        ...answers,
+      } as unknown as SubmitFeedbackSurveyRequest;
       const res = await fetch(`/api/cafes/${cafeSlug}/feedback`, {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ rating, comment: comment.trim() || undefined }),
+        body: JSON.stringify(payload),
       });
       const data = await res.json();
       if (!data.success) {
@@ -110,30 +123,50 @@ export function FeedbackScreen({ cafeSlug, cafeName }: FeedbackScreenProps) {
           </button>
         </div>
       ) : (
-        <div className="flex-1 flex flex-col justify-center px-6 py-10 max-w-sm mx-auto w-full animate-fade-in-up">
+        <div className="flex-1 flex flex-col px-6 py-10 max-w-md mx-auto w-full animate-fade-in-up">
           <p
-            className="text-center text-[#e2e0f8] font-bold uppercase mb-6"
+            className="text-center text-[#e2e0f8] font-bold uppercase"
             style={{ fontFamily: "var(--font-display), sans-serif" }}
           >
             How was your experience?
           </p>
+          <p className="text-center text-xs text-[#cbc3d7] mt-2" style={MONO}>
+            A few quick questions - it takes under a minute.
+          </p>
 
-          <StarRatingInput value={rating} onChange={setRating} />
+          <div className="mt-8">
+            <Prompt text="Name" />
+            <input
+              type="text"
+              maxLength={80}
+              value={name}
+              onChange={(e) => setName(e.target.value)}
+              placeholder="Your name"
+              className="w-full mt-2.5 border-2 border-[#494454] bg-[#1e1e2f] px-4 py-3 text-[#e2e0f8] placeholder:text-[#494454] focus:outline-none focus:border-[#cdf200] text-sm transition-colors"
+              style={{ borderRadius: 0, ...MONO }}
+            />
+          </div>
 
-          <textarea
-            className="w-full mt-8 border-2 border-[#494454] bg-[#1e1e2f] px-4 py-3 text-[#e2e0f8] placeholder:text-[#494454] focus:outline-none focus:border-[#cdf200] resize-none text-sm transition-colors"
-            style={{ borderRadius: 0, fontFamily: "var(--font-jb-mono), monospace" }}
-            rows={4}
-            maxLength={1000}
-            placeholder="Tell us more (optional)..."
-            value={comment}
-            onChange={(e) => setComment(e.target.value)}
-          />
+          {FEEDBACK_SURVEY_QUESTIONS.map((question) => (
+            <div key={question.key} className="mt-7">
+              <Prompt text={question.prompt} />
+              <div className="mt-2.5 flex flex-col gap-2.5">
+                {question.options.map((option) => (
+                  <OptionButton
+                    key={option}
+                    label={FEEDBACK_ANSWER_LABELS[option] ?? option}
+                    selected={answers[question.key] === option}
+                    onClick={() => setAnswers((prev) => ({ ...prev, [question.key]: option }))}
+                  />
+                ))}
+              </div>
+            </div>
+          ))}
 
           {error && (
             <div
-              className="mt-4 bg-[#ffb4ab]/10 text-[#ffb4ab] text-sm p-3.5 border-2 border-[#ffb4ab]/40"
-              style={{ fontFamily: "var(--font-jb-mono), monospace" }}
+              className="mt-6 bg-[#ffb4ab]/10 text-[#ffb4ab] text-sm p-3.5 border-2 border-[#ffb4ab]/40"
+              style={MONO}
             >
               {error}
             </div>
@@ -141,15 +174,63 @@ export function FeedbackScreen({ cafeSlug, cafeName }: FeedbackScreenProps) {
 
           <button
             type="button"
-            disabled={submitting}
+            disabled={submitting || !complete}
             onClick={handleSubmit}
-            className="w-full mt-6 bg-[#cdf200] disabled:bg-[#333345] disabled:text-[#cbc3d7] text-black border-2 border-black py-4 font-bold text-sm uppercase tracking-wider neo-shadow active:translate-x-[4px] active:translate-y-[4px] active:shadow-none transition-all duration-75 rounded-full"
-            style={{ fontFamily: "var(--font-jb-mono), monospace" }}
+            className="w-full mt-7 bg-[#cdf200] disabled:bg-[#333345] disabled:text-[#cbc3d7] disabled:shadow-none text-black border-2 border-black py-4 font-bold text-sm uppercase tracking-wider neo-shadow active:translate-x-[4px] active:translate-y-[4px] active:shadow-none transition-all duration-75 rounded-full"
+            style={MONO}
           >
             {submitting ? "Submitting..." : "Submit Feedback"}
           </button>
+
+          {!complete && (
+            <p className="text-center text-xs text-[#cbc3d7] mt-3" style={MONO}>
+              Please answer every question to submit.
+            </p>
+          )}
         </div>
       )}
     </div>
+  );
+}
+
+/** Question label with the required marker every survey field carries. */
+function Prompt({ text }: { text: string }) {
+  return (
+    <p className="text-sm font-bold text-[#e2e0f8]" style={MONO}>
+      {text} <span className="text-[#ffb4ab]">*</span>
+    </p>
+  );
+}
+
+function OptionButton({
+  label,
+  selected,
+  onClick,
+}: {
+  label: string;
+  selected: boolean;
+  onClick: () => void;
+}) {
+  return (
+    <button
+      type="button"
+      onClick={onClick}
+      aria-pressed={selected}
+      className={`w-full flex items-center gap-3 border-2 px-4 py-3.5 text-left text-sm transition-all duration-75 ${
+        selected
+          ? "bg-[#cdf200] border-black text-black font-bold neo-shadow-sm"
+          : "bg-[#1e1e2f] border-[#494454] text-[#e2e0f8] hover:border-[#e2e0f8]"
+      }`}
+      style={{ borderRadius: 0, ...MONO }}
+    >
+      <span
+        className={`w-4 h-4 flex-shrink-0 rounded-full border-2 ${
+          selected ? "border-black bg-black/20" : "border-[#494454]"
+        }`}
+      >
+        {selected && <span className="block w-full h-full rounded-full bg-black scale-50" />}
+      </span>
+      {label}
+    </button>
   );
 }

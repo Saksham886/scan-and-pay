@@ -45,6 +45,40 @@ enum MenuType {
   DINNER
 }
 
+// The cafeteria feedback survey shown on the kiosk home screen. Each enum is
+// one question's answer set; they are deliberately separate from MenuType
+// because the survey wording is the customer's, not the menu schedule's.
+enum FeedbackMealSession {
+  BREAKFAST
+  LUNCH
+  SNACKS
+}
+
+enum FeedbackFoodQuality {
+  EXCELLENT
+  GOOD
+  AVERAGE
+  NEEDS_IMPROVEMENT
+}
+
+enum FeedbackCleanliness {
+  VERY_CLEAN
+  MOSTLY_CLEAN
+  OFTEN_DIRTY
+}
+
+enum FeedbackMenuVariety {
+  GREAT
+  DECENT
+  NOT_ENOUGH_VARIETY
+}
+
+enum FeedbackOverallExperience {
+  EXCELLENT
+  GOOD
+  POOR
+}
+
 // ─── MODELS ─────────────────────────────────────────────
 
 model Cafe {
@@ -104,10 +138,23 @@ model Menu {
 }
 
 model Feedback {
-  id        String   @id @default(uuid())
-  cafeId    String   @map("cafe_id")
-  rating    Int
-  comment   String?
+  id      String  @id @default(uuid())
+  cafeId  String  @map("cafe_id")
+  // Kept non-null so existing averages keep working: survey submissions derive
+  // it from overallExperience (Excellent 5 / Good 3 / Poor 1) — see
+  // src/backend/services/feedback.service.ts.
+  rating  Int
+  comment String?
+
+  // Survey answers. Nullable because rows created before the survey existed
+  // (and the web star-rating screen) only carry rating + comment.
+  customerName      String?                    @map("customer_name")
+  mealSession       FeedbackMealSession?       @map("meal_session")
+  foodQuality       FeedbackFoodQuality?       @map("food_quality")
+  cleanliness       FeedbackCleanliness?
+  menuVariety       FeedbackMenuVariety?       @map("menu_variety")
+  overallExperience FeedbackOverallExperience? @map("overall_experience")
+
   createdAt DateTime @default(now()) @map("created_at")
 
   cafe Cafe @relation(fields: [cafeId], references: [id])

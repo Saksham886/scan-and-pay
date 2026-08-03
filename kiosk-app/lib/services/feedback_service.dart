@@ -1,24 +1,35 @@
 import 'api_client.dart';
 
-/// Standalone star-rating feedback about the cafe, decoupled from any
-/// specific order - mirrors POST /api/cafes/[slug]/feedback on the web app.
-/// Distinct from [OrderService.submitFeedback], which rates a single order
-/// right after checkout.
+/// Standalone cafe feedback, decoupled from any specific order - mirrors
+/// POST /api/cafes/[slug]/feedback on the web app. Distinct from
+/// [OrderService.submitFeedback], which rates a single order right after
+/// checkout.
 class FeedbackService {
   final ApiClient _client;
 
   FeedbackService({ApiClient? client}) : _client = client ?? ApiClient();
 
-  Future<ApiResult<void>> submitCafeFeedback({
+  /// The cafeteria survey shown on the kiosk: a name plus one answer per
+  /// question. Values are the server-side enum names, not the labels the
+  /// customer taps - see FeedbackSurveyQuestion in the feedback screen.
+  Future<ApiResult<void>> submitCafeSurvey({
     required String cafeSlug,
-    required int rating,
-    String? comment,
+    required String customerName,
+    required String mealSession,
+    required String foodQuality,
+    required String cleanliness,
+    required String menuVariety,
+    required String overallExperience,
   }) {
     return _client.postJson(
       '/api/cafes/$cafeSlug/feedback',
       {
-        'rating': rating,
-        if (comment != null && comment.isNotEmpty) 'comment': comment,
+        'customerName': customerName,
+        'mealSession': mealSession,
+        'foodQuality': foodQuality,
+        'cleanliness': cleanliness,
+        'menuVariety': menuVariety,
+        'overallExperience': overallExperience,
       },
       (_) {},
     );
