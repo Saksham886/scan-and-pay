@@ -45,10 +45,10 @@ export const feedbackRepository = {
       where: { cafeId, mealSession: { not: null } },
       select: {
         mealSession: true,
-        rating: true,
         foodQuality: true,
         cleanliness: true,
         menuVariety: true,
+        overallExperience: true,
       },
     });
   },

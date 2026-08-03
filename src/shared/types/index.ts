@@ -297,6 +297,26 @@ export const FEEDBACK_SURVEY_QUESTIONS: FeedbackSurveyQuestion[] = [
   },
 ];
 
+/** The questions a meal session breaks down into - the session itself groups them. */
+export type FeedbackQuestionKey = Exclude<
+  keyof SubmitFeedbackSurveyRequest,
+  "customerName" | "mealSession"
+>;
+
+export interface FeedbackAnswerCount {
+  /** Enum name; label it with FEEDBACK_ANSWER_LABELS. */
+  value: string;
+  count: number;
+  /** Share of the answers given to this question in this session, 0-100. */
+  pct: number;
+}
+
+export interface FeedbackQuestionBreakdown {
+  key: FeedbackQuestionKey;
+  /** Every option, including ones nobody picked, in the order customers saw them. */
+  options: FeedbackAnswerCount[];
+}
+
 /**
  * Per-meal-session rollup shown on the owner dashboard. Covers survey
  * submissions only - entries left before the survey carry no meal session, so
@@ -305,12 +325,7 @@ export const FEEDBACK_SURVEY_QUESTIONS: FeedbackSurveyQuestion[] = [
 export interface FeedbackSessionStats {
   session: FeedbackMealSession;
   responses: number;
-  /** Null until the session has at least one response. */
-  averageRating: number | null;
-  /** Share answering positively (0-100), null when nobody answered that question. */
-  foodPositivePct: number | null;
-  cleanlinessPositivePct: number | null;
-  varietyPositivePct: number | null;
+  questions: FeedbackQuestionBreakdown[];
 }
 
 export const FEEDBACK_ANSWER_LABELS: Record<string, string> = {

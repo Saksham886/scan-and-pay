@@ -5,8 +5,13 @@ import { Button } from "@/frontend/components/ui/button";
 import { EmptyState } from "@/frontend/components/ui/empty-state";
 import { RefreshCw, MessageSquareText } from "lucide-react";
 import { FeedbackEntryCard, StarRow } from "@/frontend/components/feedback-entry-card";
-import { cn } from "@/shared/utils/cn";
-import { FEEDBACK_ANSWER_LABELS, type FeedbackEntry, type FeedbackSessionStats } from "@/shared/types";
+import {
+  FEEDBACK_ANSWER_LABELS,
+  type FeedbackAnswerCount,
+  type FeedbackEntry,
+  type FeedbackQuestionKey,
+  type FeedbackSessionStats,
+} from "@/shared/types";
 
 export default function DashboardFeedbackPage() {
   const [entries, setEntries] = useState<FeedbackEntry[]>([]);
@@ -71,7 +76,7 @@ export default function DashboardFeedbackPage() {
         <div className="mb-5">
           <div className="flex items-baseline justify-between mb-2.5 gap-3">
             <h2 className="text-sm font-semibold text-foreground">By meal session</h2>
-            <p className="text-[11px] text-muted">Bars show the share answering positively</p>
+            <p className="text-[11px] text-muted">Count and share of each answer</p>
           </div>
           <div className="grid gap-3 sm:grid-cols-3">
             {sessionStats.map((stat) => (
@@ -107,11 +112,19 @@ export default function DashboardFeedbackPage() {
   );
 }
 
-/** One meal session's headline numbers: how many answered, and how it scored. */
+/** Short column headings - the customer-facing prompts are full sentences. */
+const QUESTION_LABELS: Record<FeedbackQuestionKey, string> = {
+  foodQuality: "Food quality",
+  cleanliness: "Cleanliness",
+  menuVariety: "Menu variety",
+  overallExperience: "Overall experience",
+};
+
+/** How one meal session answered every question, option by option. */
 function SessionStatCard({ stat }: { stat: FeedbackSessionStats }) {
   return (
     <div className="bg-surface rounded-xl border border-border p-4">
-      <div className="flex items-center justify-between gap-2 mb-3">
+      <div className="flex items-center justify-between gap-2 mb-3 pb-3 border-b border-border">
         <p className="text-sm font-semibold text-foreground">
           {FEEDBACK_ANSWER_LABELS[stat.session] ?? stat.session}
         </p>
@@ -120,47 +133,43 @@ function SessionStatCard({ stat }: { stat: FeedbackSessionStats }) {
         </span>
       </div>
 
-      {stat.averageRating === null ? (
+      {stat.responses === 0 ? (
         <p className="text-xs text-muted">No responses yet</p>
       ) : (
-        <>
-          <div className="flex items-center gap-2 mb-3.5">
-            <p className="text-2xl font-bold leading-none">{stat.averageRating.toFixed(1)}</p>
-            <StarRow rating={Math.round(stat.averageRating)} />
-          </div>
-          <div className="space-y-1.5">
-            <PositiveBar label="Food" pct={stat.foodPositivePct} />
-            <PositiveBar label="Cleanliness" pct={stat.cleanlinessPositivePct} />
-            <PositiveBar label="Variety" pct={stat.varietyPositivePct} />
-          </div>
-        </>
+        <div className="space-y-3.5">
+          {stat.questions.map((question) => (
+            <div key={question.key}>
+              <p className="text-[11px] text-muted uppercase tracking-wide font-medium mb-1.5">
+                {QUESTION_LABELS[question.key]}
+              </p>
+              <div className="space-y-1">
+                {question.options.map((option) => (
+                  <AnswerRow key={option.value} option={option} />
+                ))}
+              </div>
+            </div>
+          ))}
+        </div>
       )}
     </div>
   );
 }
 
-/**
- * Share answering positively on one question. Colour tracks the same thresholds
- * the entry badges use, so a session that needs attention reads red here and in
- * the list below it.
- */
-function PositiveBar({ label, pct }: { label: string; pct: number | null }) {
-  if (pct === null) return null;
-
+/** One option: what it was called, how many picked it, and its share. */
+function AnswerRow({ option }: { option: FeedbackAnswerCount }) {
   return (
     <div className="flex items-center gap-2">
-      <span className="text-[11px] text-muted w-[68px] flex-shrink-0">{label}</span>
-      <div className="flex-1 h-1.5 bg-white/[0.06] rounded-full overflow-hidden">
-        <div
-          className={cn(
-            "h-full rounded-full",
-            pct >= 75 ? "bg-success" : pct >= 50 ? "bg-warning" : "bg-danger"
-          )}
-          style={{ width: `${pct}%` }}
-        />
+      <span className="text-xs text-foreground flex-1 min-w-0 truncate">
+        {FEEDBACK_ANSWER_LABELS[option.value] ?? option.value}
+      </span>
+      <div className="w-14 h-1.5 bg-white/[0.06] rounded-full overflow-hidden flex-shrink-0">
+        <div className="h-full rounded-full bg-primary/70" style={{ width: `${option.pct}%` }} />
       </div>
-      <span className="text-[11px] font-semibold text-foreground w-8 text-right flex-shrink-0">
-        {Math.round(pct)}%
+      <span className="text-xs font-semibold text-foreground w-5 text-right flex-shrink-0 tabular-nums">
+        {option.count}
+      </span>
+      <span className="text-[11px] text-muted w-9 text-right flex-shrink-0 tabular-nums">
+        {Math.round(option.pct)}%
       </span>
     </div>
   );

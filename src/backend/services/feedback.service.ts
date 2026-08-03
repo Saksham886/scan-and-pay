@@ -1,5 +1,6 @@
 import { feedbackRepository } from "@/backend/repositories/feedback.repository";
 import { menuRepository } from "@/backend/repositories/menu.repository";
+import { FEEDBACK_SURVEY_QUESTIONS } from "@/shared/types";
 import type {
   FeedbackCleanliness,
   FeedbackEntry,
@@ -7,7 +8,9 @@ import type {
   FeedbackMealSession,
   FeedbackMenuVariety,
   FeedbackOverallExperience,
+  FeedbackQuestionKey,
   FeedbackSessionStats,
+  FeedbackSurveyQuestion,
   SubmitFeedbackSurveyRequest,
 } from "@/shared/types";
 
@@ -32,14 +35,13 @@ const OVERALL_TO_RATING: Record<FeedbackOverallExperience, number> = {
 };
 
 /**
- * Answers that count as positive in the per-session dashboard percentages.
- * "Mostly clean" and "Decent" sit on the positive side deliberately - they read
- * as "no complaint", and an owner watching for trouble wants the share of
- * customers who did complain to stand out.
+ * The survey minus the meal session itself: within one session, these four are
+ * what there is left to break down.
  */
-const POSITIVE_FOOD_QUALITY: FeedbackFoodQuality[] = ["EXCELLENT", "GOOD"];
-const POSITIVE_CLEANLINESS: FeedbackCleanliness[] = ["VERY_CLEAN", "MOSTLY_CLEAN"];
-const POSITIVE_MENU_VARIETY: FeedbackMenuVariety[] = ["GREAT", "DECENT"];
+const SESSION_QUESTIONS = FEEDBACK_SURVEY_QUESTIONS.filter(
+  (question): question is FeedbackSurveyQuestion & { key: FeedbackQuestionKey } =>
+    question.key !== "mealSession"
+);
 
 export const feedbackService = {
   async createFeedback(cafeSlug: string, rating: number, comment?: string): Promise<FeedbackEntry> {
@@ -110,43 +112,38 @@ export const feedbackService = {
   },
 
   /**
-   * Breakfast/lunch/snacks rollup for the owner dashboard. Every session is
-   * returned even with no responses, so the row keeps its shape instead of
-   * reflowing as feedback trickles in over the day.
+   * Breakfast/lunch/snacks rollup for the owner dashboard: how many people
+   * answered in each session, and how their answers split across every option.
+   * Sessions with no responses are still returned so the row keeps its shape
+   * instead of reflowing as feedback trickles in over the day.
    */
   async getSessionStatsForCafe(cafeId: string): Promise<FeedbackSessionStats[]> {
     const rows = await feedbackRepository.getSurveyAnswersForCafe(cafeId);
 
     return MEAL_SESSIONS.map((session) => {
       const forSession = rows.filter((row) => row.mealSession === session);
-      if (forSession.length === 0) {
-        return {
-          session,
-          responses: 0,
-          averageRating: null,
-          foodPositivePct: null,
-          cleanlinessPositivePct: null,
-          varietyPositivePct: null,
-        };
-      }
 
-      const ratingTotal = forSession.reduce((sum, row) => sum + row.rating, 0);
       return {
         session,
         responses: forSession.length,
-        averageRating: ratingTotal / forSession.length,
-        foodPositivePct: sharePositive(
-          forSession.map((row) => row.foodQuality),
-          POSITIVE_FOOD_QUALITY
-        ),
-        cleanlinessPositivePct: sharePositive(
-          forSession.map((row) => row.cleanliness),
-          POSITIVE_CLEANLINESS
-        ),
-        varietyPositivePct: sharePositive(
-          forSession.map((row) => row.menuVariety),
-          POSITIVE_MENU_VARIETY
-        ),
+        questions: SESSION_QUESTIONS.map((question) => {
+          // Unanswered questions drop out of the denominator, so a percentage
+          // always reads as "of the people who answered this one".
+          const answers = forSession.map((row) => row[question.key]);
+          const answered = answers.filter((answer) => answer !== null).length;
+
+          return {
+            key: question.key,
+            options: question.options.map((option) => {
+              const count = answers.filter((answer) => answer === option).length;
+              return {
+                value: option,
+                count,
+                pct: answered === 0 ? 0 : (count / answered) * 100,
+              };
+            }),
+          };
+        }),
       };
     });
   },
@@ -160,17 +157,6 @@ export const feedbackService = {
     };
   },
 };
-
-/**
- * Share of answers that fall in [positive], 0-100. Skips unanswered questions
- * rather than counting them against the session - a legacy row that never asked
- * about cleanliness isn't evidence the place was dirty.
- */
-function sharePositive<T extends string>(answers: (T | null)[], positive: T[]): number | null {
-  const answered = answers.filter((answer): answer is T => answer !== null);
-  if (answered.length === 0) return null;
-  return (answered.filter((answer) => positive.includes(answer)).length / answered.length) * 100;
-}
 
 function requireAnswer<T extends string>(value: unknown, allowed: T[], field: string): T {
   if (typeof value !== "string" || !allowed.includes(value as T)) {
