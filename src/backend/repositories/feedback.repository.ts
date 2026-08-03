@@ -34,6 +34,25 @@ export const feedbackRepository = {
     });
   },
 
+  /**
+   * Answer columns for every survey row of one cafe, feeding the per-session
+   * rollup on the owner dashboard. Rolled up in the service rather than by
+   * groupBy: each question's distribution would otherwise cost its own query,
+   * and a single cafe's feedback is small enough to fold in memory.
+   */
+  async getSurveyAnswersForCafe(cafeId: string) {
+    return prisma.feedback.findMany({
+      where: { cafeId, mealSession: { not: null } },
+      select: {
+        mealSession: true,
+        rating: true,
+        foodQuality: true,
+        cleanliness: true,
+        menuVariety: true,
+      },
+    });
+  },
+
   async getFeedbackForCafe(cafeId: string, options?: { limit?: number; offset?: number }) {
     const [entries, total, avg] = await Promise.all([
       prisma.feedback.findMany({

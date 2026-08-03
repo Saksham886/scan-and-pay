@@ -5,12 +5,14 @@ import { Button } from "@/frontend/components/ui/button";
 import { EmptyState } from "@/frontend/components/ui/empty-state";
 import { RefreshCw, MessageSquareText } from "lucide-react";
 import { FeedbackEntryCard, StarRow } from "@/frontend/components/feedback-entry-card";
-import type { FeedbackEntry } from "@/shared/types";
+import { cn } from "@/shared/utils/cn";
+import { FEEDBACK_ANSWER_LABELS, type FeedbackEntry, type FeedbackSessionStats } from "@/shared/types";
 
 export default function DashboardFeedbackPage() {
   const [entries, setEntries] = useState<FeedbackEntry[]>([]);
   const [total, setTotal] = useState(0);
   const [averageRating, setAverageRating] = useState<number | null>(null);
+  const [sessionStats, setSessionStats] = useState<FeedbackSessionStats[]>([]);
   const [loading, setLoading] = useState(true);
 
   const fetchFeedback = useCallback(async () => {
@@ -22,6 +24,7 @@ export default function DashboardFeedbackPage() {
         setEntries(data.data.entries);
         setTotal(data.data.total);
         setAverageRating(data.data.averageRating);
+        setSessionStats(data.data.sessionStats ?? []);
       }
     } catch {
       console.error("Failed to fetch feedback");
@@ -64,6 +67,20 @@ export default function DashboardFeedbackPage() {
         </div>
       )}
 
+      {!loading && sessionStats.some((stat) => stat.responses > 0) && (
+        <div className="mb-5">
+          <div className="flex items-baseline justify-between mb-2.5 gap-3">
+            <h2 className="text-sm font-semibold text-foreground">By meal session</h2>
+            <p className="text-[11px] text-muted">Bars show the share answering positively</p>
+          </div>
+          <div className="grid gap-3 sm:grid-cols-3">
+            {sessionStats.map((stat) => (
+              <SessionStatCard key={stat.session} stat={stat} />
+            ))}
+          </div>
+        </div>
+      )}
+
       {loading ? (
         <div className="space-y-3">
           {[...Array(4)].map((_, i) => (
@@ -86,6 +103,65 @@ export default function DashboardFeedbackPage() {
           ))}
         </div>
       )}
+    </div>
+  );
+}
+
+/** One meal session's headline numbers: how many answered, and how it scored. */
+function SessionStatCard({ stat }: { stat: FeedbackSessionStats }) {
+  return (
+    <div className="bg-surface rounded-xl border border-border p-4">
+      <div className="flex items-center justify-between gap-2 mb-3">
+        <p className="text-sm font-semibold text-foreground">
+          {FEEDBACK_ANSWER_LABELS[stat.session] ?? stat.session}
+        </p>
+        <span className="text-[11px] text-muted flex-shrink-0">
+          {stat.responses} {stat.responses === 1 ? "response" : "responses"}
+        </span>
+      </div>
+
+      {stat.averageRating === null ? (
+        <p className="text-xs text-muted">No responses yet</p>
+      ) : (
+        <>
+          <div className="flex items-center gap-2 mb-3.5">
+            <p className="text-2xl font-bold leading-none">{stat.averageRating.toFixed(1)}</p>
+            <StarRow rating={Math.round(stat.averageRating)} />
+          </div>
+          <div className="space-y-1.5">
+            <PositiveBar label="Food" pct={stat.foodPositivePct} />
+            <PositiveBar label="Cleanliness" pct={stat.cleanlinessPositivePct} />
+            <PositiveBar label="Variety" pct={stat.varietyPositivePct} />
+          </div>
+        </>
+      )}
+    </div>
+  );
+}
+
+/**
+ * Share answering positively on one question. Colour tracks the same thresholds
+ * the entry badges use, so a session that needs attention reads red here and in
+ * the list below it.
+ */
+function PositiveBar({ label, pct }: { label: string; pct: number | null }) {
+  if (pct === null) return null;
+
+  return (
+    <div className="flex items-center gap-2">
+      <span className="text-[11px] text-muted w-[68px] flex-shrink-0">{label}</span>
+      <div className="flex-1 h-1.5 bg-white/[0.06] rounded-full overflow-hidden">
+        <div
+          className={cn(
+            "h-full rounded-full",
+            pct >= 75 ? "bg-success" : pct >= 50 ? "bg-warning" : "bg-danger"
+          )}
+          style={{ width: `${pct}%` }}
+        />
+      </div>
+      <span className="text-[11px] font-semibold text-foreground w-8 text-right flex-shrink-0">
+        {Math.round(pct)}%
+      </span>
     </div>
   );
 }

@@ -297,6 +297,22 @@ export const FEEDBACK_SURVEY_QUESTIONS: FeedbackSurveyQuestion[] = [
   },
 ];
 
+/**
+ * Per-meal-session rollup shown on the owner dashboard. Covers survey
+ * submissions only - entries left before the survey carry no meal session, so
+ * there is nothing to attribute them to.
+ */
+export interface FeedbackSessionStats {
+  session: FeedbackMealSession;
+  responses: number;
+  /** Null until the session has at least one response. */
+  averageRating: number | null;
+  /** Share answering positively (0-100), null when nobody answered that question. */
+  foodPositivePct: number | null;
+  cleanlinessPositivePct: number | null;
+  varietyPositivePct: number | null;
+}
+
 export const FEEDBACK_ANSWER_LABELS: Record<string, string> = {
   BREAKFAST: "Breakfast",
   LUNCH: "Lunch",
