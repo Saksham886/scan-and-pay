@@ -16,7 +16,6 @@ import {
 export default function DashboardFeedbackPage() {
   const [entries, setEntries] = useState<FeedbackEntry[]>([]);
   const [total, setTotal] = useState(0);
-  const [averageRating, setAverageRating] = useState<number | null>(null);
   const [sessionStats, setSessionStats] = useState<FeedbackSessionStats[]>([]);
   const [loading, setLoading] = useState(true);
 
@@ -28,7 +27,6 @@ export default function DashboardFeedbackPage() {
       if (data.success) {
         setEntries(data.data.entries);
         setTotal(data.data.total);
-        setAverageRating(data.data.averageRating);
         setSessionStats(data.data.sessionStats ?? []);
       }
     } catch {
@@ -60,11 +58,6 @@ export default function DashboardFeedbackPage() {
           <div>
             <p className="text-[11px] text-muted uppercase tracking-wide font-medium">Responses</p>
             <p className="text-lg font-bold">{total}</p>
-          </div>
-          <div className="w-px h-8 bg-border" />
-          <div>
-            <p className="text-[11px] text-muted uppercase tracking-wide font-medium">Average Rating</p>
-            <p className="text-lg font-bold">{averageRating?.toFixed(1) ?? "-"}</p>
           </div>
         </div>
       )}
