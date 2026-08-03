@@ -4,7 +4,7 @@ import { useState, useEffect, useCallback } from "react";
 import { Button } from "@/frontend/components/ui/button";
 import { EmptyState } from "@/frontend/components/ui/empty-state";
 import { RefreshCw, MessageSquareText } from "lucide-react";
-import { FeedbackEntryCard, StarRow } from "@/frontend/components/feedback-entry-card";
+import { FeedbackEntryCard } from "@/frontend/components/feedback-entry-card";
 import {
   FEEDBACK_ANSWER_LABELS,
   type FeedbackAnswerCount,
@@ -64,10 +64,7 @@ export default function DashboardFeedbackPage() {
           <div className="w-px h-8 bg-border" />
           <div>
             <p className="text-[11px] text-muted uppercase tracking-wide font-medium">Average Rating</p>
-            <div className="flex items-center gap-2">
-              <p className="text-lg font-bold">{averageRating?.toFixed(1) ?? "-"}</p>
-              {averageRating !== null && <StarRow rating={Math.round(averageRating)} />}
-            </div>
+            <p className="text-lg font-bold">{averageRating?.toFixed(1) ?? "-"}</p>
           </div>
         </div>
       )}
