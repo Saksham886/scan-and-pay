@@ -3,7 +3,7 @@
 ///   flutter run --dart-define=API_BASE_URL=http://192.168.1.20:3003
 const String kApiBaseUrl = String.fromEnvironment(
   'API_BASE_URL',
-  defaultValue: 'https://scan-and-pay-nine.vercel.app',
+  defaultValue: 'https://scan-and-pay-sable.vercel.app',
 );
 
 /// Ceiling on any single API call. Without one, a kiosk on flaky cafe wifi can
