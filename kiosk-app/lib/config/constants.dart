@@ -14,8 +14,24 @@ const Duration kApiTimeout = Duration(seconds: 15);
 const Duration kMenuRefreshInterval = Duration(seconds: 60);
 
 const Duration kPostPaymentPollInterval = Duration(seconds: 2);
-const int kPostPaymentMaxAttempts = 15;
+/// Kept deliberately patient (~2 min at the 2s interval): a payment made on a
+/// flaky office network can take well over the old 30s for the webhook/UPI to
+/// settle, and declaring FAILED while the money is in flight is the worst
+/// outcome on a kiosk. A network error mid-poll is retried, never failed.
+const int kPostPaymentMaxAttempts = 60;
 const Duration kTransientErrorExtraDelay = Duration(seconds: 3);
+
+/// Native-QR payment screen: how often the kiosk asks the server to reconcile
+/// the QR against Razorpay while the customer scans and pays. 4s stays well
+/// under the /reconcile route's 30-req/min per-IP rate limit (~15/min).
+const Duration kQrPollInterval = Duration(seconds: 4);
+
+/// How long the QR stays on screen awaiting payment before the kiosk gives up
+/// and resets for the next customer. Patient on purpose — a slow scan or a
+/// webhook/UPI lag must not read as a failure. Stays under the server's QR
+/// close_by (RAZORPAY_QR_CLOSE_MINUTES, default 15m) but longer than a normal
+/// scan-and-pay.
+const Duration kQrPaymentTimeout = Duration(minutes: 3);
 
 /// How long the post-payment receipt stays on screen before the kiosk
 /// resets to the menu for the next customer. Kept short on purpose - unlike

@@ -6,6 +6,7 @@ import {
   verifyCheckoutSignature,
   fetchPaymentLink,
   fetchOrderPayments,
+  fetchQrPayments,
 } from "@/backend/lib/razorpay";
 import { broadcastNewOrder, sendOrderPlacedWhatsApp } from "@/backend/lib/order-events";
 import type { Prisma } from "@/generated/prisma";
@@ -107,10 +108,18 @@ export const paymentService = {
         | Record<string, unknown>
         | undefined;
       const notes = entity?.notes as Record<string, unknown> | undefined;
+      // qr_code.credited carries the notes on the QR entity, not the payment.
+      const qrEntity = (payload?.qr_code as Record<string, unknown> | undefined)?.entity as
+        | Record<string, unknown>
+        | undefined;
+      const qrNotes = qrEntity?.notes as Record<string, unknown> | undefined;
       // Payment Links carry the txn id as reference_id; Standard Checkout
-      // orders carry it in notes, since payment.captured doesn't echo the
-      // order's receipt field.
-      merchantTxnId = (linkEntity?.reference_id as string) || (notes?.merchantTxnId as string);
+      // orders carry it in the payment's notes (payment.captured doesn't echo
+      // the order's receipt field); dynamic QRs carry it in the QR's notes.
+      merchantTxnId =
+        (linkEntity?.reference_id as string) ||
+        (notes?.merchantTxnId as string) ||
+        (qrNotes?.merchantTxnId as string);
       if (!merchantTxnId) {
         return { success: false, message: "Missing merchant transaction id" };
       }
@@ -142,7 +151,7 @@ export const paymentService = {
       | undefined;
     const isLinkEvent = payload?.payment_link !== undefined;
 
-    const successEvents = ["payment_link.paid", "payment.captured", "order.paid"];
+    const successEvents = ["payment_link.paid", "payment.captured", "order.paid", "qr_code.credited"];
     // payment.failed is only terminal for a Payment Link, which is dead once
     // it fails. A Standard Checkout order stays open for another attempt, and
     // the kiosk's "Try Again" reopens that same order — marking it FAILED here
@@ -263,15 +272,22 @@ export const paymentService = {
           ? { keyId: razorpayKeyId, keySecret: razorpayKeySecret }
           : undefined;
 
-      // Standard Checkout orders come back as `order_…`, the older hosted
-      // Payment Links as `plink_…`. Discriminating on the prefix keeps links
-      // still in flight across the deploy reconciling against the right API.
+      // Standard Checkout orders come back as `order_…`, dynamic UPI QRs as
+      // `qr_…`, and the older hosted Payment Links as `plink_…`. Discriminating
+      // on the prefix keeps anything still in flight across a deploy (or a
+      // flag flip) reconciling against the right API.
       const isCheckoutOrder = payment.razorpayOrderId.startsWith("order_");
+      const isQr = payment.razorpayOrderId.startsWith("qr_");
 
       let isSuccess: boolean;
       let razorpayPaymentId: string | undefined;
 
-      if (isCheckoutOrder) {
+      if (isQr) {
+        const qrResult = await fetchQrPayments(payment.razorpayOrderId, razorpayCredentials);
+        if (!qrResult.success || qrResult.status === "pending") return "pending";
+        isSuccess = qrResult.status === "paid";
+        razorpayPaymentId = qrResult.paymentId;
+      } else if (isCheckoutOrder) {
         const orderResult = await fetchOrderPayments(payment.razorpayOrderId, razorpayCredentials);
         if (!orderResult.success || orderResult.status === "pending") return "pending";
         isSuccess = orderResult.status === "paid";

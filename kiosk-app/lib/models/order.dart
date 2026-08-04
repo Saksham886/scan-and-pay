@@ -94,12 +94,24 @@ class CreateOrderResponse {
   /// order still awaiting payment. Only this tells them apart.
   final OrderStatus? status;
 
+  /// Native-QR flow only (server flag RAZORPAY_USE_QR): the hosted image URL of
+  /// the single-use UPI QR the kiosk renders itself, and the merchant txn id it
+  /// polls /reconcile with. Both null for the WebView / PhonePe / subsidised
+  /// paths, so a QR-aware client checks [paymentQrImageUrl] before it ever
+  /// inspects [paymentRedirectUrl].
+  final String? paymentQrImageUrl;
+  final String? paymentQrId;
+  final String? merchantTxnId;
+
   CreateOrderResponse({
     required this.orderId,
     required this.orderNumber,
     required this.totalPaise,
     required this.paymentRedirectUrl,
     this.status,
+    this.paymentQrImageUrl,
+    this.paymentQrId,
+    this.merchantTxnId,
   });
 
   /// Null rather than a guess when the field is absent or unrecognised: a
@@ -120,6 +132,9 @@ class CreateOrderResponse {
       totalPaise: json['totalPaise'] as int,
       paymentRedirectUrl: json['paymentRedirectUrl'] as String? ?? '',
       status: _parseStatus(json['orderStatus']),
+      paymentQrImageUrl: json['paymentQrImageUrl'] as String?,
+      paymentQrId: json['paymentQrId'] as String?,
+      merchantTxnId: json['merchantTxnId'] as String?,
     );
   }
 }

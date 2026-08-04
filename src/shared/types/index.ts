@@ -88,6 +88,17 @@ export interface CreateOrderResponse {
    *  Clients must branch on this rather than on the empty string, or they will
    *  show a receipt for an order nobody has paid for. */
   orderStatus: OrderStatus;
+  /** Present only for the native-QR flow (RAZORPAY_USE_QR): the hosted image
+   *  URL of the single-use dynamic UPI QR the kiosk renders itself instead of
+   *  opening Razorpay's Standard Checkout in a WebView. Absent for the WebView,
+   *  PhonePe, and subsidised paths — those keep using paymentRedirectUrl. */
+  paymentQrImageUrl?: string;
+  /** The `qr_…` id backing the QR (stored in the same column as `order_`/`plink_`
+   *  ids); returned for debugging/traceability. */
+  paymentQrId?: string;
+  /** The merchant transaction id the kiosk polls /reconcile with. Only needed
+   *  by the QR flow, where there is no return-URL redirect to carry it. */
+  merchantTxnId?: string;
 }
 
 export interface OrderSummary {

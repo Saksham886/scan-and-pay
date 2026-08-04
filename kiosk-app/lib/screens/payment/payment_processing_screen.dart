@@ -91,8 +91,14 @@ class _PaymentProcessingScreenState extends State<PaymentProcessingScreen> {
       await Future.delayed(kPostPaymentPollInterval);
       return _poll(attempt + 1);
     } catch (_) {
+      // A thrown request error (socket drop / DNS blip on office wifi) is not a
+      // failed payment — the money may already be in flight and the webhook
+      // will settle it. Treat it like a transient status: wait and keep
+      // polling, bounded by kPostPaymentMaxAttempts, rather than declaring
+      // failure the moment the network hiccups.
       if (!mounted) return;
-      _onFailure();
+      await Future.delayed(kTransientErrorExtraDelay);
+      return _poll(attempt + 1);
     }
   }
 

@@ -40,6 +40,22 @@ class OrderService {
     );
   }
 
+  /// Actively reconciles the payment against the gateway and returns the
+  /// resulting order status in a single call — the native-QR screen polls this
+  /// while the customer scans and pays. Unlike [reconcile], the caller uses the
+  /// result. A 202 ("still pending") arrives as success:false / data:null,
+  /// which the caller treats as "keep waiting", never as a failure.
+  Future<ApiResult<OrderSummary>> reconcileForStatus({
+    required String orderId,
+    required String merchantTransactionId,
+  }) {
+    return _client.postJson(
+      '/api/orders/$orderId/reconcile',
+      {'merchantTransactionId': merchantTransactionId},
+      (data) => OrderSummary.fromJson(data as Map<String, dynamic>),
+    );
+  }
+
   Future<ApiResult<void>> submitFeedback({
     required String orderId,
     required int rating,

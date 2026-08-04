@@ -3,7 +3,7 @@ import { orderRepository } from "@/backend/repositories/order.repository";
 import { paymentRepository } from "@/backend/repositories/payment.repository";
 import { generateOrderNumber } from "@/backend/lib/utils/order-number";
 import { initiatePayment } from "@/backend/lib/phonepe";
-import { createCheckoutOrder, createPaymentLink } from "@/backend/lib/razorpay";
+import { createCheckoutOrder, createPaymentLink, createUpiQr } from "@/backend/lib/razorpay";
 import { sseManager } from "@/backend/lib/sse";
 import { broadcastNewOrder, sendOrderPlacedWhatsApp } from "@/backend/lib/order-events";
 import type { CreateOrderRequest, CreateOrderResponse, OrderSummary } from "@/shared/types";
@@ -28,6 +28,19 @@ const APP_URL = process.env.NEXT_PUBLIC_APP_URL || `http://localhost:${process.e
  * already in flight settle against the right API whichever way this is set.
  */
 const USE_PAYMENT_LINKS = process.env.RAZORPAY_USE_PAYMENT_LINKS === "true";
+
+/**
+ * Native single-QR flow: instead of opening Razorpay Standard Checkout in a
+ * kiosk WebView (merchant-confirm screen, mandatory phone field, a QR that
+ * regenerates when the customer switches UPI method), the server mints one
+ * fixed-amount single-use UPI QR and the kiosk renders it itself. Takes
+ * precedence over both USE_PAYMENT_LINKS and plain Checkout when on.
+ * Off by default so it can be enabled per-environment for a pilot rollout.
+ */
+const USE_QR = process.env.RAZORPAY_USE_QR === "true";
+
+/** How long a QR stays payable before it auto-expires (close_by). */
+const QR_CLOSE_MINUTES = Number(process.env.RAZORPAY_QR_CLOSE_MINUTES) || 15;
 
 type ExistingOrder = NonNullable<Awaited<ReturnType<typeof orderRepository.findByIdempotencyKey>>>;
 
@@ -246,8 +259,32 @@ export const orderService = {
     });
 
     let paymentRedirectUrl: string;
+    let paymentQrImageUrl: string | undefined;
+    let paymentQrId: string | undefined;
 
-    if (provider === "RAZORPAY" && USE_PAYMENT_LINKS) {
+    if (provider === "RAZORPAY" && USE_QR) {
+      const closeBy = Math.floor(Date.now() / 1000) + QR_CLOSE_MINUTES * 60;
+      const result = await createUpiQr({
+        merchantTransactionId: merchantTxnId,
+        amount: chargeableTotal,
+        description: `Order #${order.orderNumber}`,
+        closeBy,
+        credentials: razorpayCredentials,
+      });
+      if (!result.success || !result.qrId) {
+        await orderRepository.updateOrderStatus(order.id, "FAILED");
+        throw new Error(result.error || "Failed to initiate payment");
+      }
+      // Reuses the razorpayOrderId column; the `qr_` prefix is what
+      // reconcilePayment discriminates on (vs `order_` / `plink_`).
+      await paymentRepository.attachRazorpayOrderId(merchantTxnId, result.qrId);
+      // No hosted page to send the kiosk to — it renders the QR itself and
+      // polls /reconcile. paymentRedirectUrl stays empty; the QR-aware kiosk
+      // branches on paymentQrImageUrl before it ever inspects the redirect url.
+      paymentRedirectUrl = "";
+      paymentQrImageUrl = result.imageUrl;
+      paymentQrId = result.qrId;
+    } else if (provider === "RAZORPAY" && USE_PAYMENT_LINKS) {
       const returnUrl = `${APP_URL}/${cafe.slug}/order/payment-return?txn=${merchantTxnId}&orderId=${order.id}`;
       const result = await createPaymentLink({
         merchantTransactionId: merchantTxnId,
@@ -310,6 +347,11 @@ export const orderService = {
       orderNumber: order.orderNumber,
       totalPaise,
       paymentRedirectUrl,
+      paymentQrImageUrl,
+      paymentQrId,
+      // Only meaningful to the QR flow (no return-URL redirect carries it),
+      // but harmless to include otherwise.
+      merchantTxnId,
       orderStatus: "PAYMENT_PENDING",
     };
   },

@@ -186,6 +186,105 @@ export async function fetchOrderPayments(
   }
 }
 
+interface CreateUpiQrParams {
+  merchantTransactionId: string;
+  amount: number; // in paise
+  description: string;
+  closeBy: number; // epoch seconds; when the QR auto-expires
+  credentials?: RazorpayCredentials;
+}
+
+/**
+ * Creates a single-use dynamic UPI QR code for a fixed amount, rendered
+ * natively on the kiosk instead of Razorpay's interactive Standard Checkout.
+ *
+ * On a shared kiosk the customer pays from their own phone by scanning, so the
+ * merchant-confirm screen, the mandatory contact field, and the payment-method
+ * picker that Checkout forces are all noise. A dynamic QR skips every one of
+ * them: `fixed_amount` locks the total, `close_by` expires the code, and
+ * `single_use` auto-closes it after the first successful payment — so a stale
+ * or re-scanned QR from an earlier attempt can't quietly collect a second one.
+ *
+ * The returned `qrId` (prefixed `qr_`) is stored in the same razorpayOrderId
+ * column as Standard Checkout's `order_` and Payment Links' `plink_` ids;
+ * reconcilePayment tells the three apart by that prefix.
+ */
+export async function createUpiQr(
+  params: CreateUpiQrParams
+): Promise<{ success: boolean; qrId?: string; imageUrl?: string; error?: string }> {
+  const creds = resolveCredentials(params.credentials);
+  if (!creds.keyId || !creds.keySecret) {
+    return { success: false, error: "Razorpay is not configured" };
+  }
+
+  try {
+    const response = await fetch(`${RAZORPAY_BASE_URL}/payments/qr_codes`, {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+        Authorization: authHeader(creds),
+      },
+      body: JSON.stringify({
+        type: "upi_qr",
+        usage: "single_use",
+        fixed_amount: true,
+        payment_amount: params.amount,
+        description: params.description,
+        close_by: params.closeBy,
+        // Echoed back on the qr_code.credited webhook and readable via the QR
+        // payments API — this is what maps a scan back to our order.
+        notes: { merchantTxnId: params.merchantTransactionId },
+      }),
+    });
+
+    const data = await response.json();
+
+    if (response.ok && data.id) {
+      return { success: true, qrId: data.id, imageUrl: data.image_url };
+    }
+
+    return { success: false, error: data.error?.description || "QR creation failed" };
+  } catch (error) {
+    return {
+      success: false,
+      error: error instanceof Error ? error.message : "QR creation failed",
+    };
+  }
+}
+
+/**
+ * Reconcile status for a dynamic UPI QR. Mirrors fetchOrderPayments: a QR can
+ * be scanned more than once before one succeeds, so a single captured payment
+ * wins. Deliberately never returns "failed" — an as-yet-uncaptured QR stays
+ * "pending" (the kiosk's own timeout ends the wait), so a QR that is still
+ * open for another scan is never prematurely marked FAILED against the order.
+ */
+export async function fetchQrPayments(
+  qrId: string,
+  credentials?: RazorpayCredentials
+): Promise<{ success: boolean; status: "paid" | "failed" | "pending"; paymentId?: string }> {
+  const creds = resolveCredentials(credentials);
+
+  try {
+    const response = await fetch(`${RAZORPAY_BASE_URL}/payments/qr_codes/${qrId}/payments`, {
+      method: "GET",
+      headers: { Authorization: authHeader(creds) },
+    });
+
+    const data = await response.json();
+    if (!response.ok) return { success: false, status: "pending" };
+
+    const items = (data.items || []) as Array<Record<string, unknown>>;
+    const captured = items.find((p) => p.status === "captured");
+    if (captured) {
+      return { success: true, status: "paid", paymentId: captured.id as string };
+    }
+    return { success: true, status: "pending" };
+  } catch {
+    return { success: false, status: "pending" };
+  }
+}
+
 /**
  * Verifies the signature Checkout hands back in its success handler. This is
  * the fast confirmation path — it lets the kiosk show "paid" immediately

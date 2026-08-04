@@ -15,6 +15,7 @@ import '../../widgets/veg_indicator.dart';
 import '../menu/menu_screen.dart';
 import '../order_status/order_status_screen.dart';
 import '../payment/payment_webview_screen.dart';
+import '../payment/qr_payment_screen.dart';
 
 class CheckoutScreen extends StatefulWidget {
   const CheckoutScreen({super.key});
@@ -82,7 +83,25 @@ class _CheckoutScreenState extends State<CheckoutScreen> {
       final order = result.data!;
       setState(() => _loading = false);
 
-      if (order.paymentRedirectUrl.isNotEmpty) {
+      final qrUrl = order.paymentQrImageUrl;
+      final txn = order.merchantTxnId;
+      if (qrUrl != null && qrUrl.isNotEmpty && txn != null && txn.isNotEmpty) {
+        // Native single-QR flow (server flag RAZORPAY_USE_QR): render the QR
+        // ourselves instead of opening Razorpay Standard Checkout in a WebView.
+        Navigator.of(context).push(
+          MaterialPageRoute(
+            builder:
+                (_) => QrPaymentScreen(
+                  orderId: order.orderId,
+                  cafeSlug: cafeSlug,
+                  merchantTxnId: txn,
+                  qrImageUrl: qrUrl,
+                  amountPaise: order.totalPaise,
+                  orderNumber: order.orderNumber,
+                ),
+          ),
+        );
+      } else if (order.paymentRedirectUrl.isNotEmpty) {
         Navigator.of(context).push(
           MaterialPageRoute(
             builder:
