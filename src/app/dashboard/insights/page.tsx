@@ -34,7 +34,7 @@ export default function OwnerDeepInsightsPage() {
 
   useEffect(() => {
     let cancelled = false;
-    fetch(`/api/dashboard/insights?windowDays=${windowDays}`)
+    fetch(`/api/dashboard/insights?windowDays=${windowDays}`, { cache: "no-store" })
       .then(async (r) => ({ ok: r.ok, body: await r.json() }))
       .then(({ ok, body }) => {
         if (cancelled) return;

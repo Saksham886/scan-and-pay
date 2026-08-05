@@ -29,7 +29,7 @@ export default function DeepInsightsPage() {
 
   useEffect(() => {
     let cancelled = false;
-    fetch(`/api/admin/insights?windowDays=${windowDays}`)
+    fetch(`/api/admin/insights?windowDays=${windowDays}`, { cache: "no-store" })
       .then((r) => r.json())
       .then((d) => {
         if (cancelled) return;
