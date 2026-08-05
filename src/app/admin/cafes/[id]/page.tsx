@@ -136,6 +136,15 @@ export default function AdminCafeDetailPage() {
   const [razorpayKeySecret, setRazorpayKeySecret] = useState("");
   const [razorpayWebhookSecret, setRazorpayWebhookSecret] = useState("");
   const [showRazorpaySecret, setShowRazorpaySecret] = useState(false);
+  const [webhookCopied, setWebhookCopied] = useState(false);
+  // Admin panel is served from the same origin as the backend, so this is the
+  // exact webhook URL the super admin must register in each cafe's Razorpay
+  // dashboard. Empty during SSR (window undefined); the modal only renders
+  // client-side once the cafe has loaded, so it's always populated when shown.
+  const webhookUrl =
+    typeof window !== "undefined"
+      ? `${window.location.origin}/api/webhooks/razorpay`
+      : "";
   const [switchingProvider, setSwitchingProvider] = useState(false);
 
   // Cafe users state
@@ -1087,13 +1096,60 @@ export default function AdminCafeDetailPage() {
                   <p className="text-xs text-muted">Leave blank to keep the existing key secret.</p>
                 )}
               </div>
-              <Input
-                id="razorpay-webhook-secret"
-                label="Webhook Secret (optional)"
-                value={razorpayWebhookSecret}
-                onChange={(e) => setRazorpayWebhookSecret(e.target.value)}
-                placeholder="Leave blank to keep existing / use global default"
-              />
+              <div className="space-y-2">
+                <label
+                  className="block text-xs font-medium text-foreground"
+                  htmlFor="razorpay-webhook-secret"
+                >
+                  Webhook Secret <span className="text-muted">(recommended)</span>
+                </label>
+                <div className="bg-warning/10 border border-warning/25 rounded-xl p-3 text-xs text-foreground/90 space-y-2">
+                  <p>
+                    In this cafe&apos;s Razorpay dashboard, go to{" "}
+                    <strong>Settings &gt; Webhooks &gt; Add New Webhook</strong> and use this URL:
+                  </p>
+                  <div className="flex items-center gap-2">
+                    <code className="flex-1 break-all rounded-lg bg-background border border-border px-2 py-1 font-mono text-[11px]">
+                      {webhookUrl}
+                    </code>
+                    <button
+                      type="button"
+                      onClick={() => {
+                        navigator.clipboard?.writeText(webhookUrl);
+                        setWebhookCopied(true);
+                        setTimeout(() => setWebhookCopied(false), 1500);
+                      }}
+                      className="shrink-0 rounded-lg border border-border px-2 py-1 text-[11px] font-medium text-muted hover:text-foreground"
+                    >
+                      {webhookCopied ? "Copied!" : "Copy"}
+                    </button>
+                  </div>
+                  <p>
+                    Enable events <span className="font-mono">qr_code.credited</span>,{" "}
+                    <span className="font-mono">payment.captured</span>,{" "}
+                    <span className="font-mono">order.paid</span> — then paste the webhook&apos;s
+                    signing secret below. <strong>It must match</strong> the secret you set there,
+                    or this cafe&apos;s payment confirmations get rejected.
+                  </p>
+                </div>
+                <input
+                  id="razorpay-webhook-secret"
+                  type="text"
+                  value={razorpayWebhookSecret}
+                  onChange={(e) => setRazorpayWebhookSecret(e.target.value)}
+                  placeholder={
+                    cafe.razorpayKeyId
+                      ? "Enter new webhook secret to update"
+                      : "Paste the webhook signing secret"
+                  }
+                  className="w-full px-3 py-2 text-sm border border-border rounded-xl bg-background focus:outline-none focus:ring-2 focus:ring-primary/30 focus:border-primary font-mono"
+                />
+                {cafe.razorpayKeyId && (
+                  <p className="text-xs text-muted">
+                    Leave blank to keep the existing webhook secret.
+                  </p>
+                )}
+              </div>
             </>
           )}
 
