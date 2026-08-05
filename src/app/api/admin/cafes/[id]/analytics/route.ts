@@ -2,39 +2,36 @@ import { NextResponse } from "next/server";
 import { auth } from "@/backend/lib/auth";
 import { adminRepository } from "@/backend/repositories/admin.repository";
 
+// Rolling windows anchored to the cafe's local clock (UTC on Vercel would make
+// "today" start at ~5:30am IST). 330 = IST; override REPORTING_TZ_OFFSET_MINUTES.
+const TZ_OFFSET_MS =
+  (Number(process.env.REPORTING_TZ_OFFSET_MINUTES) || 330) * 60 * 1000;
+
+/** Local (offset) wall-clock midnight of the given day, as a real UTC instant. */
+function localMidnight(year: number, month: number, day: number): Date {
+  return new Date(Date.UTC(year, month, day, 0, 0, 0, 0) - TZ_OFFSET_MS);
+}
+
 function getDateRange(range: string): { from: Date; to: Date } {
-  const now = new Date();
-  const to = new Date(now);
+  const to = new Date();
+  // "Now" shifted so its UTC fields read as the local (IST) wall clock.
+  const local = new Date(Date.now() + TZ_OFFSET_MS);
+  const y = local.getUTCFullYear();
+  const m = local.getUTCMonth();
+  const d = local.getUTCDate();
 
   switch (range) {
-    case "today": {
-      const from = new Date(now);
-      from.setHours(0, 0, 0, 0);
-      return { from, to };
-    }
-    case "week": {
-      const from = new Date(now);
-      from.setDate(from.getDate() - 7);
-      from.setHours(0, 0, 0, 0);
-      return { from, to };
-    }
-    case "month": {
-      const from = new Date(now);
-      from.setMonth(from.getMonth() - 1);
-      from.setHours(0, 0, 0, 0);
-      return { from, to };
-    }
-    case "year": {
-      const from = new Date(now);
-      from.setFullYear(from.getFullYear() - 1);
-      from.setHours(0, 0, 0, 0);
-      return { from, to };
-    }
+    case "today":
+      return { from: localMidnight(y, m, d), to };
+    case "week":
+      return { from: localMidnight(y, m, d - 7), to };
+    case "month":
+      return { from: localMidnight(y, m - 1, d), to };
+    case "year":
+      return { from: localMidnight(y - 1, m, d), to };
     case "all":
-    default: {
-      const from = new Date(0); // epoch
-      return { from, to };
-    }
+    default:
+      return { from: new Date(0), to };
   }
 }
 
