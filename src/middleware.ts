@@ -43,7 +43,18 @@ export function middleware(request: NextRequest) {
     return NextResponse.redirect(loginUrl);
   }
 
-  return NextResponse.next();
+  const res = NextResponse.next();
+
+  // Protected API data is per-user / per-cafe and always dynamic, so it must
+  // never be cached by the browser or the Vercel CDN. Without this, a shared
+  // URL like /api/dashboard/analytics can serve one owner's data to the next
+  // from a heuristic cache — which showed up as different cafes seeing the
+  // same (or stale/"random") analytics.
+  if (isProtectedApi) {
+    res.headers.set("Cache-Control", "no-store, must-revalidate");
+  }
+
+  return res;
 }
 
 export const config = {

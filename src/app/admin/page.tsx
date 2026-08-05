@@ -119,8 +119,8 @@ export default function AdminCafesPage() {
   const fetchData = useCallback(async () => {
     try {
       const [cafesRes, analyticsRes] = await Promise.all([
-        fetch("/api/admin/cafes"),
-        fetch("/api/admin/analytics"),
+        fetch("/api/admin/cafes", { cache: "no-store" }),
+        fetch("/api/admin/analytics", { cache: "no-store" }),
       ]);
       const cafesData = await cafesRes.json();
       const analyticsData = await analyticsRes.json();

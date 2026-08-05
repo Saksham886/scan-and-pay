@@ -45,7 +45,7 @@ export default function OwnerAnalyticsPage() {
   const fetchAnalytics = useCallback(async (r: TimeRange) => {
     setLoading(true);
     try {
-      const res = await fetch(`/api/dashboard/analytics?range=${r}`);
+      const res = await fetch(`/api/dashboard/analytics?range=${r}`, { cache: "no-store" });
       const data = await res.json();
       if (data.success) setAnalytics(data.data);
     } catch {

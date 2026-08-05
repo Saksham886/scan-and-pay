@@ -64,7 +64,7 @@ export default function CafeRevenuePage() {
 
   const fetchCafe = useCallback(async () => {
     try {
-      const res = await fetch(`/api/admin/cafes/${id}`);
+      const res = await fetch(`/api/admin/cafes/${id}`, { cache: "no-store" });
       const data = await res.json();
       if (data.success) {
         setCafeName(data.data.name);
@@ -77,7 +77,7 @@ export default function CafeRevenuePage() {
 
   const fetchAnalytics = useCallback(async (r: TimeRange) => {
     try {
-      const res = await fetch(`/api/admin/cafes/${id}/analytics?range=${r}`);
+      const res = await fetch(`/api/admin/cafes/${id}/analytics?range=${r}`, { cache: "no-store" });
       const data = await res.json();
       if (data.success) setAnalytics(data.data);
     } catch {
