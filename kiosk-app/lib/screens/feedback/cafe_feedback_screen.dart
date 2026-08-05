@@ -342,10 +342,13 @@ class _FeedbackForm extends StatelessWidget {
                 ),
               ],
               const SizedBox(height: 20),
+              // Always the neon/accent style (never the dark disabled fill);
+              // onSubmit no-ops until the form is complete, and the hint below
+              // tells the customer what's still needed.
               PrimaryButton(
                 label: submitting ? 'Submitting...' : 'Submit Feedback',
                 loading: submitting,
-                onPressed: complete ? onSubmit : null,
+                onPressed: onSubmit,
               ),
               if (!complete) ...[
                 const SizedBox(height: 10),

@@ -110,9 +110,12 @@ class _FeedbackScreenState extends State<FeedbackScreen> {
                 ),
               ),
               if (!_submitted)
+                // Always the neon/accent style (never the dark disabled fill);
+                // _submit no-ops until a star is picked, so an unrated tap
+                // simply does nothing.
                 PrimaryButton(
                   label: 'Submit',
-                  onPressed: _rating == 0 ? null : _submit,
+                  onPressed: _submit,
                   loading: _submitting,
                 ),
               const SizedBox(height: 12),
