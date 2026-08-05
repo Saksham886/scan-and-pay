@@ -9,10 +9,17 @@ import '../../services/order_service.dart';
 import '../../services/printer_service.dart';
 import '../../state/kiosk_config_provider.dart';
 import '../../utils/currency.dart';
+import '../../widgets/idle_reset_guard.dart';
 import '../../widgets/loading_view.dart';
 import '../../widgets/neo_pressable.dart';
 import '../../widgets/primary_button.dart';
 import '../feedback/feedback_screen.dart';
+
+/// How long the receipt stays on screen with no touch before the kiosk moves
+/// on to the feedback prompt (same destination as the Continue button), so a
+/// customer who walks off doesn't leave the receipt up for the next person.
+/// Any touch — scrolling, printing — resets this.
+const _receiptRedirectDelay = Duration(seconds: 10);
 
 /// A kiosk receipt screen, not a live order tracker: it fetches the order
 /// once and shows a receipt, then waits for the customer to tap Continue -
@@ -93,7 +100,11 @@ class _OrderStatusScreenState extends State<OrderStatusScreen> {
                     ),
                   )
                 : const LoadingView(message: 'Loading order...'))
-            : _Receipt(order: _order!, onContinue: _goToFeedback),
+            : IdleResetGuard(
+                timeout: _receiptRedirectDelay,
+                onIdle: _goToFeedback,
+                child: _Receipt(order: _order!, onContinue: _goToFeedback),
+              ),
       ),
     );
   }
