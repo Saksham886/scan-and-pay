@@ -1126,6 +1126,7 @@ export default function AdminCafeDetailPage() {
                   </div>
                   <p>
                     Enable events <span className="font-mono">qr_code.credited</span>,{" "}
+                    <span className="font-mono">qr_code.closed</span>,{" "}
                     <span className="font-mono">payment.captured</span>,{" "}
                     <span className="font-mono">order.paid</span> — then paste the webhook&apos;s
                     signing secret below. <strong>It must match</strong> the secret you set there,

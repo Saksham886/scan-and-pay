@@ -69,7 +69,8 @@ Razorpay Dashboard → **Settings → Webhooks → Add New Webhook**:
 
 - **URL:** `https://<your-domain>/api/webhooks/razorpay`
 - **Secret:** the same value as `RAZORPAY_WEBHOOK_SECRET`
-- **Active events:** `qr_code.credited` (required for the QR flow),
+- **Active events:** `qr_code.credited` and `qr_code.closed` (required for the
+  QR flow — credited confirms payment, closed fails an expired/abandoned QR),
   `payment.captured`, `order.paid` (and `payment_link.paid` only if you use
   Payment Links)
 

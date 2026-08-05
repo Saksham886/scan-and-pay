@@ -160,6 +160,9 @@ export const paymentService = {
     const paymentEntity = (payload?.payment as Record<string, unknown> | undefined)?.entity as
       | Record<string, unknown>
       | undefined;
+    const qrEntity = (payload?.qr_code as Record<string, unknown> | undefined)?.entity as
+      | Record<string, unknown>
+      | undefined;
     const isLinkEvent = payload?.payment_link !== undefined;
 
     const successEvents = ["payment_link.paid", "payment.captured", "order.paid", "qr_code.credited"];
@@ -171,7 +174,22 @@ export const paymentService = {
     const failureEvents = isLinkEvent
       ? ["payment.failed", "payment_link.cancelled", "payment_link.expired"]
       : [];
-    if (!successEvents.includes(event || "") && !failureEvents.includes(event || "")) {
+
+    // A QR closing without being paid (expired via close_by, or closed on
+    // demand when we gave up on the order) is terminal — the code can no longer
+    // be paid, so the order is failed. When it closed *because* it was paid,
+    // qr_code.credited already settled it, so that case is ignored here to avoid
+    // racing a success to FAILED. This is the server-to-server backstop that
+    // resolves an abandoned QR order even when no kiosk is left polling.
+    const isQrClosedUnpaid =
+      event === "qr_code.closed" &&
+      (qrEntity?.close_reason as string | undefined) !== "paid";
+
+    if (
+      !successEvents.includes(event || "") &&
+      !failureEvents.includes(event || "") &&
+      !isQrClosedUnpaid
+    ) {
       return { success: true, message: "Event ignored" };
     }
 
