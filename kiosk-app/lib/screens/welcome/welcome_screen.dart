@@ -335,15 +335,6 @@ class _WelcomeContent extends StatelessWidget {
                         letterSpacing: -0.5,
                       ),
                     ),
-                    const SizedBox(height: 4),
-                    Text(
-                      'a fortyup product',
-                      style: CustomerText.mono(
-                        fontSize: 11,
-                        color: CustomerColors.muted,
-                        letterSpacing: 1,
-                      ),
-                    ),
                   ],
                 ),
               ),
