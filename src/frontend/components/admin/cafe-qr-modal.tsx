@@ -11,7 +11,7 @@ interface CafeQRModalProps {
   onClose: () => void;
   cafeName: string;
   cafeSlug: string;
-  /** Appended to the cafe URL, e.g. "/feedback/write". Default "" (ordering). */
+  /** Appended to the cafe URL, e.g. "/feedback". Default "" (ordering). */
   pathSuffix?: string;
   title?: string;
   caption?: string;

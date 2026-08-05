@@ -100,6 +100,7 @@ class CafeFeedbackScreen extends StatefulWidget {
 class _CafeFeedbackScreenState extends State<CafeFeedbackScreen> {
   final _feedbackService = FeedbackService();
   final _nameController = TextEditingController();
+  final _commentController = TextEditingController();
   Timer? _resetTimer;
   Timer? _countdownTimer;
 
@@ -110,24 +111,16 @@ class _CafeFeedbackScreenState extends State<CafeFeedbackScreen> {
   int _countdown = _newFeedbackDelay.inSeconds;
 
   @override
-  void initState() {
-    super.initState();
-    // The submit button unlocks only once the name and every question are
-    // filled in, so keystrokes have to drive a rebuild.
-    _nameController.addListener(() => setState(() {}));
-  }
-
-  @override
   void dispose() {
     _nameController.dispose();
+    _commentController.dispose();
     _resetTimer?.cancel();
     _countdownTimer?.cancel();
     super.dispose();
   }
 
-  bool get _complete =>
-      _nameController.text.trim().isNotEmpty &&
-      _questions.every((q) => _answers.containsKey(q.key));
+  // Name and comment are optional; only the five answers are required.
+  bool get _complete => _questions.every((q) => _answers.containsKey(q.key));
 
   Future<void> _submit() async {
     if (!_complete || _submitting) return;
@@ -140,6 +133,7 @@ class _CafeFeedbackScreenState extends State<CafeFeedbackScreen> {
       final result = await _feedbackService.submitCafeSurvey(
         cafeSlug: widget.cafeSlug,
         customerName: _nameController.text.trim(),
+        comment: _commentController.text.trim(),
         mealSession: _answers['mealSession']!,
         foodQuality: _answers['foodQuality']!,
         cleanliness: _answers['cleanliness']!,
@@ -196,6 +190,7 @@ class _CafeFeedbackScreenState extends State<CafeFeedbackScreen> {
       _error = null;
       _answers.clear();
       _nameController.clear();
+      _commentController.clear();
       _countdown = _newFeedbackDelay.inSeconds;
     });
   }
@@ -218,6 +213,7 @@ class _CafeFeedbackScreenState extends State<CafeFeedbackScreen> {
                   ? _ThankYou(countdown: _countdown, onBack: _backToWelcome)
                   : _FeedbackForm(
                       nameController: _nameController,
+                      commentController: _commentController,
                       answers: _answers,
                       onAnswer: (key, value) => setState(() => _answers[key] = value),
                       error: _error,
@@ -277,6 +273,7 @@ class _Header extends StatelessWidget {
 
 class _FeedbackForm extends StatelessWidget {
   final TextEditingController nameController;
+  final TextEditingController commentController;
   final Map<String, String> answers;
   final void Function(String key, String value) onAnswer;
   final String? error;
@@ -286,6 +283,7 @@ class _FeedbackForm extends StatelessWidget {
 
   const _FeedbackForm({
     required this.nameController,
+    required this.commentController,
     required this.answers,
     required this.onAnswer,
     required this.error,
@@ -318,7 +316,7 @@ class _FeedbackForm extends StatelessWidget {
                 style: CustomerText.mono(fontSize: 12, color: CustomerColors.muted),
               ),
               const SizedBox(height: 28),
-              const _Prompt(text: 'Name', required: true),
+              const _Prompt(text: 'Name (optional)'),
               const SizedBox(height: 10),
               Container(
                 decoration: BoxDecoration(
@@ -355,6 +353,30 @@ class _FeedbackForm extends StatelessWidget {
                     ),
                   ),
               ],
+              const SizedBox(height: 26),
+              const _Prompt(text: 'Anything else? (optional)'),
+              const SizedBox(height: 10),
+              Container(
+                decoration: BoxDecoration(
+                  color: CustomerColors.surface,
+                  border: Border.all(color: CustomerColors.border, width: 2),
+                ),
+                child: TextField(
+                  controller: commentController,
+                  maxLength: 1000,
+                  maxLines: 3,
+                  style: CustomerText.mono(fontSize: 15, color: CustomerColors.foreground),
+                  decoration: InputDecoration(
+                    filled: true,
+                    fillColor: Colors.transparent,
+                    hintText: 'Write your feedback in your own words',
+                    hintStyle: CustomerText.mono(fontSize: 15, color: CustomerColors.border),
+                    counterText: '',
+                    contentPadding: const EdgeInsets.all(14),
+                    border: InputBorder.none,
+                  ),
+                ),
+              ),
               if (error != null) ...[
                 const SizedBox(height: 14),
                 Text(

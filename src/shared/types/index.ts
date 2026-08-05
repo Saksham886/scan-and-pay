@@ -258,7 +258,10 @@ export interface SubmitFeedbackRequest {
 
 /** Cafeteria survey submitted from the kiosk home screen. */
 export interface SubmitFeedbackSurveyRequest {
-  customerName: string;
+  // Name and comment are optional — the five multiple-choice answers are the
+  // required core of the survey.
+  customerName?: string;
+  comment?: string;
   mealSession: FeedbackMealSession;
   foodQuality: FeedbackFoodQuality;
   cleanliness: FeedbackCleanliness;
@@ -272,7 +275,7 @@ export interface SubmitFeedbackSurveyRequest {
  * - keep the two in step when a question changes.
  */
 export interface FeedbackSurveyQuestion {
-  key: Exclude<keyof SubmitFeedbackSurveyRequest, "customerName">;
+  key: Exclude<keyof SubmitFeedbackSurveyRequest, "customerName" | "comment">;
   prompt: string;
   options: string[];
 }
@@ -308,7 +311,7 @@ export const FEEDBACK_SURVEY_QUESTIONS: FeedbackSurveyQuestion[] = [
 /** The questions a meal session breaks down into - the session itself groups them. */
 export type FeedbackQuestionKey = Exclude<
   keyof SubmitFeedbackSurveyRequest,
-  "customerName" | "mealSession"
+  "customerName" | "comment" | "mealSession"
 >;
 
 export interface FeedbackAnswerCount {

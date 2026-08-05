@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, useEffect } from "react";
+import { useState } from "react";
 import { useRouter } from "next/navigation";
 import { ArrowLeft, CheckCircle2 } from "lucide-react";
 import {
@@ -14,43 +14,33 @@ interface FeedbackScreenProps {
   cafeName: string;
 }
 
-const AUTO_REDIRECT_SECONDS = 5;
+const MAX_COMMENT_LEN = 1000;
 
 const MONO = { fontFamily: "var(--font-jb-mono), monospace" };
 
 export function FeedbackScreen({ cafeSlug, cafeName }: FeedbackScreenProps) {
   const router = useRouter();
   const [name, setName] = useState("");
+  const [comment, setComment] = useState("");
   const [answers, setAnswers] = useState<Record<string, string>>({});
   const [submitting, setSubmitting] = useState(false);
   const [error, setError] = useState("");
   const [submitted, setSubmitted] = useState(false);
-  const [countdown, setCountdown] = useState(AUTO_REDIRECT_SECONDS);
 
-  const complete =
-    name.trim().length > 0 && FEEDBACK_SURVEY_QUESTIONS.every((q) => answers[q.key]);
-
-  useEffect(() => {
-    if (!submitted) return;
-    if (countdown <= 0) {
-      router.push(`/${cafeSlug}`);
-      return;
-    }
-    const t = setTimeout(() => setCountdown((c) => c - 1), 1000);
-    return () => clearTimeout(t);
-  }, [submitted, countdown, router, cafeSlug]);
+  const complete = FEEDBACK_SURVEY_QUESTIONS.every((q) => answers[q.key]);
 
   const handleSubmit = async () => {
     if (!complete) {
-      setError("Please enter your name and answer every question.");
+      setError("Please answer every question.");
       return;
     }
     setError("");
     setSubmitting(true);
     try {
       const payload = {
-        customerName: name.trim(),
         ...answers,
+        ...(name.trim() && { customerName: name.trim() }),
+        ...(comment.trim() && { comment: comment.trim() }),
       } as unknown as SubmitFeedbackSurveyRequest;
       const res = await fetch(`/api/cafes/${cafeSlug}/feedback`, {
         method: "POST",
@@ -111,16 +101,9 @@ export function FeedbackScreen({ cafeSlug, cafeName }: FeedbackScreenProps) {
           <p className="text-sm text-[#cbc3d7] mb-6" style={{ fontFamily: "var(--font-jb-mono), monospace" }}>
             Your feedback helps us improve.
           </p>
-          <p className="text-xs text-[#494454] mb-6" style={{ fontFamily: "var(--font-jb-mono), monospace" }}>
-            Back to home in <span className="text-[#cdf200] font-semibold">{countdown}s</span>
+          <p className="text-xs text-[#494454]" style={{ fontFamily: "var(--font-jb-mono), monospace" }}>
+            You can close this page now.
           </p>
-          <button
-            onClick={() => router.push(`/${cafeSlug}`)}
-            className="bg-[#cdf200] text-black border-2 border-black px-8 py-3 font-bold text-sm uppercase tracking-wider neo-shadow active:translate-x-[4px] active:translate-y-[4px] active:shadow-none transition-all duration-75 rounded-full"
-            style={{ fontFamily: "var(--font-jb-mono), monospace" }}
-          >
-            Back to Home
-          </button>
         </div>
       ) : (
         <div className="flex-1 flex flex-col px-6 py-10 max-w-md mx-auto w-full animate-fade-in-up">
@@ -135,7 +118,9 @@ export function FeedbackScreen({ cafeSlug, cafeName }: FeedbackScreenProps) {
           </p>
 
           <div className="mt-8">
-            <Prompt text="Name" />
+            <p className="text-sm font-bold text-[#e2e0f8]" style={MONO}>
+              Name <span className="text-[#494454]">(optional)</span>
+            </p>
             <input
               type="text"
               maxLength={80}
@@ -163,6 +148,21 @@ export function FeedbackScreen({ cafeSlug, cafeName }: FeedbackScreenProps) {
             </div>
           ))}
 
+          <div className="mt-7">
+            <p className="text-sm font-bold text-[#e2e0f8]" style={MONO}>
+              Anything else? <span className="text-[#494454]">(optional)</span>
+            </p>
+            <textarea
+              value={comment}
+              onChange={(e) => setComment(e.target.value)}
+              maxLength={MAX_COMMENT_LEN}
+              rows={4}
+              placeholder="Write your feedback in your own words..."
+              className="w-full mt-2.5 border-2 border-[#494454] bg-[#1e1e2f] px-4 py-3 text-[#e2e0f8] placeholder:text-[#494454] focus:outline-none focus:border-[#cdf200] text-sm transition-colors resize-none"
+              style={{ borderRadius: 0, ...MONO }}
+            />
+          </div>
+
           {error && (
             <div
               className="mt-6 bg-[#ffb4ab]/10 text-[#ffb4ab] text-sm p-3.5 border-2 border-[#ffb4ab]/40"
@@ -187,15 +187,6 @@ export function FeedbackScreen({ cafeSlug, cafeName }: FeedbackScreenProps) {
               Please answer every question to submit.
             </p>
           )}
-
-          <button
-            type="button"
-            onClick={() => router.push(`/${cafeSlug}/feedback/write`)}
-            className="mt-5 text-center text-xs text-[#cbc3d7] underline underline-offset-4 hover:text-[#cdf200] transition-colors"
-            style={MONO}
-          >
-            Prefer to write in your own words?
-          </button>
         </div>
       )}
     </div>

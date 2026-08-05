@@ -14,7 +14,8 @@ class FeedbackService {
   /// customer taps - see FeedbackSurveyQuestion in the feedback screen.
   Future<ApiResult<void>> submitCafeSurvey({
     required String cafeSlug,
-    required String customerName,
+    String? customerName,
+    String? comment,
     required String mealSession,
     required String foodQuality,
     required String cleanliness,
@@ -24,7 +25,9 @@ class FeedbackService {
     return _client.postJson(
       '/api/cafes/$cafeSlug/feedback',
       {
-        'customerName': customerName,
+        if (customerName != null && customerName.isNotEmpty)
+          'customerName': customerName,
+        if (comment != null && comment.isNotEmpty) 'comment': comment,
         'mealSession': mealSession,
         'foodQuality': foodQuality,
         'cleanliness': cleanliness,

@@ -6,7 +6,6 @@ import { EmptyState } from "@/frontend/components/ui/empty-state";
 import { RefreshCw, MessageSquareText, QrCode } from "lucide-react";
 import { FeedbackEntryCard } from "@/frontend/components/feedback-entry-card";
 import { CafeQRModal } from "@/frontend/components/admin/cafe-qr-modal";
-import { cn } from "@/shared/utils/cn";
 import {
   FEEDBACK_ANSWER_LABELS,
   type FeedbackAnswerCount,
@@ -21,7 +20,6 @@ export default function DashboardFeedbackPage() {
   const [loading, setLoading] = useState(true);
   const [cafe, setCafe] = useState<{ name: string; slug: string } | null>(null);
   const [qrOpen, setQrOpen] = useState(false);
-  const [tab, setTab] = useState<"app" | "comment">("app");
 
   const fetchFeedback = useCallback(async () => {
     setLoading(true);
@@ -53,12 +51,6 @@ export default function DashboardFeedbackPage() {
       .catch(() => {});
   }, []);
 
-  // App feedback = the structured cafeteria survey (has overallExperience);
-  // comment feedback = free-text written entries left via the feedback QR.
-  const surveyEntries = entries.filter((e) => e.overallExperience !== null);
-  const commentEntries = entries.filter((e) => e.overallExperience === null);
-  const visibleEntries = tab === "app" ? surveyEntries : commentEntries;
-
   return (
     <div>
       <div className="flex flex-col sm:flex-row sm:items-center justify-between mb-6 gap-3">
@@ -80,30 +72,7 @@ export default function DashboardFeedbackPage() {
         </div>
       </div>
 
-      {/* Toggle between the structured app survey and free-text comments, so
-          the page doesn't get crowded showing both at once. */}
-      <div className="inline-flex items-center gap-1 bg-surface rounded-xl border border-border p-1 mb-5">
-        <button
-          onClick={() => setTab("app")}
-          className={cn(
-            "px-4 py-2 rounded-lg text-sm font-medium transition-colors",
-            tab === "app" ? "bg-primary text-white shadow-sm" : "text-muted hover:text-foreground"
-          )}
-        >
-          App Feedback ({surveyEntries.length})
-        </button>
-        <button
-          onClick={() => setTab("comment")}
-          className={cn(
-            "px-4 py-2 rounded-lg text-sm font-medium transition-colors",
-            tab === "comment" ? "bg-primary text-white shadow-sm" : "text-muted hover:text-foreground"
-          )}
-        >
-          Comment Feedback ({commentEntries.length})
-        </button>
-      </div>
-
-      {tab === "app" && !loading && sessionStats.some((stat) => stat.responses > 0) && (
+      {!loading && sessionStats.some((stat) => stat.responses > 0) && (
         <div className="mb-5">
           <div className="flex items-baseline justify-between mb-2.5 gap-3">
             <h2 className="text-sm font-semibold text-foreground">By meal session</h2>
@@ -126,19 +95,15 @@ export default function DashboardFeedbackPage() {
             </div>
           ))}
         </div>
-      ) : visibleEntries.length === 0 ? (
+      ) : entries.length === 0 ? (
         <EmptyState
           icon={<MessageSquareText size={48} />}
-          title={tab === "app" ? "No app feedback yet" : "No written feedback yet"}
-          description={
-            tab === "app"
-              ? "Cafeteria survey responses from the home screen will appear here"
-              : "Written feedback left via the feedback QR will appear here"
-          }
+          title="No feedback yet"
+          description="Feedback left from the kiosk or the feedback QR will appear here"
         />
       ) : (
         <div className="space-y-3">
-          {visibleEntries.map((entry) => (
+          {entries.map((entry) => (
             <FeedbackEntryCard key={entry.id} entry={entry} />
           ))}
         </div>
@@ -150,12 +115,12 @@ export default function DashboardFeedbackPage() {
           onClose={() => setQrOpen(false)}
           cafeName={cafe.name}
           cafeSlug={cafe.slug}
-          pathSuffix="/feedback/write"
+          pathSuffix="/feedback"
           title="Feedback QR Code"
           caption="Customers scan this to leave feedback for"
           cta="Scan to leave feedback"
           fileLabel="feedback-qr"
-          tip="Print and place on tables or at the counter so customers can scan and share written feedback."
+          tip="Print and place on tables or at the counter so customers can scan and share feedback."
         />
       )}
     </div>

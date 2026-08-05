@@ -77,12 +77,16 @@ export const feedbackService = {
     cafeSlug: string,
     input: SubmitFeedbackSurveyRequest
   ): Promise<FeedbackEntry> {
-    const customerName = typeof input.customerName === "string" ? input.customerName.trim() : "";
-    if (!customerName) {
-      throw new Error("Name is required");
-    }
-    if (customerName.length > MAX_NAME_LEN) {
+    // Name and comment are optional; only the five answers are required.
+    const customerName =
+      typeof input.customerName === "string" ? input.customerName.trim() || undefined : undefined;
+    if (customerName && customerName.length > MAX_NAME_LEN) {
       throw new Error(`Name cannot exceed ${MAX_NAME_LEN} characters`);
+    }
+    const comment =
+      typeof input.comment === "string" ? input.comment.trim() || undefined : undefined;
+    if (comment && comment.length > MAX_COMMENT_LEN) {
+      throw new Error(`comment cannot exceed ${MAX_COMMENT_LEN} characters`);
     }
 
     const mealSession = requireAnswer(input.mealSession, MEAL_SESSIONS, "mealSession");
@@ -100,6 +104,7 @@ export const feedbackService = {
       cafeId: cafe.id,
       rating: OVERALL_TO_RATING[overallExperience],
       customerName,
+      comment,
       mealSession,
       foodQuality,
       cleanliness,
