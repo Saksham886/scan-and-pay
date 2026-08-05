@@ -43,7 +43,7 @@ export async function POST(
       return NextResponse.json({ success: false, error: "Invalid body" }, { status: 400 });
     }
 
-    const { rating, comment, overallExperience } = body as Record<string, unknown>;
+    const { rating, comment, customerName, overallExperience } = body as Record<string, unknown>;
 
     // The survey carries no rating, so `overallExperience` is what tells the
     // two payload shapes apart; the service validates every answer.
@@ -61,8 +61,16 @@ export async function POST(
     if (comment !== undefined && typeof comment !== "string") {
       return NextResponse.json({ success: false, error: "comment must be a string" }, { status: 400 });
     }
+    if (customerName !== undefined && typeof customerName !== "string") {
+      return NextResponse.json({ success: false, error: "customerName must be a string" }, { status: 400 });
+    }
 
-    const result = await feedbackService.createFeedback(slug, rating, comment as string | undefined);
+    const result = await feedbackService.createFeedback(
+      slug,
+      rating,
+      comment as string | undefined,
+      customerName as string | undefined
+    );
     return NextResponse.json({ success: true, data: result }, { status: 201 });
   } catch (error) {
     const message = error instanceof Error ? error.message : "Failed to submit feedback";

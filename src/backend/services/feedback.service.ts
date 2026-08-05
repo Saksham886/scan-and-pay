@@ -44,16 +44,31 @@ const SESSION_QUESTIONS = FEEDBACK_SURVEY_QUESTIONS.filter(
 );
 
 export const feedbackService = {
-  async createFeedback(cafeSlug: string, rating: number, comment?: string): Promise<FeedbackEntry> {
+  async createFeedback(
+    cafeSlug: string,
+    rating: number,
+    comment?: string,
+    customerName?: string
+  ): Promise<FeedbackEntry> {
     if (!Number.isInteger(rating) || rating < 1 || rating > 5) {
       throw new Error("rating must be an integer between 1 and 5");
     }
     if (comment !== undefined && comment.length > MAX_COMMENT_LEN) {
       throw new Error(`comment cannot exceed ${MAX_COMMENT_LEN} characters`);
     }
+    // Optional on the free-text path (unlike the survey, which requires it).
+    const name = customerName?.trim() || undefined;
+    if (name && name.length > MAX_NAME_LEN) {
+      throw new Error(`Name cannot exceed ${MAX_NAME_LEN} characters`);
+    }
 
     const cafe = await this.requireActiveCafe(cafeSlug);
-    const created = await feedbackRepository.createFeedback({ cafeId: cafe.id, rating, comment });
+    const created = await feedbackRepository.createFeedback({
+      cafeId: cafe.id,
+      rating,
+      comment,
+      customerName: name,
+    });
     return mapEntry(created);
   },
 

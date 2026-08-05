@@ -67,7 +67,15 @@ export function FeedbackEntryCard({ entry, showCafe = false }: { entry: Feedback
               <span className="truncate">{entry.customerName || "Anonymous"}</span>
             </span>
           ) : (
-            <StarRow rating={entry.rating} />
+            <>
+              <StarRow rating={entry.rating} />
+              {entry.customerName && (
+                <span className="inline-flex items-center gap-1.5 text-sm font-semibold text-foreground min-w-0">
+                  <User size={13} className="text-muted flex-shrink-0" />
+                  <span className="truncate">{entry.customerName}</span>
+                </span>
+              )}
+            </>
           )}
           {entry.mealSession && (
             <span className="inline-flex items-center gap-1 bg-white/[0.06] border border-white/[0.08] text-muted text-[11px] font-semibold px-2 py-0.5 rounded-full">

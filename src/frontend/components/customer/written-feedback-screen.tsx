@@ -22,6 +22,7 @@ const DISPLAY = { fontFamily: "var(--font-display), sans-serif" };
  */
 export function WrittenFeedbackScreen({ cafeSlug, cafeName }: WrittenFeedbackScreenProps) {
   const router = useRouter();
+  const [name, setName] = useState("");
   const [rating, setRating] = useState(0);
   const [hover, setHover] = useState(0);
   const [comment, setComment] = useState("");
@@ -53,7 +54,11 @@ export function WrittenFeedbackScreen({ cafeSlug, cafeName }: WrittenFeedbackScr
       const res = await fetch(`/api/cafes/${cafeSlug}/feedback`, {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ rating, comment: comment.trim() }),
+        body: JSON.stringify({
+          rating,
+          comment: comment.trim(),
+          ...(name.trim() && { customerName: name.trim() }),
+        }),
       });
       const data = await res.json();
       if (!data.success) {
@@ -132,8 +137,24 @@ export function WrittenFeedbackScreen({ cafeSlug, cafeName }: WrittenFeedbackScr
             Rate your experience and share whatever you&apos;d like.
           </p>
 
-          {/* Star rating */}
+          {/* Name (optional) */}
           <div className="mt-8">
+            <p className="text-sm font-bold text-[#e2e0f8]" style={MONO}>
+              Name <span className="text-[#494454]">(optional)</span>
+            </p>
+            <input
+              type="text"
+              maxLength={80}
+              value={name}
+              onChange={(e) => setName(e.target.value)}
+              placeholder="Your name"
+              className="w-full mt-2.5 border-2 border-[#494454] bg-[#1e1e2f] px-4 py-3 text-[#e2e0f8] placeholder:text-[#494454] focus:outline-none focus:border-[#cdf200] text-sm transition-colors"
+              style={{ borderRadius: 0, ...MONO }}
+            />
+          </div>
+
+          {/* Star rating */}
+          <div className="mt-7">
             <p className="text-sm font-bold text-[#e2e0f8]" style={MONO}>
               Your rating <span className="text-[#ffb4ab]">*</span>
             </p>
