@@ -187,6 +187,15 @@ export function FeedbackScreen({ cafeSlug, cafeName }: FeedbackScreenProps) {
               Please answer every question to submit.
             </p>
           )}
+
+          <button
+            type="button"
+            onClick={() => router.push(`/${cafeSlug}/feedback/write`)}
+            className="mt-5 text-center text-xs text-[#cbc3d7] underline underline-offset-4 hover:text-[#cdf200] transition-colors"
+            style={MONO}
+          >
+            Prefer to write in your own words?
+          </button>
         </div>
       )}
     </div>
