@@ -197,9 +197,6 @@ export interface CafeInsights {
   totalOrders: number;
   totalRevenue: number;
   avgOrderValuePaise: number;
-  uniqueCustomers: number;
-  repeatCustomers: number;
-  repeatRate: number; // 0..1
   peakHour: number | null; // 0..23
   peakHourOrders: number;
   peakDayOfWeek: number | null; // 0=Sun..6=Sat

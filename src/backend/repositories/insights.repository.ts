@@ -73,25 +73,19 @@ async function buildCafeInsights(
   const [
     orders,
     aggregate,
-    customerGroups,
     topItems,
     tableGroups,
     lastOrder,
   ] = await Promise.all([
     prisma.order.findMany({
       where: baseWhere,
-      select: { createdAt: true, totalPaise: true, customerPhone: true, tableId: true },
+      select: { createdAt: true, totalPaise: true, tableId: true },
     }),
     prisma.order.aggregate({
       where: baseWhere,
       _sum: { totalPaise: true },
       _count: { _all: true },
       _avg: { totalPaise: true },
-    }),
-    prisma.order.groupBy({
-      by: ["customerPhone"],
-      where: { ...baseWhere, customerPhone: { not: null } },
-      _count: { _all: true },
     }),
     prisma.orderItem.groupBy({
       by: ["menuItemId", "itemName"],
@@ -157,10 +151,6 @@ async function buildCafeInsights(
     }
   }
 
-  const uniqueCustomers = customerGroups.length;
-  const repeatCustomers = customerGroups.filter((g) => g._count._all > 1).length;
-  const repeatRate = uniqueCustomers > 0 ? repeatCustomers / uniqueCustomers : 0;
-
   const topItemsByQuantity: TopItemInsight[] = topItems.map((t) => ({
     menuItemId: t.menuItemId,
     name: t.itemName,
@@ -210,9 +200,6 @@ async function buildCafeInsights(
     totalOrders,
     totalRevenue,
     avgOrderValuePaise,
-    uniqueCustomers,
-    repeatCustomers,
-    repeatRate,
     peakHour,
     peakHourOrders,
     peakDayOfWeek,

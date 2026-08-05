@@ -8,8 +8,6 @@ import {
   Clock,
   Calendar,
   Trophy,
-  Users2,
-  Repeat,
   Armchair,
   TrendingUp,
 } from "lucide-react";
@@ -209,20 +207,6 @@ export function CafeInsightCard({
                 sub={paiseToCurrencyShort(cafe.topItemByRevenue.revenuePaise)}
               />
             )}
-
-            <InsightRow
-              icon={<Users2 size={16} className="text-purple-500" />}
-              label="Unique customers"
-              value={cafe.uniqueCustomers.toLocaleString()}
-              sub="identified by phone"
-            />
-
-            <InsightRow
-              icon={<Repeat size={16} className="text-pink-500" />}
-              label="Repeat customer rate"
-              value={`${Math.round(cafe.repeatRate * 100)}%`}
-              sub={`${cafe.repeatCustomers} repeat / ${cafe.uniqueCustomers} total`}
-            />
 
             {cafe.mostUsedTable && (
               <InsightRow
