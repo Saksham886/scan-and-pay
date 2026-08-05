@@ -2,12 +2,15 @@ import 'dart:async';
 
 import 'package:flutter/material.dart';
 
-import '../../config/constants.dart';
 import '../../config/customer_theme.dart';
 import '../../services/order_service.dart';
 import '../../widgets/neo_pressable.dart';
 import '../../widgets/primary_button.dart';
 import '../menu/menu_screen.dart';
+
+/// How long the thank-you screen shows before the kiosk loops back to the menu
+/// for the next customer.
+const _menuResetDelay = Duration(seconds: 3);
 
 /// Shown right after the receipt: a lightweight star rating ask so the
 /// kiosk can collect feedback before freeing up for the next customer.
@@ -31,7 +34,7 @@ class _FeedbackScreenState extends State<FeedbackScreen> {
   int _rating = 0;
   bool _submitting = false;
   bool _submitted = false;
-  int _countdown = kFeedbackAutoReset.inSeconds;
+  int _countdown = _menuResetDelay.inSeconds;
 
   @override
   void dispose() {
@@ -70,8 +73,8 @@ class _FeedbackScreenState extends State<FeedbackScreen> {
   void _scheduleReset() {
     _resetTimer?.cancel();
     _countdownTimer?.cancel();
-    _countdown = kFeedbackAutoReset.inSeconds;
-    _resetTimer = Timer(kFeedbackAutoReset, _backToMenu);
+    _countdown = _menuResetDelay.inSeconds;
+    _resetTimer = Timer(_menuResetDelay, _backToMenu);
     _countdownTimer = Timer.periodic(const Duration(seconds: 1), (timer) {
       if (!mounted || _countdown <= 1) {
         timer.cancel();
