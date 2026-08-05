@@ -177,7 +177,7 @@ export function DashboardShell({ user, children }: DashboardShellProps) {
         { name: "Deep Insights",href: "/admin/insights",  icon: Sparkles },
       ]
     : [
-        { name: "Orders",       href: "/dashboard",            icon: ClipboardList },
+        { name: "Kitchen",      href: "/dashboard",            icon: ClipboardList },
         { name: "Payments",     href: "/dashboard/payments",   icon: CreditCard },
         { name: "Menu",         href: "/dashboard/menu",       icon: UtensilsCrossed },
         { name: "Feedback",     href: "/dashboard/feedback",   icon: Star },
