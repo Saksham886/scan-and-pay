@@ -3,14 +3,23 @@ import type { CafeInsights, TopItemInsight } from "@/shared/types";
 
 const VALID_STATUSES = ["PAID", "PREPARING", "READY", "COMPLETED"] as const;
 
-function startOfDay(d: Date) {
-  const x = new Date(d);
-  x.setHours(0, 0, 0, 0);
-  return x;
+// Insights bucket orders by the cafe's local clock, not the server's — on
+// Vercel that's UTC, which shifted "orders by hour", "by day of week" and the
+// daily trend by the timezone offset (they looked wrong/scattered). India has
+// no DST, so a fixed offset is exact; override REPORTING_TZ_OFFSET_MINUTES if
+// deploying elsewhere (330 = IST, UTC+5:30).
+const TZ_OFFSET_MS =
+  (Number(process.env.REPORTING_TZ_OFFSET_MINUTES) || 330) * 60 * 1000;
+
+/** A Date whose UTC fields read as the local (offset) wall-clock time, so
+ *  getUTCHours() / getUTCDay() / the ISO date give local hour / day / date. */
+function toLocal(d: Date): Date {
+  return new Date(d.getTime() + TZ_OFFSET_MS);
 }
 
-function dateKey(d: Date) {
-  return d.toISOString().slice(0, 10);
+/** Local (offset) calendar date as YYYY-MM-DD. */
+function localDateKey(d: Date): string {
+  return toLocal(d).toISOString().slice(0, 10);
 }
 
 export const insightsRepository = {
@@ -108,8 +117,9 @@ async function buildCafeInsights(
   const hourHistogram = new Array<number>(24).fill(0);
   const dayHistogram = new Array<number>(7).fill(0);
   for (const o of orders) {
-    hourHistogram[o.createdAt.getHours()]++;
-    dayHistogram[o.createdAt.getDay()]++;
+    const local = toLocal(o.createdAt);
+    hourHistogram[local.getUTCHours()]++;
+    dayHistogram[local.getUTCDay()]++;
   }
 
   let peakHour: number | null = null;
@@ -130,18 +140,17 @@ async function buildCafeInsights(
     }
   });
 
-  // Last 7 days rolling trend
-  const today = startOfDay(new Date());
+  // Last 7 days rolling trend, in the cafe's local timezone so the day
+  // boundaries match the cafe's clock rather than UTC's.
+  const todayLocalMs = toLocal(new Date()).setUTCHours(0, 0, 0, 0);
   const trendDays: { date: string; revenuePaise: number; orders: number }[] = [];
   for (let i = 6; i >= 0; i--) {
-    const d = new Date(today);
-    d.setDate(d.getDate() - i);
-    trendDays.push({ date: dateKey(d), revenuePaise: 0, orders: 0 });
+    const d = new Date(todayLocalMs - i * 86_400_000);
+    trendDays.push({ date: d.toISOString().slice(0, 10), revenuePaise: 0, orders: 0 });
   }
   const trendIndex = new Map(trendDays.map((t, i) => [t.date, i]));
   for (const o of orders) {
-    const key = dateKey(startOfDay(o.createdAt));
-    const idx = trendIndex.get(key);
+    const idx = trendIndex.get(localDateKey(o.createdAt));
     if (idx !== undefined) {
       trendDays[idx].revenuePaise += o.totalPaise;
       trendDays[idx].orders += 1;
