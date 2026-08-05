@@ -2,11 +2,15 @@ import 'dart:async';
 
 import 'package:flutter/material.dart';
 
-import '../../config/constants.dart';
 import '../../config/customer_theme.dart';
 import '../../services/feedback_service.dart';
 import '../../widgets/neo_pressable.dart';
 import '../../widgets/primary_button.dart';
+
+/// After a successful survey the kiosk loops straight back to a fresh, blank
+/// form so the next person can give feedback without anyone touching the
+/// kiosk — a feedback station rather than a one-shot form.
+const _newFeedbackDelay = Duration(seconds: 3);
 
 /// One answer option: what the customer reads, and the enum name the API
 /// stores.
@@ -103,7 +107,7 @@ class _CafeFeedbackScreenState extends State<CafeFeedbackScreen> {
   bool _submitting = false;
   bool _submitted = false;
   String? _error;
-  int _countdown = kFeedbackAutoReset.inSeconds;
+  int _countdown = _newFeedbackDelay.inSeconds;
 
   @override
   void initState() {
@@ -167,14 +171,32 @@ class _CafeFeedbackScreenState extends State<CafeFeedbackScreen> {
   void _scheduleReset() {
     _resetTimer?.cancel();
     _countdownTimer?.cancel();
-    _countdown = kFeedbackAutoReset.inSeconds;
-    _resetTimer = Timer(kFeedbackAutoReset, _backToWelcome);
+    _countdown = _newFeedbackDelay.inSeconds;
+    // Loop back to a fresh, blank survey rather than returning to welcome, so
+    // the next person can leave feedback straight away.
+    _resetTimer = Timer(_newFeedbackDelay, _resetForNewFeedback);
     _countdownTimer = Timer.periodic(const Duration(seconds: 1), (timer) {
       if (!mounted || _countdown <= 1) {
         timer.cancel();
         return;
       }
       setState(() => _countdown -= 1);
+    });
+  }
+
+  /// Clears the form back to its initial empty state so the thank-you screen
+  /// gives way to a fresh survey for the next customer.
+  void _resetForNewFeedback() {
+    _resetTimer?.cancel();
+    _countdownTimer?.cancel();
+    if (!mounted) return;
+    setState(() {
+      _submitted = false;
+      _submitting = false;
+      _error = null;
+      _answers.clear();
+      _nameController.clear();
+      _countdown = _newFeedbackDelay.inSeconds;
     });
   }
 
@@ -475,7 +497,7 @@ class _ThankYou extends StatelessWidget {
             ),
             const SizedBox(height: 12),
             Text(
-              'Back to home in ${countdown}s',
+              'New feedback in ${countdown}s',
               textAlign: TextAlign.center,
               style: CustomerText.mono(fontSize: 12, color: CustomerColors.border),
             ),
