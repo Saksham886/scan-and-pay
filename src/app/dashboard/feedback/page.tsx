@@ -3,8 +3,9 @@
 import { useState, useEffect, useCallback } from "react";
 import { Button } from "@/frontend/components/ui/button";
 import { EmptyState } from "@/frontend/components/ui/empty-state";
-import { RefreshCw, MessageSquareText } from "lucide-react";
+import { RefreshCw, MessageSquareText, QrCode } from "lucide-react";
 import { FeedbackEntryCard } from "@/frontend/components/feedback-entry-card";
+import { CafeQRModal } from "@/frontend/components/admin/cafe-qr-modal";
 import {
   FEEDBACK_ANSWER_LABELS,
   type FeedbackAnswerCount,
@@ -18,6 +19,8 @@ export default function DashboardFeedbackPage() {
   const [total, setTotal] = useState(0);
   const [sessionStats, setSessionStats] = useState<FeedbackSessionStats[]>([]);
   const [loading, setLoading] = useState(true);
+  const [cafe, setCafe] = useState<{ name: string; slug: string } | null>(null);
+  const [qrOpen, setQrOpen] = useState(false);
 
   const fetchFeedback = useCallback(async () => {
     setLoading(true);
@@ -40,6 +43,16 @@ export default function DashboardFeedbackPage() {
     fetchFeedback();
   }, [fetchFeedback]);
 
+  // Cafe name + slug drive the feedback-page QR the owner can print.
+  useEffect(() => {
+    fetch("/api/dashboard/cafe", { cache: "no-store" })
+      .then((r) => r.json())
+      .then((d) => {
+        if (d.success) setCafe(d.data);
+      })
+      .catch(() => {});
+  }, []);
+
   return (
     <div>
       <div className="flex flex-col sm:flex-row sm:items-center justify-between mb-6 gap-3">
@@ -47,10 +60,18 @@ export default function DashboardFeedbackPage() {
           <h1 className="text-xl sm:text-2xl font-bold">Feedback</h1>
           <p className="text-sm text-muted mt-0.5">Cafeteria survey responses left from the home screen</p>
         </div>
-        <Button variant="secondary" size="sm" onClick={fetchFeedback} className="self-start sm:self-auto">
-          <RefreshCw size={14} className="mr-1.5" />
-          Refresh
-        </Button>
+        <div className="flex items-center gap-2 self-start sm:self-auto">
+          {cafe && (
+            <Button variant="secondary" size="sm" onClick={() => setQrOpen(true)}>
+              <QrCode size={14} className="mr-1.5" />
+              Feedback QR
+            </Button>
+          )}
+          <Button variant="secondary" size="sm" onClick={fetchFeedback}>
+            <RefreshCw size={14} className="mr-1.5" />
+            Refresh
+          </Button>
+        </div>
       </div>
 
       {!loading && total > 0 && (
@@ -97,6 +118,21 @@ export default function DashboardFeedbackPage() {
             <FeedbackEntryCard key={entry.id} entry={entry} />
           ))}
         </div>
+      )}
+
+      {cafe && (
+        <CafeQRModal
+          isOpen={qrOpen}
+          onClose={() => setQrOpen(false)}
+          cafeName={cafe.name}
+          cafeSlug={cafe.slug}
+          pathSuffix="/feedback/write"
+          title="Feedback QR Code"
+          caption="Customers scan this to leave feedback for"
+          cta="Scan to leave feedback"
+          fileLabel="feedback-qr"
+          tip="Print and place on tables or at the counter so customers can scan and share written feedback."
+        />
       )}
     </div>
   );

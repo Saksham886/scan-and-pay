@@ -11,16 +11,35 @@ interface CafeQRModalProps {
   onClose: () => void;
   cafeName: string;
   cafeSlug: string;
+  /** Appended to the cafe URL, e.g. "/feedback/write". Default "" (ordering). */
+  pathSuffix?: string;
+  title?: string;
+  caption?: string;
+  cta?: string;
+  /** Download filename becomes `${cafeSlug}-${fileLabel}.png`. */
+  fileLabel?: string;
+  tip?: string;
 }
 
-export function CafeQRModal({ isOpen, onClose, cafeName, cafeSlug }: CafeQRModalProps) {
+export function CafeQRModal({
+  isOpen,
+  onClose,
+  cafeName,
+  cafeSlug,
+  pathSuffix = "",
+  title = "Cafe QR Code",
+  caption = "Customers scan this to order at",
+  cta = "Scan to order",
+  fileLabel = "qr",
+  tip = "Tip: Print and place at the counter or on tables so customers can scan & order.",
+}: CafeQRModalProps) {
   const canvasRef = useRef<HTMLCanvasElement | null>(null);
   const [dataUrl, setDataUrl] = useState<string>("");
   const [copied, setCopied] = useState(false);
 
   const url = typeof window !== "undefined"
-    ? `${window.location.origin}/${cafeSlug}`
-    : `/${cafeSlug}`;
+    ? `${window.location.origin}/${cafeSlug}${pathSuffix}`
+    : `/${cafeSlug}${pathSuffix}`;
 
   useEffect(() => {
     if (!isOpen || !canvasRef.current) return;
@@ -47,7 +66,7 @@ export function CafeQRModal({ isOpen, onClose, cafeName, cafeSlug }: CafeQRModal
     if (!dataUrl) return;
     const a = document.createElement("a");
     a.href = dataUrl;
-    a.download = `${cafeSlug}-qr.png`;
+    a.download = `${cafeSlug}-${fileLabel}.png`;
     document.body.appendChild(a);
     a.click();
     document.body.removeChild(a);
@@ -82,7 +101,7 @@ export function CafeQRModal({ isOpen, onClose, cafeName, cafeSlug }: CafeQRModal
         </head>
         <body>
           <h1>${cafeName}</h1>
-          <p class="cta">Scan to order</p>
+          <p class="cta">${cta}</p>
           <img src="${dataUrl}" alt="QR Code" />
           <div class="url">${url}</div>
           <script>window.onload = () => { window.print(); }<\/script>
@@ -93,10 +112,10 @@ export function CafeQRModal({ isOpen, onClose, cafeName, cafeSlug }: CafeQRModal
   };
 
   return (
-    <Modal isOpen={isOpen} onClose={onClose} title="Cafe QR Code">
+    <Modal isOpen={isOpen} onClose={onClose} title={title}>
       <div className="space-y-5">
         <div className="text-center">
-          <p className="text-sm text-muted mb-1">Customers scan this to order at</p>
+          <p className="text-sm text-muted mb-1">{caption}</p>
           <p className="font-bold text-base">{cafeName}</p>
         </div>
 
@@ -143,7 +162,7 @@ export function CafeQRModal({ isOpen, onClose, cafeName, cafeSlug }: CafeQRModal
         </div>
 
         <p className="text-xs text-muted text-center">
-          Tip: Print and place at the counter or on tables so customers can scan & order.
+          {tip}
         </p>
       </div>
     </Modal>
