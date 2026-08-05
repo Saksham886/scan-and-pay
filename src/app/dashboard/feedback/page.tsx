@@ -6,6 +6,7 @@ import { EmptyState } from "@/frontend/components/ui/empty-state";
 import { RefreshCw, MessageSquareText, QrCode } from "lucide-react";
 import { FeedbackEntryCard } from "@/frontend/components/feedback-entry-card";
 import { CafeQRModal } from "@/frontend/components/admin/cafe-qr-modal";
+import { cn } from "@/shared/utils/cn";
 import {
   FEEDBACK_ANSWER_LABELS,
   type FeedbackAnswerCount,
@@ -16,11 +17,11 @@ import {
 
 export default function DashboardFeedbackPage() {
   const [entries, setEntries] = useState<FeedbackEntry[]>([]);
-  const [total, setTotal] = useState(0);
   const [sessionStats, setSessionStats] = useState<FeedbackSessionStats[]>([]);
   const [loading, setLoading] = useState(true);
   const [cafe, setCafe] = useState<{ name: string; slug: string } | null>(null);
   const [qrOpen, setQrOpen] = useState(false);
+  const [tab, setTab] = useState<"app" | "comment">("app");
 
   const fetchFeedback = useCallback(async () => {
     setLoading(true);
@@ -29,7 +30,6 @@ export default function DashboardFeedbackPage() {
       const data = await res.json();
       if (data.success) {
         setEntries(data.data.entries);
-        setTotal(data.data.total);
         setSessionStats(data.data.sessionStats ?? []);
       }
     } catch {
@@ -53,6 +53,12 @@ export default function DashboardFeedbackPage() {
       .catch(() => {});
   }, []);
 
+  // App feedback = the structured cafeteria survey (has overallExperience);
+  // comment feedback = free-text written entries left via the feedback QR.
+  const surveyEntries = entries.filter((e) => e.overallExperience !== null);
+  const commentEntries = entries.filter((e) => e.overallExperience === null);
+  const visibleEntries = tab === "app" ? surveyEntries : commentEntries;
+
   return (
     <div>
       <div className="flex flex-col sm:flex-row sm:items-center justify-between mb-6 gap-3">
@@ -74,16 +80,30 @@ export default function DashboardFeedbackPage() {
         </div>
       </div>
 
-      {!loading && total > 0 && (
-        <div className="flex items-center gap-6 bg-surface rounded-xl border border-border px-5 py-3 mb-5 shadow-sm">
-          <div>
-            <p className="text-[11px] text-muted uppercase tracking-wide font-medium">Responses</p>
-            <p className="text-lg font-bold">{total}</p>
-          </div>
-        </div>
-      )}
+      {/* Toggle between the structured app survey and free-text comments, so
+          the page doesn't get crowded showing both at once. */}
+      <div className="inline-flex items-center gap-1 bg-surface rounded-xl border border-border p-1 mb-5">
+        <button
+          onClick={() => setTab("app")}
+          className={cn(
+            "px-4 py-2 rounded-lg text-sm font-medium transition-colors",
+            tab === "app" ? "bg-primary text-white shadow-sm" : "text-muted hover:text-foreground"
+          )}
+        >
+          App Feedback ({surveyEntries.length})
+        </button>
+        <button
+          onClick={() => setTab("comment")}
+          className={cn(
+            "px-4 py-2 rounded-lg text-sm font-medium transition-colors",
+            tab === "comment" ? "bg-primary text-white shadow-sm" : "text-muted hover:text-foreground"
+          )}
+        >
+          Comment Feedback ({commentEntries.length})
+        </button>
+      </div>
 
-      {!loading && sessionStats.some((stat) => stat.responses > 0) && (
+      {tab === "app" && !loading && sessionStats.some((stat) => stat.responses > 0) && (
         <div className="mb-5">
           <div className="flex items-baseline justify-between mb-2.5 gap-3">
             <h2 className="text-sm font-semibold text-foreground">By meal session</h2>
@@ -106,15 +126,19 @@ export default function DashboardFeedbackPage() {
             </div>
           ))}
         </div>
-      ) : entries.length === 0 ? (
+      ) : visibleEntries.length === 0 ? (
         <EmptyState
           icon={<MessageSquareText size={48} />}
-          title="No feedback yet"
-          description="Ratings submitted from the customer home screen will appear here"
+          title={tab === "app" ? "No app feedback yet" : "No written feedback yet"}
+          description={
+            tab === "app"
+              ? "Cafeteria survey responses from the home screen will appear here"
+              : "Written feedback left via the feedback QR will appear here"
+          }
         />
       ) : (
         <div className="space-y-3">
-          {entries.map((entry) => (
+          {visibleEntries.map((entry) => (
             <FeedbackEntryCard key={entry.id} entry={entry} />
           ))}
         </div>

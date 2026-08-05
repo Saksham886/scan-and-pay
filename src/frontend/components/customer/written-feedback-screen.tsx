@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, useEffect } from "react";
+import { useState } from "react";
 import { useRouter } from "next/navigation";
 import { ArrowLeft, CheckCircle2, Star } from "lucide-react";
 
@@ -9,7 +9,6 @@ interface WrittenFeedbackScreenProps {
   cafeName: string;
 }
 
-const AUTO_REDIRECT_SECONDS = 5;
 const MAX_COMMENT_LEN = 1000;
 const MONO = { fontFamily: "var(--font-jb-mono), monospace" };
 const DISPLAY = { fontFamily: "var(--font-display), sans-serif" };
@@ -29,19 +28,8 @@ export function WrittenFeedbackScreen({ cafeSlug, cafeName }: WrittenFeedbackScr
   const [submitting, setSubmitting] = useState(false);
   const [error, setError] = useState("");
   const [submitted, setSubmitted] = useState(false);
-  const [countdown, setCountdown] = useState(AUTO_REDIRECT_SECONDS);
 
   const complete = rating >= 1 && comment.trim().length > 0;
-
-  useEffect(() => {
-    if (!submitted) return;
-    if (countdown <= 0) {
-      router.push(`/${cafeSlug}`);
-      return;
-    }
-    const t = setTimeout(() => setCountdown((c) => c - 1), 1000);
-    return () => clearTimeout(t);
-  }, [submitted, countdown, router, cafeSlug]);
 
   const handleSubmit = async () => {
     if (!complete) {
@@ -117,16 +105,9 @@ export function WrittenFeedbackScreen({ cafeSlug, cafeName }: WrittenFeedbackScr
           <p className="text-sm text-[#cbc3d7] mb-6" style={MONO}>
             Your feedback helps us improve.
           </p>
-          <p className="text-xs text-[#494454] mb-6" style={MONO}>
-            Back to home in <span className="text-[#cdf200] font-semibold">{countdown}s</span>
+          <p className="text-xs text-[#494454]" style={MONO}>
+            You can close this page now.
           </p>
-          <button
-            onClick={() => router.push(`/${cafeSlug}`)}
-            className="bg-[#cdf200] text-black border-2 border-black px-8 py-3 font-bold text-sm uppercase tracking-wider neo-shadow active:translate-x-[4px] active:translate-y-[4px] active:shadow-none transition-all duration-75 rounded-full"
-            style={MONO}
-          >
-            Back to Home
-          </button>
         </div>
       ) : (
         <div className="flex-1 flex flex-col px-6 py-10 max-w-md mx-auto w-full animate-fade-in-up">
