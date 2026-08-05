@@ -14,11 +14,13 @@ const Duration kApiTimeout = Duration(seconds: 15);
 const Duration kMenuRefreshInterval = Duration(seconds: 60);
 
 const Duration kPostPaymentPollInterval = Duration(seconds: 2);
-/// Kept deliberately patient (~2 min at the 2s interval): a payment made on a
+/// Kept deliberately patient (~3 min at the 2s interval): a payment made on a
 /// flaky office network can take well over the old 30s for the webhook/UPI to
 /// settle, and declaring FAILED while the money is in flight is the worst
-/// outcome on a kiosk. A network error mid-poll is retried, never failed.
-const int kPostPaymentMaxAttempts = 60;
+/// outcome on a kiosk. A network error mid-poll is retried, never failed. Runs
+/// a little past the server's pending-expiry window so a genuinely failed or
+/// cancelled payment is observed as FAILED here rather than timing out blindly.
+const int kPostPaymentMaxAttempts = 90;
 const Duration kTransientErrorExtraDelay = Duration(seconds: 3);
 
 /// Native-QR payment screen: how often the kiosk asks the server to reconcile

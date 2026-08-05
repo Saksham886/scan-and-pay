@@ -7,7 +7,18 @@ import {
   fetchPaymentLink,
   fetchOrderPayments,
   fetchQrPayments,
+  closeQrCode,
 } from "@/backend/lib/razorpay";
+
+/**
+ * How long an order may sit in PAYMENT_PENDING before reconcile gives up and
+ * marks it FAILED — the customer cancelled, the payment failed silently, or
+ * they walked off. Without this, a never-completed payment stays "pending"
+ * forever on the dashboard and the kiosk. Kept a little under the kiosk's own
+ * on-screen timeout so a live poll settles the order before the kiosk resets.
+ */
+const PENDING_FAIL_AFTER_MS =
+  (Number(process.env.PAYMENT_PENDING_FAIL_MINUTES) || 2) * 60 * 1000;
 import { broadcastNewOrder, sendOrderPlacedWhatsApp } from "@/backend/lib/order-events";
 import type { Prisma } from "@/generated/prisma";
 import { after } from "next/server";
@@ -279,28 +290,48 @@ export const paymentService = {
       const isCheckoutOrder = payment.razorpayOrderId.startsWith("order_");
       const isQr = payment.razorpayOrderId.startsWith("qr_");
 
+      // Once an order has been pending past the window, a gateway "still
+      // pending" is treated as a terminal failure so it stops lingering.
+      const isStale = Date.now() - payment.createdAt.getTime() > PENDING_FAIL_AFTER_MS;
+
       let isSuccess: boolean;
       let razorpayPaymentId: string | undefined;
 
       if (isQr) {
         const qrResult = await fetchQrPayments(payment.razorpayOrderId, razorpayCredentials);
-        if (!qrResult.success || qrResult.status === "pending") return "pending";
-        isSuccess = qrResult.status === "paid";
-        razorpayPaymentId = qrResult.paymentId;
+        if (!qrResult.success) return "pending"; // transient — retry
+        if (qrResult.status === "pending") {
+          if (!isStale) return "pending";
+          // Timed out with no payment: close the QR so a late scan can't pay an
+          // order we're about to fail, then mark it FAILED.
+          await closeQrCode(payment.razorpayOrderId, razorpayCredentials);
+          isSuccess = false;
+        } else {
+          isSuccess = qrResult.status === "paid";
+          razorpayPaymentId = qrResult.paymentId;
+        }
       } else if (isCheckoutOrder) {
         const orderResult = await fetchOrderPayments(payment.razorpayOrderId, razorpayCredentials);
-        if (!orderResult.success || orderResult.status === "pending") return "pending";
-        isSuccess = orderResult.status === "paid";
-        razorpayPaymentId = orderResult.paymentId;
+        if (!orderResult.success) return "pending";
+        if (orderResult.status === "pending") {
+          if (!isStale) return "pending";
+          isSuccess = false;
+        } else {
+          isSuccess = orderResult.status === "paid";
+          razorpayPaymentId = orderResult.paymentId;
+        }
       } else {
         const linkResult = await fetchPaymentLink(payment.razorpayOrderId, razorpayCredentials);
         if (!linkResult.success) return "pending";
-        if (linkResult.status === "created" || linkResult.status === "partially_paid") return "pending";
-
-        isSuccess = linkResult.status === "paid";
-        const linkPayments = linkResult.data?.payments as Array<Record<string, unknown>> | undefined;
-        const lastPayment = linkPayments?.[linkPayments.length - 1];
-        razorpayPaymentId = lastPayment?.payment_id as string | undefined;
+        if (linkResult.status === "created" || linkResult.status === "partially_paid") {
+          if (!isStale) return "pending";
+          isSuccess = false;
+        } else {
+          isSuccess = linkResult.status === "paid";
+          const linkPayments = linkResult.data?.payments as Array<Record<string, unknown>> | undefined;
+          const lastPayment = linkPayments?.[linkPayments.length - 1];
+          razorpayPaymentId = lastPayment?.payment_id as string | undefined;
+        }
       }
 
       const won = await paymentRepository.claimPaymentResult(merchantTxnId, {
@@ -333,8 +364,15 @@ export const paymentService = {
     const result = await checkPaymentStatus(merchantTxnId, credentials);
     // Network/internal error - treat as transient, caller should retry
     if (result.status === "INTERNAL_ERROR") return "pending";
-    // PhonePe explicitly says payment is still pending
-    if (result.status === "PAYMENT_PENDING") return "pending";
+    // PhonePe says still pending: keep waiting until the order is past the
+    // window, after which a persistent "pending" is treated as failed so it
+    // doesn't linger on the dashboard/kiosk.
+    if (
+      result.status === "PAYMENT_PENDING" &&
+      Date.now() - payment.createdAt.getTime() <= PENDING_FAIL_AFTER_MS
+    ) {
+      return "pending";
+    }
 
     const isSuccess = result.status === "PAYMENT_SUCCESS";
     // PhonePe status API wraps data inside result.data.data

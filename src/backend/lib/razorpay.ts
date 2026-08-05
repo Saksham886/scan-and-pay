@@ -279,9 +279,42 @@ export async function fetchQrPayments(
     if (captured) {
       return { success: true, status: "paid", paymentId: captured.id as string };
     }
+    // A declined/cancelled UPI attempt records a payment with status "failed".
+    // The QR itself stays open (single_use only closes on capture), but on a
+    // kiosk we surface the failure rather than leaving the customer on an
+    // endless "waiting" — only when there are attempts and none is still in
+    // flight (all failed), so an in-progress "created" payment stays pending.
+    if (items.length > 0 && items.every((p) => p.status === "failed")) {
+      return { success: true, status: "failed" };
+    }
     return { success: true, status: "pending" };
   } catch {
     return { success: false, status: "pending" };
+  }
+}
+
+/**
+ * Closes a dynamic QR so it can no longer be paid. Called when we give up on a
+ * still-unpaid order and mark it failed, so a late scan can't pay a QR the
+ * kiosk has already moved on from (which the webhook would otherwise flip back
+ * to paid). Best-effort — the order is failed regardless of the outcome here.
+ */
+export async function closeQrCode(
+  qrId: string,
+  credentials?: RazorpayCredentials
+): Promise<void> {
+  const creds = resolveCredentials(credentials);
+  if (!creds.keyId || !creds.keySecret) return;
+  try {
+    await fetch(`${RAZORPAY_BASE_URL}/payments/qr_codes/${qrId}/close`, {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+        Authorization: authHeader(creds),
+      },
+    });
+  } catch {
+    // Ignored — failing the order does not depend on the QR closing cleanly.
   }
 }
 
