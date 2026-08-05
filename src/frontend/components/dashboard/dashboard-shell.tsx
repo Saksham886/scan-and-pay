@@ -20,6 +20,7 @@ import {
   QrCode,
   Wallet,
   Star,
+  CreditCard,
 } from "lucide-react";
 import { CafeQRModal } from "@/frontend/components/admin/cafe-qr-modal";
 
@@ -177,6 +178,7 @@ export function DashboardShell({ user, children }: DashboardShellProps) {
       ]
     : [
         { name: "Orders",       href: "/dashboard",            icon: ClipboardList },
+        { name: "Payments",     href: "/dashboard/payments",   icon: CreditCard },
         { name: "Menu",         href: "/dashboard/menu",       icon: UtensilsCrossed },
         { name: "Feedback",     href: "/dashboard/feedback",   icon: Star },
         { name: "Analytics",    href: "/dashboard/analytics",  icon: BarChart3 },
